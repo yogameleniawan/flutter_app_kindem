@@ -188,9 +188,13 @@ class _CoursesMainState extends State<CoursesMain> {
                           }
                         });
                       },
-                      child: Image(
-                        image: AssetImage("assets/images/arrow-left.png"),
-                      ),
+                      child: indexCourses == 0
+                          ? Image(
+                              image: AssetImage("assets/images/blank.png"),
+                            )
+                          : Image(
+                              image: AssetImage("assets/images/arrow-left.png"),
+                            ),
                     ),
                     InkWell(
                       onTap: () {
@@ -221,14 +225,19 @@ class _CoursesMainState extends State<CoursesMain> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          if (indexCourses < courses.length) {
+                          if (indexCourses < courses.length - 1) {
                             indexCourses++;
                           }
                         });
                       },
-                      child: Image(
-                        image: AssetImage("assets/images/arrow-right.png"),
-                      ),
+                      child: indexCourses < courses.length - 1
+                          ? Image(
+                              image:
+                                  AssetImage("assets/images/arrow-right.png"),
+                            )
+                          : Image(
+                              image: AssetImage("assets/images/blank.png"),
+                            ),
                     ),
                   ],
                 ),
