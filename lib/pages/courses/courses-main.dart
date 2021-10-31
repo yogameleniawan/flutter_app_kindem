@@ -8,6 +8,10 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:text_to_speech/text_to_speech.dart';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
+import 'package:flutter_tts/flutter_tts.dart';
 
 class CoursesMain extends StatefulWidget {
   CoursesMain(
@@ -23,16 +27,63 @@ class CoursesMain extends StatefulWidget {
   _CoursesMainState createState() => _CoursesMainState();
 }
 
+enum TtsState { playing, stopped, paused, continued }
+
 class _CoursesMainState extends State<CoursesMain> {
   List courses = [];
   int indexCourses = 0;
 
-  TextToSpeech tts = TextToSpeech();
+  late FlutterTts flutterTts;
+  String? language;
+  String? engine;
+  double volume = 1.0;
+  double pitch = 1.54;
+  double rate = 0.4;
 
-  String text = '';
-  double volume = 1; // Range: 0-1
-  double rate = 0.97; // Range: 0-2
-  double pitch = 1.54; // Range: 0-2
+  String? text;
+
+  TtsState ttsState = TtsState.stopped;
+
+  get isPlaying => ttsState == TtsState.playing;
+
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
+  @override
+  initState() {
+    super.initState();
+    getCourses();
+    initTts();
+  }
+
+  initTts() {
+    flutterTts = FlutterTts();
+
+    if (isAndroid) {
+      _getDefaultEngine();
+    }
+
+    flutterTts.setStartHandler(() {
+      setState(() {
+        print("Playing");
+        ttsState = TtsState.playing;
+      });
+    });
+  }
+
+  Future _getDefaultEngine() async {
+    var engine = "com.google.android.tts";
+  }
+
+  Future _speak(String lang) async {
+    flutterTts.setLanguage(lang);
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+
+    await flutterTts.awaitSpeakCompletion(true);
+    await flutterTts.speak(text!);
+  }
 
   void getCourses() async {
     final String uri =
@@ -48,28 +99,6 @@ class _CoursesMainState extends State<CoursesMain> {
         courses = course;
       });
     }
-  }
-
-  void speakIndonesia() {
-    tts.setVolume(volume);
-    tts.setRate(rate);
-    tts.setLanguage("id-ID");
-    tts.setPitch(pitch);
-    tts.speak(text);
-  }
-
-  void speakEnglish() {
-    tts.setVolume(volume);
-    tts.setRate(rate);
-    tts.setLanguage("en-US");
-    tts.setPitch(pitch);
-    tts.speak(text);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getCourses();
   }
 
   @override
@@ -169,7 +198,7 @@ class _CoursesMainState extends State<CoursesMain> {
                           text = courses.length > 0
                               ? courses[indexCourses].indonesia_text
                               : "Empty";
-                          speakIndonesia();
+                          _speak("id-ID");
                         });
                       },
                       child: Image(
@@ -182,7 +211,7 @@ class _CoursesMainState extends State<CoursesMain> {
                           text = courses.length > 0
                               ? courses[indexCourses].english_text
                               : "Empty";
-                          speakEnglish();
+                          _speak("en-US");
                         });
                       },
                       child: Image(

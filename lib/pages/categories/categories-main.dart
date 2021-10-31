@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/category.dart';
@@ -125,11 +125,13 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Column(
                                     children: [
-                                      CachedNetworkImage(
+                                      ExtendedImage.network(
+                                        data.image,
                                         width: 200,
-                                        imageUrl: data.image,
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
+                                        fit: BoxFit.fill,
+                                        cache: true,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30.0)),
                                       ),
                                       Text(
                                         data.name,

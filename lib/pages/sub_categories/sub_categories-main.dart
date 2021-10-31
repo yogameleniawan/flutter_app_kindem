@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/sub_category.dart';
@@ -61,15 +61,12 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10)),
-                        child: CachedNetworkImage(
+                        child: ExtendedImage.network(
+                          widget.image,
                           width: 80,
-                          imageUrl: widget.image,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      value: downloadProgress.progress),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
+                          fit: BoxFit.fill,
+                          cache: true,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
                         ),
                       ),
                     ),
@@ -108,16 +105,13 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                                       Padding(
                                         padding:
                                             const EdgeInsets.only(right: 10),
-                                        child: CachedNetworkImage(
+                                        child: ExtendedImage.network(
+                                          sub_categories[index].image,
                                           width: 80,
-                                          imageUrl: sub_categories[index].image,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              CircularProgressIndicator(
-                                                  value: downloadProgress
-                                                      .progress),
-                                          errorWidget: (context, url, error) =>
-                                              Icon(Icons.error),
+                                          fit: BoxFit.fill,
+                                          cache: true,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(30.0)),
                                         ),
                                       ),
                                       Text(
