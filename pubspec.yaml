@@ -31,6 +31,9 @@ dependencies:
   bouncing_widget: ^2.0.0
   animations: ^2.0.2
   carousel_slider: ^4.0.0
+  cached_network_image: ^3.1.0
+  flutter_cache_manager: ^3.1.2
+  text_to_speech: ^0.2.3
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +53,10 @@ flutter:
   assets:
     - assets/images/study.png
     - assets/images/test.png
+    - assets/images/indonesia.png
+    - assets/images/english.png
+    - assets/images/arrow-left.png
+    - assets/images/arrow-right.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

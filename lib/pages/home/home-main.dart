@@ -1,14 +1,5 @@
-import 'package:animations/animations.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/models/category.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
-import 'package:flutter_app_stulish/pages/sub_categories/sub_categories-main.dart';
-import 'package:flutter_app_stulish/services/httpservice.dart';
-import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
 
 class HomeMain extends StatefulWidget {
   HomeMain({Key? key}) : super(key: key);
@@ -52,8 +43,8 @@ class _HomeMainState extends State<HomeMain> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  StudyCard(),
-                  TestCard(),
+                  Center(child: StudyCard()),
+                  Center(child: TestCard()),
                 ],
               ),
             ),
@@ -139,7 +130,7 @@ class TestCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 2000),
+            transitionDuration: Duration(milliseconds: 1000),
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
               return CategoriesMain();
@@ -158,32 +149,29 @@ class TestCard extends StatelessWidget {
           ),
         );
       },
-      child: Hero(
-        tag: "image",
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 5),
-          child: Container(
-            padding: const EdgeInsets.only(
-                top: 40, bottom: 20, right: 100, left: 100),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Flexible(
-              child: Column(
-                children: [
-                  Image(image: AssetImage("assets/images/test.png")),
-                  Text(
-                    "TEST",
-                    style: TextStyle(
-                        color: Color(0xFF007251),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28),
-                  ),
-                  Text(
-                    "Ujian",
-                    style: TextStyle(color: Color(0xFF007251), fontSize: 20),
-                  )
-                ],
-              ),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 5),
+        child: Container(
+          padding:
+              const EdgeInsets.only(top: 40, bottom: 20, right: 100, left: 100),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Flexible(
+            child: Column(
+              children: [
+                Image(image: AssetImage("assets/images/test.png")),
+                Text(
+                  "TEST",
+                  style: TextStyle(
+                      color: Color(0xFF007251),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28),
+                ),
+                Text(
+                  "Ujian",
+                  style: TextStyle(color: Color(0xFF007251), fontSize: 20),
+                )
+              ],
             ),
           ),
         ),
