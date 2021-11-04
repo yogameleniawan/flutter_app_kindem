@@ -37,7 +37,9 @@ dependencies:
   extended_image: ^4.0.0
   
   flutter_tts: ^3.2.2
-
+  speech_to_text: ^4.2.2
+  highlight_text: any
+  avatar_glow: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

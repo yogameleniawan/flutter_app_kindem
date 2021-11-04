@@ -12,10 +12,8 @@ import 'dart:io';
 import 'dart:async';
 
 class CategoriesMain extends StatefulWidget {
-  CategoriesMain({
-    Key? key,
-  }) : super(key: key);
-
+  CategoriesMain({Key? key, required this.isTest}) : super(key: key);
+  final bool isTest;
   @override
   _CategoriesMainState createState() => _CategoriesMainState();
 }
@@ -50,6 +48,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             backgroundColor: Color(0xFF007251),
             body: Container(
@@ -71,7 +70,9 @@ class _CategoriesMainState extends State<CategoriesMain> {
                             padding: const EdgeInsets.all(10.0),
                             child: Image(
                               width: MediaQuery.of(context).size.width * 0.10,
-                              image: AssetImage("assets/images/study.png"),
+                              image: widget.isTest == false
+                                  ? AssetImage("assets/images/study.png")
+                                  : AssetImage("assets/images/test.png"),
                             ),
                           ),
                         ),
@@ -101,7 +102,8 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                         Animation<double> secondaryAnimation) {
                                       return SubCategoriesMain(
                                           image: data.image,
-                                          id_category: data.id);
+                                          id_category: data.id,
+                                          isTest: widget.isTest);
                                     },
                                     transitionsBuilder: (BuildContext context,
                                         Animation<double> animation,

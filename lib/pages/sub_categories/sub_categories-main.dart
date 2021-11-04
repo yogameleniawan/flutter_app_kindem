@@ -1,16 +1,24 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/sub_category.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-main.dart';
+import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SubCategoriesMain extends StatefulWidget {
-  SubCategoriesMain({Key? key, required this.image, required this.id_category})
+  SubCategoriesMain(
+      {Key? key,
+      required this.image,
+      required this.id_category,
+      required this.isTest})
       : super(key: key);
+  final bool isTest;
   final String id_category;
   final String image;
   @override
@@ -43,9 +51,12 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
     getAllSubCategories();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
             backgroundColor: Color(0xFF007251),
             body: Container(
@@ -86,10 +97,19 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                               onTap: () {
                                 Navigator.push(context, MaterialPageRoute(
                                     builder: (BuildContext context) {
-                                  return CoursesMain(
-                                      id_sub_category: sub_categories[index].id,
-                                      image: sub_categories[index].image,
-                                      sub_name: sub_categories[index].name);
+                                  return widget.isTest == false
+                                      ? CoursesMain(
+                                          id_sub_category:
+                                              sub_categories[index].id,
+                                          image: sub_categories[index].image,
+                                          sub_name: sub_categories[index].name,
+                                          isTest: widget.isTest)
+                                      : CourseTest(
+                                          id_sub_category:
+                                              sub_categories[index].id,
+                                          image: sub_categories[index].image,
+                                          sub_name: sub_categories[index].name,
+                                          isTest: widget.isTest);
                                 }));
                               },
                               child: Padding(

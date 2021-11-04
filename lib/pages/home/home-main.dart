@@ -10,7 +10,7 @@ class HomeMain extends StatefulWidget {
 
 class _HomeMainState extends State<HomeMain> {
   PageController pageController = new PageController();
-
+  bool isTest = false;
   @override
   void initState() {
     super.initState();
@@ -20,6 +20,7 @@ class _HomeMainState extends State<HomeMain> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: Color(0xFF007251),
         body: SingleChildScrollView(
@@ -43,8 +44,8 @@ class _HomeMainState extends State<HomeMain> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  Center(child: StudyCard()),
-                  Center(child: TestCard()),
+                  Center(child: StudyCard(isTest: false)),
+                  Center(child: TestCard(isTest: true)),
                 ],
               ),
             ),
@@ -56,9 +57,8 @@ class _HomeMainState extends State<HomeMain> {
 }
 
 class StudyCard extends StatelessWidget {
-  const StudyCard({
-    Key? key,
-  }) : super(key: key);
+  const StudyCard({Key? key, required this.isTest}) : super(key: key);
+  final bool isTest;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class StudyCard extends StatelessWidget {
             transitionDuration: Duration(milliseconds: 2000),
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
-              return CategoriesMain();
+              return CategoriesMain(isTest: this.isTest);
             },
             transitionsBuilder: (BuildContext context,
                 Animation<double> animation,
@@ -120,10 +120,8 @@ class StudyCard extends StatelessWidget {
 }
 
 class TestCard extends StatelessWidget {
-  const TestCard({
-    Key? key,
-  }) : super(key: key);
-
+  const TestCard({Key? key, required this.isTest}) : super(key: key);
+  final bool isTest;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -133,7 +131,7 @@ class TestCard extends StatelessWidget {
             transitionDuration: Duration(milliseconds: 1000),
             pageBuilder: (BuildContext context, Animation<double> animation,
                 Animation<double> secondaryAnimation) {
-              return CategoriesMain();
+              return CategoriesMain(isTest: this.isTest);
             },
             transitionsBuilder: (BuildContext context,
                 Animation<double> animation,

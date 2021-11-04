@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,11 @@ import 'package:flutter/foundation.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
-
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 
-class CoursesMain extends StatefulWidget {
-  CoursesMain(
+class CourseTest extends StatefulWidget {
+  CourseTest(
       {Key? key,
       required this.id_sub_category,
       required this.image,
@@ -25,13 +26,14 @@ class CoursesMain extends StatefulWidget {
   final String image;
   final String sub_name;
   final bool isTest;
+
   @override
-  _CoursesMainState createState() => _CoursesMainState();
+  _CourseTestState createState() => _CourseTestState();
 }
 
 enum TtsState { playing, stopped, paused, continued }
 
-class _CoursesMainState extends State<CoursesMain> {
+class _CourseTestState extends State<CourseTest> {
   List courses = [];
   int indexCourses = 0;
 
@@ -41,6 +43,11 @@ class _CoursesMainState extends State<CoursesMain> {
   double volume = 1.0;
   double pitch = 1.54;
   double rate = 0.4;
+
+  stt.SpeechToText _speech = new stt.SpeechToText();
+  bool _isListening = false;
+  String _text = '____________';
+  double _confidence = 1.0;
 
   String? text;
 
@@ -56,6 +63,7 @@ class _CoursesMainState extends State<CoursesMain> {
     super.initState();
     getCourses();
     initTts();
+    _speech = stt.SpeechToText();
   }
 
   initTts() {
@@ -103,11 +111,48 @@ class _CoursesMainState extends State<CoursesMain> {
     }
   }
 
+  void _listen() async {
+    if (!_isListening) {
+      bool available = await _speech.initialize(
+        onStatus: (val) => _isListening = false,
+        onError: (val) => print('onError: $val'),
+      );
+      if (available) {
+        setState(() => _isListening = true);
+        _speech.listen(
+          onResult: (val) => setState(() {
+            _text = val.recognizedWords;
+            if (val.hasConfidenceRating && val.confidence > 0) {
+              _confidence = val.confidence;
+            }
+          }),
+        );
+      }
+    } else {
+      setState(() => _isListening = false);
+      _speech.stop();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: AvatarGlow(
+          animate: _isListening,
+          glowColor: Theme.of(context).primaryColor,
+          endRadius: 75.0,
+          duration: const Duration(milliseconds: 2000),
+          repeatPauseDuration: const Duration(milliseconds: 100),
+          repeat: true,
+          child: FloatingActionButton(
+            backgroundColor: Color(0xFFFFD900),
+            onPressed: _listen,
+            child: Icon(_isListening ? Icons.mic : Icons.mic_none),
+          ),
+        ),
         backgroundColor: Color(0xFF007251),
         body: Container(
             child: Padding(
@@ -146,36 +191,41 @@ class _CoursesMainState extends State<CoursesMain> {
                   )
                 ],
               ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                child: CachedNetworkImage(
-                  width: 250,
-                  imageUrl: courses.length > 0
-                      ? courses[indexCourses].image
-                      : "https://i.stack.imgur.com/5ykYD.png",
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+              InkWell(
+                onTap: () {
+                  setState(() {
+                    text = courses.length > 0
+                        ? courses[indexCourses].english_text
+                        : "Empty";
+                    _speak("en-US");
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: CachedNetworkImage(
+                    width: 250,
+                    imageUrl: courses.length > 0
+                        ? courses[indexCourses].image
+                        : "https://i.stack.imgur.com/5ykYD.png",
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                                value: downloadProgress.progress),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
                 ),
               ),
               Column(
                 children: [
-                  Text(
-                      courses.length > 0
-                          ? courses[indexCourses].english_text
-                          : "Empty",
+                  Text("What is this?",
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 20,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       )),
-                  Text(
-                      courses.length > 0
-                          ? courses[indexCourses].indonesia_text
-                          : "Empty",
+                  Text(_text,
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                 ],
               ),
@@ -189,6 +239,7 @@ class _CoursesMainState extends State<CoursesMain> {
                         setState(() {
                           if (indexCourses > 0) {
                             indexCourses--;
+                            _text = '____________';
                           }
                         });
                       },
@@ -203,34 +254,9 @@ class _CoursesMainState extends State<CoursesMain> {
                     InkWell(
                       onTap: () {
                         setState(() {
-                          text = courses.length > 0
-                              ? courses[indexCourses].indonesia_text
-                              : "Empty";
-                          _speak("id-ID");
-                        });
-                      },
-                      child: Image(
-                        image: AssetImage("assets/images/indonesia.png"),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          text = courses.length > 0
-                              ? courses[indexCourses].english_text
-                              : "Empty";
-                          _speak("en-US");
-                        });
-                      },
-                      child: Image(
-                        image: AssetImage("assets/images/english.png"),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
                           if (indexCourses < courses.length - 1) {
                             indexCourses++;
+                            _text = '____________';
                           }
                         });
                       },
