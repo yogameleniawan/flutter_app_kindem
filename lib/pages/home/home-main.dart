@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class HomeMain extends StatefulWidget {
   HomeMain({Key? key}) : super(key: key);
@@ -30,19 +32,45 @@ class _HomeMainState extends State<HomeMain> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "STULISH",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 20),
-                    child: Text(
-                      "Helo User",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            "STULISH",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5, bottom: 20),
+                            child: Text(
+                              "Helo User",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Provider.of<AuthProvider>(context, listen: false)
+                              .logout();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Text("Logout",
+                                style: TextStyle(color: Color(0xFF007251))),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                   Center(child: StudyCard(isTest: false)),
                   Center(child: TestCard(isTest: true)),

@@ -3,11 +3,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/course.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -97,10 +99,14 @@ class _CourseTestState extends State<CourseTest> {
 
   void getCourses() async {
     final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/getCoursesById/" +
+        "https://stulish-rest-api.herokuapp.com/api/v1/getCoursesById/" +
             widget.id_sub_category;
 
-    http.Response result = await http.get(Uri.parse(uri));
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);
       List courseMap = jsonResponse['data'];

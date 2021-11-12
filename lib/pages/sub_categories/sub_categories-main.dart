@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/sub_category.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-main.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
@@ -30,10 +32,14 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
 
   void getAllSubCategories() async {
     final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/getSubCategoriesById/" +
+        "https://stulish-rest-api.herokuapp.com/api/v1/getSubCategoriesById/" +
             widget.id_category;
 
-    http.Response result = await http.get(Uri.parse(uri));
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);
       List subCategoryMap = jsonResponse['data'];
@@ -50,8 +56,6 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
     super.initState();
     getAllSubCategories();
   }
-
-
 
   @override
   Widget build(BuildContext context) {

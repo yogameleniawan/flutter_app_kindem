@@ -1,9 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
+import 'package:flutter_app_stulish/pages/login/login-main.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (BuildContext context) => AuthProvider(),
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -14,7 +21,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: MyHomePage(),
+      home: Center(child: Consumer<AuthProvider>(
+        builder: (context, auth, child) {
+          switch (auth.isAuthenticated) {
+            case true:
+              return HomeMain();
+            default:
+              return LoginMain();
+          }
+        },
+      )),
       debugShowCheckedModeBanner: false,
     );
   }

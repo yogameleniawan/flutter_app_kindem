@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/category.dart';
 import 'package:flutter_app_stulish/pages/sub_categories/sub_categories-main.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_app_stulish/services/httpservice.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -10,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+
+import 'package:provider/provider.dart';
 
 class CategoriesMain extends StatefulWidget {
   CategoriesMain({Key? key, required this.isTest}) : super(key: key);
@@ -25,9 +28,12 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   void getAllCategory() async {
     final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/getAllCategories";
-
-    http.Response result = await http.get(Uri.parse(uri));
+        "https://stulish-rest-api.herokuapp.com/api/v1/getAllCategories";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);
       List categoryMap = jsonResponse['data'];
