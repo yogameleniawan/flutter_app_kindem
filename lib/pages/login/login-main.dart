@@ -17,6 +17,14 @@ class _LoginMainState extends State<LoginMain> {
   String _errorMessage = "";
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailController.text = 'yogameleniawan@gmail.com';
+    passwordController.text = 'rahasiagan27';
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF007251),

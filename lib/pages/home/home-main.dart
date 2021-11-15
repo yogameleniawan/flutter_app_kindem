@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 class HomeMain extends StatefulWidget {
   HomeMain({Key? key}) : super(key: key);
@@ -13,10 +17,29 @@ class HomeMain extends StatefulWidget {
 class _HomeMainState extends State<HomeMain> {
   PageController pageController = new PageController();
   bool isTest = false;
+  User user = new User();
+
   @override
   void initState() {
     super.initState();
     pageController = PageController(viewportFraction: 6.0);
+    getUser();
+  }
+
+  void getUser() async {
+    final String uri = "https://stulish-rest-api.herokuapp.com/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user = users;
+      });
+    }
   }
 
   @override
@@ -35,23 +58,28 @@ class _HomeMainState extends State<HomeMain> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        children: [
-                          Text(
-                            "STULISH",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5, bottom: 20),
-                            child: Text(
-                              "Helo User",
-                              style: TextStyle(color: Colors.white),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "STULISH",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 5, bottom: 20),
+                              child: Text(
+                                "Helo \n" + user.name,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       InkWell(
                         onTap: () {

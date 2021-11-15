@@ -3,6 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/course.dart';
+import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,6 +17,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
 class CourseTest extends StatefulWidget {
   CourseTest(
@@ -60,12 +63,58 @@ class _CourseTestState extends State<CourseTest> {
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  User user = new User();
+
   @override
   initState() {
     super.initState();
     getCourses();
     initTts();
     _speech = stt.SpeechToText();
+    getUser();
+  }
+
+  Future getUser() async {
+    final String uri = "https://stulish-rest-api.herokuapp.com/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user = users;
+      });
+    }
+  }
+
+  void storeAnswer(
+      String answer, String courseText, String course_id, int user_id) async {
+    final String uri =
+        "https://stulish-rest-api.herokuapp.com/api/v1/storeAnswer";
+    Map data = {
+      'answer': answer,
+      'checked': true,
+      'course_text': courseText,
+      'course_id': course_id,
+      'sub_category_id': widget.id_sub_category,
+      'user_id': user_id,
+    };
+    var body = json.encode(data);
+
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body);
+    if (result.statusCode == HttpStatus.ok) {
+      print("Success");
+    }
   }
 
   initTts() {
@@ -149,7 +198,7 @@ class _CourseTestState extends State<CourseTest> {
         floatingActionButton: AvatarGlow(
           animate: _isListening,
           glowColor: Theme.of(context).primaryColor,
-          endRadius: 75.0,
+          endRadius: 40.0,
           duration: const Duration(milliseconds: 2000),
           repeatPauseDuration: const Duration(milliseconds: 100),
           repeat: true,
@@ -197,6 +246,14 @@ class _CourseTestState extends State<CourseTest> {
                   )
                 ],
               ),
+              Center(
+                  child: FAProgressBar(
+                backgroundColor: Colors.white,
+                progressColor: Color(0xFFFFD900),
+                currentValue: (indexCourses + 1) * 10,
+                maxValue: courses.length * 10,
+                size: 15,
+              )),
               InkWell(
                 onTap: () {
                   setState(() {
@@ -241,21 +298,10 @@ class _CourseTestState extends State<CourseTest> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (indexCourses > 0) {
-                            indexCourses--;
-                            _text = '____________';
-                          }
-                        });
-                      },
-                      child: indexCourses == 0
-                          ? Image(
-                              image: AssetImage("assets/images/blank.png"),
-                            )
-                          : Image(
-                              image: AssetImage("assets/images/arrow-left.png"),
-                            ),
+                      onTap: () {},
+                      child: Image(
+                        image: AssetImage("assets/images/blank.png"),
+                      ),
                     ),
                     InkWell(
                       onTap: () {
@@ -263,8 +309,19 @@ class _CourseTestState extends State<CourseTest> {
                           if (indexCourses < courses.length - 1) {
                             indexCourses++;
                             _text = '____________';
+                          } else if (indexCourses == courses.length - 1) {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return ResultMain(
+                                id_user: user.id,
+                                id_sub_category: widget.id_sub_category,
+                                image_sub_category: widget.image,
+                              );
+                            }));
                           }
                         });
+                        storeAnswer(_text, courses[indexCourses].english_text,
+                            courses[indexCourses].id, user.id);
                       },
                       child: indexCourses < courses.length - 1
                           ? Image(
@@ -272,7 +329,7 @@ class _CourseTestState extends State<CourseTest> {
                                   AssetImage("assets/images/arrow-right.png"),
                             )
                           : Image(
-                              image: AssetImage("assets/images/blank.png"),
+                              image: AssetImage("assets/images/complete.png"),
                             ),
                     ),
                   ],
