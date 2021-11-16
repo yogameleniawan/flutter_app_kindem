@@ -307,26 +307,12 @@ class _CourseTestState extends State<CourseTest> {
                       onTap: () {
                         storeAnswer(_text, courses[indexCourses].english_text,
                             courses[indexCourses].id, user.id);
-                        setState(() async {
+                        setState(() {
                           if (indexCourses < courses.length - 1) {
                             indexCourses++;
                             _text = '____________';
                           } else if (indexCourses == courses.length - 1) {
-                            final result = await Navigator.push(context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                              return ResultMain(
-                                id_user: user.id,
-                                id_sub_category: widget.id_sub_category,
-                                image_sub_category: widget.image,
-                              );
-                            }));
-                            if (result == true) {
-                              setState(() {
-                                indexCourses = 0;
-                                _text = '____________';
-                              });
-                            }
+                            _navigateNextTest(context);
                           }
                         });
                       },
@@ -347,5 +333,22 @@ class _CourseTestState extends State<CourseTest> {
         )),
       ),
     );
+  }
+
+  _navigateNextTest(BuildContext context) async {
+    final result = await Navigator.push(context,
+        MaterialPageRoute(builder: (BuildContext context) {
+      return ResultMain(
+        id_user: user.id,
+        id_sub_category: widget.id_sub_category,
+        image_sub_category: widget.image,
+      );
+    }));
+    if (result == true) {
+      setState(() {
+        indexCourses = 0;
+        _text = '____________';
+      });
+    }
   }
 }
