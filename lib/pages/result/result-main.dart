@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/score.dart';
 import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/home/home-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -70,9 +71,6 @@ class _ResultMainState extends State<ResultMain> {
                 Row(
                   children: [
                     InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
                       child: Container(
                         decoration: BoxDecoration(
                             color: Colors.white,
@@ -91,15 +89,47 @@ class _ResultMainState extends State<ResultMain> {
                     ),
                   ],
                 ),
-                Text("YOUR SCORE IS ",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white)),
-                Text(
-                  score.is_true.toString() + "/" + score.total_test.toString(),
-                  style: TextStyle(color: Colors.white),
+                Column(
+                  children: [
+                    Text("YOUR SCORE IS ",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                    Text(
+                      score.is_true.toString() +
+                          "/" +
+                          score.total_test.toString(),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (c) => HomeMain()),
+                              (route) => false);
+                        },
+                        child: Image(
+                          image: AssetImage("assets/images/home.png"),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context, true);
+                        },
+                        child: Image(
+                          image: AssetImage("assets/images/reload.png"),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           )),

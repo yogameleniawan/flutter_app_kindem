@@ -68,6 +68,8 @@ flutter:
     - assets/images/arrow-right.png
     - assets/images/blank.png
     - assets/images/complete.png
+    - assets/images/home.png
+    - assets/images/reload.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

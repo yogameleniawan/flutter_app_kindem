@@ -305,23 +305,30 @@ class _CourseTestState extends State<CourseTest> {
                     ),
                     InkWell(
                       onTap: () {
-                        setState(() {
+                        storeAnswer(_text, courses[indexCourses].english_text,
+                            courses[indexCourses].id, user.id);
+                        setState(() async {
                           if (indexCourses < courses.length - 1) {
                             indexCourses++;
                             _text = '____________';
                           } else if (indexCourses == courses.length - 1) {
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context) {
+                            final result = await Navigator.push(context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) {
                               return ResultMain(
                                 id_user: user.id,
                                 id_sub_category: widget.id_sub_category,
                                 image_sub_category: widget.image,
                               );
                             }));
+                            if (result == true) {
+                              setState(() {
+                                indexCourses = 0;
+                                _text = '____________';
+                              });
+                            }
                           }
                         });
-                        storeAnswer(_text, courses[indexCourses].english_text,
-                            courses[indexCourses].id, user.id);
                       },
                       child: indexCourses < courses.length - 1
                           ? Image(
