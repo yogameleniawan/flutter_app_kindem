@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,6 +14,8 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -49,11 +53,6 @@ class _CourseTestState extends State<CourseTest> {
   double pitch = 1.54;
   double rate = 0.4;
 
-  stt.SpeechToText _speech = new stt.SpeechToText();
-  bool _isListening = false;
-  String _text = '____________';
-  double _confidence = 1.0;
-
   String? text;
 
   TtsState ttsState = TtsState.stopped;
@@ -63,6 +62,19 @@ class _CourseTestState extends State<CourseTest> {
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
 
+  // Voice Recognition
+  bool _hasSpeech = false;
+  bool onMic = false;
+  double level = 0.0;
+  double minSoundLevel = 50000;
+  double maxSoundLevel = -50000;
+  String lastWords = '';
+
+  String _currentLocaleId = '';
+
+  final SpeechToText speech = SpeechToText();
+  // Voice Recognition
+
   User user = new User();
 
   @override
@@ -70,8 +82,55 @@ class _CourseTestState extends State<CourseTest> {
     super.initState();
     getCourses();
     initTts();
-    _speech = stt.SpeechToText();
+    initSpeechState();
     getUser();
+  }
+
+  Future<void> initSpeechState() async {
+    var hasSpeech = await speech.initialize(
+      debugLogging: true,
+    );
+    if (hasSpeech) {
+      _currentLocaleId = 'en_001';
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _hasSpeech = hasSpeech;
+    });
+  }
+
+  void startListening() {
+    lastWords = '';
+
+    speech.listen(
+        onResult: resultListener,
+        listenFor: Duration(seconds: 30),
+        pauseFor: Duration(seconds: 5),
+        partialResults: true,
+        localeId: _currentLocaleId,
+        onSoundLevelChange: soundLevelListener,
+        cancelOnError: true,
+        listenMode: ListenMode.confirmation);
+    setState(() {
+      onMic = true;
+    });
+  }
+
+  void resultListener(SpeechRecognitionResult result) {
+    setState(() {
+      lastWords = '${result.recognizedWords}';
+      onMic = false;
+    });
+  }
+
+  void soundLevelListener(double level) {
+    minSoundLevel = min(minSoundLevel, level);
+    maxSoundLevel = max(maxSoundLevel, level);
+    setState(() {
+      this.level = level;
+    });
   }
 
   Future getUser() async {
@@ -166,29 +225,6 @@ class _CourseTestState extends State<CourseTest> {
     }
   }
 
-  void _listen() async {
-    if (!_isListening) {
-      bool available = await _speech.initialize(
-        onStatus: (val) => _isListening = false,
-        onError: (val) => print('onError: $val'),
-      );
-      if (available) {
-        setState(() => _isListening = true);
-        _speech.listen(
-          onResult: (val) => setState(() {
-            _text = val.recognizedWords;
-            if (val.hasConfidenceRating && val.confidence > 0) {
-              _confidence = val.confidence;
-            }
-          }),
-        );
-      }
-    } else {
-      setState(() => _isListening = false);
-      _speech.stop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -196,7 +232,7 @@ class _CourseTestState extends State<CourseTest> {
       home: Scaffold(
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: AvatarGlow(
-          animate: _isListening,
+          animate: onMic,
           glowColor: Theme.of(context).primaryColor,
           endRadius: 40.0,
           duration: const Duration(milliseconds: 2000),
@@ -204,8 +240,8 @@ class _CourseTestState extends State<CourseTest> {
           repeat: true,
           child: FloatingActionButton(
             backgroundColor: Color(0xFFFFD900),
-            onPressed: _listen,
-            child: Icon(_isListening ? Icons.mic : Icons.mic_none),
+            onPressed: startListening,
+            child: Icon(onMic ? Icons.mic_none : Icons.mic),
           ),
         ),
         backgroundColor: Color(0xFF007251),
@@ -288,7 +324,7 @@ class _CourseTestState extends State<CourseTest> {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       )),
-                  Text(_text,
+                  Text(lastWords,
                       style: TextStyle(color: Colors.white, fontSize: 20)),
                 ],
               ),
@@ -305,12 +341,15 @@ class _CourseTestState extends State<CourseTest> {
                     ),
                     InkWell(
                       onTap: () {
-                        storeAnswer(_text, courses[indexCourses].english_text,
-                            courses[indexCourses].id, user.id);
+                        storeAnswer(
+                            lastWords,
+                            courses[indexCourses].english_text,
+                            courses[indexCourses].id,
+                            user.id);
                         setState(() {
                           if (indexCourses < courses.length - 1) {
                             indexCourses++;
-                            _text = '____________';
+                            lastWords = '____________';
                           } else if (indexCourses == courses.length - 1) {
                             _navigateNextTest(context);
                           }
@@ -347,7 +386,7 @@ class _CourseTestState extends State<CourseTest> {
     if (result == true) {
       setState(() {
         indexCourses = 0;
-        _text = '____________';
+        lastWords = '____________';
       });
     }
   }

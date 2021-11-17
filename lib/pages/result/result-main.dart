@@ -56,6 +56,22 @@ class _ResultMainState extends State<ResultMain> {
     }
   }
 
+  Future reloadTest() async {
+    final String uri =
+        "https://stulish-rest-api.herokuapp.com/api/v1/reloadTest?user_id=" +
+            widget.id_user.toString() +
+            "&sub_category_id=" +
+            widget.id_sub_category;
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      return true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -120,8 +136,11 @@ class _ResultMainState extends State<ResultMain> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {
-                          Navigator.pop(context, true);
+                        onTap: () async {
+                          bool reload = await reloadTest();
+                          if (reload) {
+                            Navigator.pop(context, true);
+                          }
                         },
                         child: Image(
                           image: AssetImage("assets/images/reload.png"),
