@@ -3,8 +3,10 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/sub_category.dart';
+import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-main.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
+import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -29,6 +31,23 @@ class SubCategoriesMain extends StatefulWidget {
 
 class _SubCategoriesMainState extends State<SubCategoriesMain> {
   List sub_categories = [];
+  User user = new User();
+
+  Future getUser() async {
+    final String uri = "https://stulish-rest-api.herokuapp.com/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user = users;
+      });
+    }
+  }
 
   void getAllSubCategories() async {
     final String uri =
@@ -51,10 +70,33 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
     }
   }
 
+  Future<bool> getTest(String sub_category_id, int user_id) async {
+    final String uri =
+        "https://stulish-rest-api.herokuapp.com/api/v1/getTest?user_id=" +
+            user_id.toString() +
+            "&sub_category_id=" +
+            sub_category_id;
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      if (jsonResponse['complete'] == true) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
   @override
   void initState() {
     super.initState();
     getAllSubCategories();
+    getUser();
   }
 
   @override
@@ -98,23 +140,39 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                           itemCount: sub_categories.length,
                           itemBuilder: (context, int index) {
                             return InkWell(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return widget.isTest == false
-                                      ? CoursesMain(
-                                          id_sub_category:
-                                              sub_categories[index].id,
-                                          image: sub_categories[index].image,
-                                          sub_name: sub_categories[index].name,
-                                          isTest: widget.isTest)
-                                      : CourseTest(
-                                          id_sub_category:
-                                              sub_categories[index].id,
-                                          image: sub_categories[index].image,
-                                          sub_name: sub_categories[index].name,
-                                          isTest: widget.isTest);
-                                }));
+                              onTap: () async {
+                                var value = await getTest(
+                                    sub_categories[index].id, user.id);
+                                if (value == true) {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return ResultMain(
+                                      id_user: user.id,
+                                      id_sub_category: sub_categories[index].id,
+                                      image_sub_category:
+                                          sub_categories[index].image,
+                                    );
+                                  }));
+                                } else {
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return widget.isTest == false
+                                        ? CoursesMain(
+                                            id_sub_category:
+                                                sub_categories[index].id,
+                                            image: sub_categories[index].image,
+                                            sub_name:
+                                                sub_categories[index].name,
+                                            isTest: widget.isTest)
+                                        : CourseTest(
+                                            id_sub_category:
+                                                sub_categories[index].id,
+                                            image: sub_categories[index].image,
+                                            sub_name:
+                                                sub_categories[index].name,
+                                            isTest: widget.isTest);
+                                  }));
+                                }
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 20),

@@ -20,8 +20,6 @@ class _LoginMainState extends State<LoginMain> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    emailController.text = 'yogameleniawan@gmail.com';
-    passwordController.text = 'rahasiagan27';
   }
 
   @override
