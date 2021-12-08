@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
+import 'package:flutter_app_stulish/pages/scores/score-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -102,6 +103,45 @@ class _HomeMainState extends State<HomeMain> {
                   ),
                   Center(child: StudyCard(isTest: false)),
                   Center(child: TestCard(isTest: true)),
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return ScoreMain(
+                              id_user: user.id,
+                            );
+                          }));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Image(
+                                  width: 150,
+                                  image: AssetImage("assets/images/score.jpg"),
+                                ),
+                                Text(
+                                  "View Your Score",
+                                  style: TextStyle(
+                                      color: Color(0xFF007251),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text("Lihat Skor Kamu"),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

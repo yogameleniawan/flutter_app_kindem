@@ -205,7 +205,7 @@ class _CourseTestState extends State<CourseTest> {
     await flutterTts.speak(text!);
   }
 
-  void getCourses() async {
+  Future getCourses() async {
     final String uri =
         "https://stulish-rest-api.herokuapp.com/api/v1/getCoursesById/" +
             widget.id_sub_category;

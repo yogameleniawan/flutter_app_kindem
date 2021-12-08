@@ -26,7 +26,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
   List categories = [];
   DefaultCacheManager manager = new DefaultCacheManager();
 
-  void getAllCategory() async {
+  Future getAllCategory() async {
     final String uri =
         "https://stulish-rest-api.herokuapp.com/api/v1/getAllCategories";
     String? token =

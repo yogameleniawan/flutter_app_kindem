@@ -49,7 +49,7 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
     }
   }
 
-  void getAllSubCategories() async {
+  Future getAllSubCategories() async {
     final String uri =
         "https://stulish-rest-api.herokuapp.com/api/v1/getSubCategoriesById/" +
             widget.id_category;
