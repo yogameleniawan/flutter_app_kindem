@@ -57,7 +57,7 @@ class _LoginMainState extends State<LoginMain> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 40,
-                        fontWeight: FontWeight.w400),
+                        fontWeight: FontWeight.w500),
                   ),
                 ),
                 Padding(
