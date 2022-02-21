@@ -46,6 +46,8 @@ dependencies:
   shared_preferences: ^2.0.8
   flutter_animation_progress_bar: ^2.0.1
   intl: ^0.17.0
+  responsive_sizer: ^3.0.5+1
+  skeletons: ^0.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,6 +77,7 @@ flutter:
     - assets/images/home.png
     - assets/images/reload.png
     - assets/images/score.jpg
+    - assets/images/next.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
