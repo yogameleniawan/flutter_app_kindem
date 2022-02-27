@@ -155,10 +155,8 @@ class _LoginMainState extends State<LoginMain> {
               ],
             ),
           ),
-          Positioned(
-            right: 140.0,
-            top: 90.0,
-            left: 140.0,
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 82, horizontal: 130),
             child: Image(
               image: AssetImage("assets/images/kindem-logo.png"),
             ),

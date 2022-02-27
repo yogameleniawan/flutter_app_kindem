@@ -1,14 +1,13 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 
-class ProfileDetail extends StatefulWidget {
-  const ProfileDetail({Key? key}) : super(key: key);
+class ProfileSetting extends StatefulWidget {
+  const ProfileSetting({Key? key}) : super(key: key);
   @override
-  _ProfileDetailState createState() => _ProfileDetailState();
+  _ProfileSettingState createState() => _ProfileSettingState();
 }
 
-class _ProfileDetailState extends State<ProfileDetail> {
-  @override
+class _ProfileSettingState extends State<ProfileSetting> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -20,42 +19,49 @@ class _ProfileDetailState extends State<ProfileDetail> {
             child: Column(
               children: [
                 Container(
-                  alignment: Alignment.center,
-                  child: CircleAvatar(
-                    maxRadius: MediaQuery.of(context).size.height * 0.1 / 1.5,
-                    backgroundColor: Colors.white,
-                    // backgroundColor: Color(color),
-                    child: Container(
-                      height: 100,
-                      child: Image(
-                        width: 100,
-                        // color: Colors.white,
-                        image: AssetImage("assets/images/kindem-logo.png"),
+                  margin: EdgeInsets.only(bottom: 70),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        maxRadius:
+                            MediaQuery.of(context).size.height * 0.1 / 1.8,
+                        backgroundColor: Colors.white,
+                        // backgroundColor: Color(color),
+                        child: Container(
+                          height: 100,
+                          child: Image(
+                            width: 100,
+                            // color: Colors.white,
+                            image: AssetImage("assets/images/kindem-logo.png"),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Text(
-                    "Nama User Sing Paling Dowo Dewe",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 25.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "CITIZEN/RAKYAT BIASA (LVL1)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15.0,
-                    ),
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.only(left: 20),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Nama User Sing Paling Dowo Dewe",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 25.0,
+                                  ),
+                                ),
+                                Text(
+                                  "CITIZEN/RAKYAT BIASA (LVL1)",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 15.0,
+                                  ),
+                                ),
+                              ]),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Container(
@@ -76,13 +82,6 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 20),
-                        child: Image(
-                          width: 120.0,
-                          image: AssetImage("assets/images/kindem-logo.png"),
-                        ),
-                      ),
-                      Container(
                         margin: EdgeInsets.symmetric(
                           horizontal: 25.0,
                         ),
@@ -92,6 +91,77 @@ class _ProfileDetailState extends State<ProfileDetail> {
                           children: [
                             Container(
                               child: ResultDetail(),
+                            ),
+
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 6, right: 6, top: 25),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.grey[400],
+                              ),
+                              child: TextFormField(
+                                // controller: ,
+                                obscureText: true,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  hintText: '123456789',
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 1.0),
+                                  prefixIcon: Icon(Icons.person_outline,
+                                      color: Colors.black),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    // borderSide: ,
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            Container(
+                              margin:
+                                  EdgeInsets.only(left: 6, right: 6, top: 25),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Color(0xFFF5A720),
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: TextFormField(
+                                // controller: ,
+                                initialValue: "Nama User",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+
+                                decoration: InputDecoration(
+                                  hintText: 'Nama User',
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 1.0),
+                                  hintStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  prefixIcon: Icon(Icons.text_fields,
+                                      color: Colors.black),
+                                  suffixIcon:
+                                      Icon(Icons.edit, color: Colors.black),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 1, color: Color(0xFFF5A720)),
+                                    borderRadius: BorderRadius.circular(6.0),
+                                    // borderSide: ,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 1, color: Colors.red),
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                ),
+                              ),
                             ),
 
                             //button
@@ -126,9 +196,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.09),
                     offset: Offset(0, 9),
-                    blurRadius: 10,
+                    blurRadius: 8,
                     spreadRadius: 1),
               ],
             ),
@@ -173,9 +243,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
               borderRadius: BorderRadius.circular(10.0),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withOpacity(0.09),
                     offset: Offset(0, 9),
-                    blurRadius: 11,
+                    blurRadius: 8,
                     spreadRadius: 1),
               ],
             ),
@@ -225,7 +295,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
           scaleFactor: 2.0,
           onPressed: () {},
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
             margin: EdgeInsets.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: Color(0xFFF5A720),
@@ -239,10 +309,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
               ],
             ),
             child: Text(
-              "KEMBALI",
+              "UBAH PASSWORD",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 19,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -254,7 +324,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
           onPressed: () {},
           child: Container(
             margin: EdgeInsets.symmetric(horizontal: 6),
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 43),
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 22),
             decoration: BoxDecoration(
               color: Color(0xFFF5A720),
               borderRadius: BorderRadius.circular(20.0),
@@ -267,10 +337,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
               ],
             ),
             child: Text(
-              "HOME",
+              "GANTI FOTO",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
