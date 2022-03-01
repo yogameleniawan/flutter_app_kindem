@@ -17,8 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
 class CategoriesMain extends StatefulWidget {
-  CategoriesMain({Key? key, required this.isTest}) : super(key: key);
-  final bool isTest;
+  CategoriesMain({Key? key}) : super(key: key);
   @override
   _CategoriesMainState createState() => _CategoriesMainState();
 }
@@ -130,9 +129,9 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                           Animation<double>
                                               secondaryAnimation) {
                                         return SubCategoriesMain(
-                                            image: data.image,
-                                            id_category: data.id,
-                                            isTest: widget.isTest);
+                                          image: data.image,
+                                          id_category: data.id,
+                                        );
                                       },
                                       transitionsBuilder: (BuildContext context,
                                           Animation<double> animation,

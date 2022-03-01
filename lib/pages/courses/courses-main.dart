@@ -20,13 +20,11 @@ class CoursesMain extends StatefulWidget {
       {Key? key,
       required this.id_sub_category,
       required this.image,
-      required this.sub_name,
-      required this.isTest})
+      required this.sub_name})
       : super(key: key);
   final String id_sub_category;
   final String image;
   final String sub_name;
-  final bool isTest;
   @override
   _CoursesMainState createState() => _CoursesMainState();
 }

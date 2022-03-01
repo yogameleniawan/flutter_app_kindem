@@ -16,13 +16,8 @@ import 'dart:async';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SubCategoriesMain extends StatefulWidget {
-  SubCategoriesMain(
-      {Key? key,
-      required this.image,
-      required this.id_category,
-      required this.isTest})
+  SubCategoriesMain({Key? key, required this.image, required this.id_category})
       : super(key: key);
-  final bool isTest;
   final String id_category;
   final String image;
   @override
@@ -156,21 +151,11 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                                 } else {
                                   Navigator.push(context, MaterialPageRoute(
                                       builder: (BuildContext context) {
-                                    return widget.isTest == false
-                                        ? CoursesMain(
-                                            id_sub_category:
-                                                sub_categories[index].id,
-                                            image: sub_categories[index].image,
-                                            sub_name:
-                                                sub_categories[index].name,
-                                            isTest: widget.isTest)
-                                        : CourseTest(
-                                            id_sub_category:
-                                                sub_categories[index].id,
-                                            image: sub_categories[index].image,
-                                            sub_name:
-                                                sub_categories[index].name,
-                                            isTest: widget.isTest);
+                                    return CoursesMain(
+                                      id_sub_category: sub_categories[index].id,
+                                      image: sub_categories[index].image,
+                                      sub_name: sub_categories[index].name,
+                                    );
                                   }));
                                 }
                               },

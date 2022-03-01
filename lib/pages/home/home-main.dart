@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
+import 'package:flutter_app_stulish/pages/home/components/banner.dart';
 import 'package:flutter_app_stulish/pages/scores/score-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+
+import 'components/course-card.dart';
+import 'components/search-friend.dart';
 
 class HomeMain extends StatefulWidget {
   HomeMain({Key? key}) : super(key: key);
@@ -48,7 +53,7 @@ class _HomeMainState extends State<HomeMain> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color(0xFF007251),
+        backgroundColor: Color(0xFFF1F1F1),
         body: SingleChildScrollView(
           child: Container(
             child: Padding(
@@ -64,208 +69,48 @@ class _HomeMainState extends State<HomeMain> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "STULISH",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold),
-                            ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(top: 5, bottom: 20),
-                              child: Text(
-                                "Helo \n" + user.name,
-                                style: TextStyle(color: Colors.white),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Helo",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    user.name,
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 24),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
                       InkWell(
-                        onTap: () {
-                          Provider.of<AuthProvider>(context, listen: false)
-                              .logout();
-                        },
+                        onTap: () {},
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Text("Logout",
-                                style: TextStyle(color: Color(0xFF007251))),
+                          child: Image(
+                            image: AssetImage("assets/images/user_icon.png"),
                           ),
                         ),
                       )
                     ],
                   ),
-                  Center(child: StudyCard(isTest: false)),
-                  Center(child: TestCard(isTest: true)),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ScoreMain(
-                              id_user: user.id,
-                            );
-                          }));
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Image(
-                                  width: 150,
-                                  image: AssetImage("assets/images/score.jpg"),
-                                ),
-                                Text(
-                                  "View Your Score",
-                                  style: TextStyle(
-                                      color: Color(0xFF007251),
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text("Lihat Skor Kamu"),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
+                  BannerHome(),
+                  SearchFriend(),
+                  Text("Materi yang sedang kamu kerjakan"),
+                  CourseCard(),
+                  CourseCard(),
+                  CourseCard(),
                 ],
               ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class StudyCard extends StatelessWidget {
-  const StudyCard({Key? key, required this.isTest}) : super(key: key);
-  final bool isTest;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 2000),
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation) {
-              return CategoriesMain(isTest: this.isTest);
-            },
-            transitionsBuilder: (BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child) {
-              return Align(
-                child: FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-              );
-            },
-          ),
-        );
-      },
-      child: Hero(
-        tag: "imageStudy",
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Container(
-            padding: const EdgeInsets.only(
-                top: 40, bottom: 20, right: 100, left: 100),
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
-            child: Flexible(
-              child: Column(
-                children: [
-                  Image(image: AssetImage("assets/images/study.png")),
-                  Text(
-                    "STUDY",
-                    style: TextStyle(
-                        color: Color(0xFF007251),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 28),
-                  ),
-                  Text(
-                    "Belajar",
-                    style: TextStyle(color: Color(0xFF007251), fontSize: 20),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TestCard extends StatelessWidget {
-  const TestCard({Key? key, required this.isTest}) : super(key: key);
-  final bool isTest;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 1000),
-            pageBuilder: (BuildContext context, Animation<double> animation,
-                Animation<double> secondaryAnimation) {
-              return CategoriesMain(isTest: this.isTest);
-            },
-            transitionsBuilder: (BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child) {
-              return Align(
-                child: FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-              );
-            },
-          ),
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: Container(
-          padding:
-              const EdgeInsets.only(top: 40, bottom: 20, right: 100, left: 100),
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: Flexible(
-            child: Column(
-              children: [
-                Image(image: AssetImage("assets/images/test.png")),
-                Text(
-                  "TEST",
-                  style: TextStyle(
-                      color: Color(0xFF007251),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28),
-                ),
-                Text(
-                  "Ujian",
-                  style: TextStyle(color: Color(0xFF007251), fontSize: 20),
-                )
-              ],
             ),
           ),
         ),
