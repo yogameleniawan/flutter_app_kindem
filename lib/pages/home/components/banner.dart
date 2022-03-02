@@ -25,7 +25,7 @@ class BannerHome extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).push(
                   PageRouteBuilder(
-                    transitionDuration: Duration(milliseconds: 2000),
+                    transitionDuration: Duration(milliseconds: 500),
                     pageBuilder: (BuildContext context,
                         Animation<double> animation,
                         Animation<double> secondaryAnimation) {

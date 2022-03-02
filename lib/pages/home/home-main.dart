@@ -3,6 +3,8 @@ import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
 import 'package:flutter_app_stulish/pages/home/components/banner.dart';
+import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
+import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
 import 'package:flutter_app_stulish/pages/scores/score-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -91,7 +93,29 @@ class _HomeMainState extends State<HomeMain> {
                         ),
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 500),
+                              pageBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation) {
+                                return ProfileSetting();
+                              },
+                              transitionsBuilder: (BuildContext context,
+                                  Animation<double> animation,
+                                  Animation<double> secondaryAnimation,
+                                  Widget child) {
+                                return Align(
+                                  child: FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),

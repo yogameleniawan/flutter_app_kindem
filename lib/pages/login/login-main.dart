@@ -116,7 +116,10 @@ class _LoginMainState extends State<LoginMain> {
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(
-                        0.0, displayHeight(context) * 0.02, 0.0, 0.0),
+                        0.0,
+                        displayHeight(context) * 0.02,
+                        0.0,
+                        displayHeight(context) * 0.02),
                     child: Text(
                       _errorMessage,
                       style: TextStyle(color: Colors.red),
@@ -140,6 +143,7 @@ class _LoginMainState extends State<LoginMain> {
                               if (result == false) {
                                 setState(() {
                                   _errorMessage = 'Email or Password Wrong';
+                                  _isLoading = !_isLoading;
                                 });
                               }
                             },
@@ -176,7 +180,7 @@ class _LoginMainState extends State<LoginMain> {
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(
-                                  top: 15, bottom: 15, left: 30, right: 30),
+                                  top: 17, bottom: 17, left: 30, right: 30),
                               child: CircularProgressIndicator(
                                   color: Colors.white),
                             ),
