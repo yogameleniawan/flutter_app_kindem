@@ -1,5 +1,7 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:flutter_app_stulish/pages/home/home-main.dart';
 
 class ProfileDetail extends StatefulWidget {
   const ProfileDetail({Key? key}) : super(key: key);
@@ -15,8 +17,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
       home: Scaffold(
         backgroundColor: Color(0xFF0074CD),
         body: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 40, vertical: 70),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
             child: Column(
               children: [
                 Container(
@@ -38,7 +40,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 Container(
                   margin: EdgeInsets.only(top: 20),
                   child: Text(
-                    "Nama User Sing Paling Dowo Dewe",
+                    "Nama User",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -60,8 +62,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 20.0),
-                  width: MediaQuery.of(context).size.width * 50,
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  width: displayWidth(context) * 40,
+                  height: displayHeight(context) * 0.60,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.0),
@@ -76,7 +78,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   child: Column(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(top: 20),
+                        margin: EdgeInsets.only(top: 10),
                         child: Image(
                           width: 120.0,
                           image: AssetImage("assets/images/kindem-logo.png"),
@@ -84,15 +86,13 @@ class _ProfileDetailState extends State<ProfileDetail> {
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(
-                          horizontal: 25.0,
+                          horizontal: 18.0,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 35.0),
+                        padding: EdgeInsets.symmetric(vertical: 20.0),
                         // color: Colors.red,
                         child: Column(
                           children: [
-                            Container(
-                              child: ResultDetail(),
-                            ),
+                            ResultDetail(),
 
                             //button
                             Container(
@@ -115,102 +115,97 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   Widget ResultDetail() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-            margin: EdgeInsets.symmetric(horizontal: 6),
-            decoration: BoxDecoration(
-              color: Color(0xFFF5A720),
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: Offset(0, 9),
-                    blurRadius: 10,
-                    spreadRadius: 1),
-              ],
-            ),
-            child: Column(
-              children: [
-                Container(
-                  child: Text(
-                    "25",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 67,
-                    ),
+        Container(
+          width: displayWidth(context) * 0.35,
+          height: displayHeight(context) * 0.19,
+          padding: EdgeInsets.symmetric(
+              horizontal: displayWidth(context) * 0.04,
+              vertical: displayHeight(context) * 0.01),
+          decoration: BoxDecoration(
+            color: Color(0xFFF5A720),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.09),
+                  offset: Offset(0, 9),
+                  blurRadius: 8,
+                  spreadRadius: 1),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "12",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36.2,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: displayHeight(context) * 0.015),
+                child: Text(
+                  "Materi yang diselesaikan",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    // fontWeight: FontWeight.bold,
+                    // fontSize: 36.4,
                   ),
                 ),
-                Container(
-                    child: Text(
-                  "Materi yang",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )),
-                Container(
-                    child: Text(
-                  "diselesaikan",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )),
-              ],
-            ),
+              ),
+            ],
           ),
+          // Text("25"),
         ),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 6),
-            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-            decoration: BoxDecoration(
-              color: Color(0xFFF5A720),
-              borderRadius: BorderRadius.circular(10.0),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    offset: Offset(0, 9),
-                    blurRadius: 11,
-                    spreadRadius: 1),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  child: Text(
-                    "25",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 67,
-                    ),
+        Container(
+          width: displayWidth(context) * 0.35,
+          height: displayHeight(context) * 0.19,
+          padding: EdgeInsets.symmetric(
+              horizontal: displayWidth(context) * 0.04,
+              vertical: displayHeight(context) * 0.01),
+          decoration: BoxDecoration(
+            color: Color(0xFFF5A720),
+            borderRadius: BorderRadius.circular(10.0),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.09),
+                  offset: Offset(0, 9),
+                  blurRadius: 8,
+                  spreadRadius: 1),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "40",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 36.2,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: displayHeight(context) * 0.015),
+                child: Text(
+                  "Exp yang didapatkan",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    // fontWeight: FontWeight.bold,
+                    // fontSize: 36.4,
                   ),
                 ),
-                Container(
-                    child: Text(
-                  "Exp yang",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )),
-                Container(
-                    child: Text(
-                  "diselesaikan",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )),
-              ],
-            ),
+              ),
+            ],
           ),
+          // Text("25"),
         ),
       ],
     );
@@ -218,18 +213,22 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   Widget Button() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BouncingWidget(
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
           onPressed: () {},
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-            margin: EdgeInsets.symmetric(horizontal: 6),
+            width: displayWidth(context) * 0.35,
+            padding:
+                EdgeInsets.symmetric(vertical: displayHeight(context) * 0.015),
+            // height: displayHeight(context) * 0.04,
+            // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            // margin: EdgeInsets.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: Color(0xFFF5A720),
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(15.0),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.20),
@@ -240,9 +239,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
             ),
             child: Text(
               "KEMBALI",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 19,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -251,13 +251,36 @@ class _ProfileDetailState extends State<ProfileDetail> {
         BouncingWidget(
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                transitionDuration: Duration(milliseconds: 500),
+                pageBuilder: (BuildContext context, Animation<double> animation,
+                    Animation<double> secondaryAnimation) {
+                  return HomeMain();
+                },
+                transitionsBuilder: (BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child) {
+                  return Align(
+                    child: FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  );
+                },
+              ),
+            );
+          },
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 6),
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 43),
+            width: displayWidth(context) * 0.35,
+            // margin: EdgeInsets.symmetric(horizontal: 6),
+            padding:
+                EdgeInsets.symmetric(vertical: displayHeight(context) * 0.015),
             decoration: BoxDecoration(
               color: Color(0xFFF5A720),
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(15.0),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.20),
@@ -268,9 +291,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
             ),
             child: Text(
               "HOME",
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
