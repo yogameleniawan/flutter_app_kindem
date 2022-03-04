@@ -23,27 +23,10 @@ class BannerHome extends StatelessWidget {
             left: displayWidth(context) * 0.05,
             child: InkWell(
               onTap: () {
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    transitionDuration: Duration(milliseconds: 500),
-                    pageBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation) {
-                      return CategoriesMain();
-                    },
-                    transitionsBuilder: (BuildContext context,
-                        Animation<double> animation,
-                        Animation<double> secondaryAnimation,
-                        Widget child) {
-                      return Align(
-                        child: FadeTransition(
-                          opacity: animation,
-                          child: child,
-                        ),
-                      );
-                    },
-                  ),
-                );
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                  return CategoriesMain();
+                }));
               },
               child: Container(
                   padding: EdgeInsets.fromLTRB(

@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/services.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'components/course-card.dart';
 import 'components/search-friend.dart';
 
@@ -26,12 +27,18 @@ class _HomeMainState extends State<HomeMain> {
   PageController pageController = new PageController();
   bool isTest = false;
   User user = new User();
-
+  GlobalKey _one = GlobalKey();
+  GlobalKey _two = GlobalKey();
+  late BuildContext myContext;
   @override
   void initState() {
     super.initState();
     pageController = PageController(viewportFraction: 6.0);
     getUser();
+
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => ShowCaseWidget.of(myContext)!.startShowCase([_one, _two]),
+    );
   }
 
   void getUser() async {
@@ -52,93 +59,105 @@ class _HomeMainState extends State<HomeMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFFF1F1F1),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ShowCaseWidget(
+      builder: Builder(builder: (context) {
+        myContext = context;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Color(0xFFF1F1F1),
+            body: SingleChildScrollView(
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 5, bottom: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Helo",
-                                    style: TextStyle(color: Colors.black),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 5, bottom: 20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Helo",
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        user.name,
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 24),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    user.name,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 24),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              transitionDuration: Duration(milliseconds: 500),
-                              pageBuilder: (BuildContext context,
-                                  Animation<double> animation,
-                                  Animation<double> secondaryAnimation) {
-                                return ProfileSetting();
-                              },
-                              transitionsBuilder: (BuildContext context,
-                                  Animation<double> animation,
-                                  Animation<double> secondaryAnimation,
-                                  Widget child) {
-                                return Align(
-                                  child: FadeTransition(
-                                    opacity: animation,
-                                    child: child,
+                          ),
+                          Showcase(
+                            key: _one,
+                            description: 'Ketuk ini untuk melihat profile kamu',
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionDuration:
+                                        Duration(milliseconds: 500),
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secondaryAnimation) {
+                                      return ProfileSetting();
+                                    },
+                                    transitionsBuilder: (BuildContext context,
+                                        Animation<double> animation,
+                                        Animation<double> secondaryAnimation,
+                                        Widget child) {
+                                      return Align(
+                                        child: FadeTransition(
+                                          opacity: animation,
+                                          child: child,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 );
                               },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Image(
+                                  image:
+                                      AssetImage("assets/images/user_icon.png"),
+                                ),
+                              ),
                             ),
-                          );
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Image(
-                            image: AssetImage("assets/images/user_icon.png"),
-                          ),
-                        ),
-                      )
+                          )
+                        ],
+                      ),
+                      BannerHome(),
+                      SearchFriend(),
+                      Text("Materi yang sedang kamu kerjakan"),
+                      CourseCard(),
+                      CourseCard(),
+                      CourseCard(),
                     ],
                   ),
-                  BannerHome(),
-                  SearchFriend(),
-                  Text("Materi yang sedang kamu kerjakan"),
-                  CourseCard(),
-                  CourseCard(),
-                  CourseCard(),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

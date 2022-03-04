@@ -49,6 +49,7 @@ dependencies:
   responsive_sizer: ^3.0.5+1
   skeletons: ^0.0.3
   percent_indicator: ^4.0.0
+  showcaseview: ^1.1.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

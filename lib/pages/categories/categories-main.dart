@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/category.dart';
 import 'package:flutter_app_stulish/models/sub_category.dart';
+import 'package:flutter_app_stulish/pages/courses/courses-main.dart';
 import 'package:flutter_app_stulish/pages/sub_categories/sub_categories-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_app_stulish/services/httpservice.dart';
@@ -16,6 +17,8 @@ import 'dart:async';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
+
+import 'components/skeleton-chapter.dart';
 
 class CategoriesMain extends StatefulWidget {
   CategoriesMain({Key? key}) : super(key: key);
@@ -159,54 +162,22 @@ class _CategoriesMainState extends State<CategoriesMain> {
                           items: categories.map((data) {
                             return Builder(
                               builder: (BuildContext context) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      PageRouteBuilder(
-                                        transitionDuration:
-                                            Duration(milliseconds: 1000),
-                                        pageBuilder: (BuildContext context,
-                                            Animation<double> animation,
-                                            Animation<double>
-                                                secondaryAnimation) {
-                                          return SubCategoriesMain(
-                                            image: data.image,
-                                            id_category: data.id,
-                                          );
-                                        },
-                                        transitionsBuilder:
-                                            (BuildContext context,
-                                                Animation<double> animation,
-                                                Animation<double>
-                                                    secondaryAnimation,
-                                                Widget child) {
-                                          return Align(
-                                            child: FadeTransition(
-                                              opacity: animation,
-                                              child: child,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 5.0),
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: ExtendedImage.network(
-                                        data.image,
-                                        width: 200,
-                                        fit: BoxFit.fill,
-                                        cache: true,
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(30.0)),
-                                      )),
-                                );
+                                return Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 5.0),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: ExtendedImage.network(
+                                      data.image,
+                                      width: 200,
+                                      fit: BoxFit.fill,
+                                      cache: true,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(30.0)),
+                                    ));
                               },
                             );
                           }).toList(),
@@ -239,66 +210,83 @@ class _CategoriesMainState extends State<CategoriesMain> {
                       ),
                       Expanded(
                         child: Skeleton(
-                          skeleton: SkeletonListView(),
+                          skeleton: SkeletonChapter(),
                           isLoading: _isLoadingChapter,
                           child: ListView.builder(
                               itemCount: sub_categories.length,
                               itemBuilder: (context, int index) {
                                 return Builder(builder: (context) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 5),
-                                                child: Text(
-                                                  "|",
-                                                  style: TextStyle(
-                                                    fontSize: 30.sp,
-                                                    fontWeight: FontWeight.bold,
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return CoursesMain(
+                                          id_sub_category:
+                                              sub_categories[index].id,
+                                          image: sub_categories[index].image,
+                                          sub_name: sub_categories[index].name,
+                                        );
+                                      }));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 5),
+                                                  child: Text(
+                                                    "|",
+                                                    style: TextStyle(
+                                                      fontSize: 30.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 5, bottom: 5),
-                                                    child: Text(
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 5,
+                                                              bottom: 5),
+                                                      child: Text(
+                                                        sub_categories[index]
+                                                            .name,
+                                                        style: TextStyle(
+                                                          fontSize: 18.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(
                                                       sub_categories[index]
                                                           .name,
                                                       style: TextStyle(
-                                                        fontSize: 18.sp,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontSize: 14.sp,
                                                       ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    sub_categories[index].name,
-                                                    style: TextStyle(
-                                                      fontSize: 14.sp,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          Image(
-                                            width: 40,
-                                            image: AssetImage(
-                                                "assets/images/next.png"),
-                                          ),
-                                        ],
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Image(
+                                              width: 40,
+                                              image: AssetImage(
+                                                  "assets/images/next.png"),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );

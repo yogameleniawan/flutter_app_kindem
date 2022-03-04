@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
@@ -9,11 +10,14 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter_tts/flutter_tts.dart';
+
+import 'components/skeleton-course-text.dart';
 
 class CoursesMain extends StatefulWidget {
   CoursesMain(
@@ -112,76 +116,73 @@ class _CoursesMainState extends State<CoursesMain> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color(0xFF007251),
+        backgroundColor: Color(0xFFF1F1F1),
         body: Container(
             child: Padding(
-          padding: const EdgeInsets.only(top: 40, right: 20, left: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: displayWidth(context) * 0.05,
+            vertical: displayHeight(context) * 0.05,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: CachedNetworkImage(
-                        width: 80,
-                        imageUrl: widget.image,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: displayWidth(context) * 0.1,
+                  vertical: displayWidth(context) * 0.3,
+                ),
+                child: Skeleton(
+                  skeleton: SkeletonAvatar(
+                    style: SkeletonAvatarStyle(
+                      width: displayWidth(context) * 1,
+                      minHeight: displayHeight(context) * 0.1,
+                      maxHeight: displayHeight(context) * 0.3,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(widget.sub_name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  )
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                child: CachedNetworkImage(
-                  width: 250,
-                  imageUrl: courses.length > 0
-                      ? courses[indexCourses].image
-                      : "https://i.stack.imgur.com/5ykYD.png",
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                          value: downloadProgress.progress),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  isLoading: courses.length < 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: CachedNetworkImage(
+                      height: displayHeight(context) * 0.3,
+                      width: displayWidth(context) * 0.8,
+                      imageUrl:
+                          courses.length > 0 ? courses[indexCourses].image : "",
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => SkeletonAvatar(
+                        style: SkeletonAvatarStyle(
+                          width: displayWidth(context) * 1,
+                          minHeight: displayHeight(context) * 0.1,
+                          maxHeight: displayHeight(context) * 0.3,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
+                  ),
                 ),
               ),
-              Column(
-                children: [
-                  Text(
-                      courses.length > 0
-                          ? courses[indexCourses].english_text
-                          : "Empty",
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(
-                      courses.length > 0
-                          ? courses[indexCourses].indonesia_text
-                          : "Empty",
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
-                ],
+              Skeleton(
+                skeleton: SkeletonTextCourse(),
+                isLoading: courses.length < 1,
+                child: Column(
+                  children: [
+                    Text(
+                        courses.length > 0
+                            ? courses[indexCourses].english_text
+                            : "-",
+                        style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(
+                        courses.length > 0
+                            ? courses[indexCourses].indonesia_text
+                            : "-",
+                        style: TextStyle(color: Colors.black, fontSize: 20)),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
