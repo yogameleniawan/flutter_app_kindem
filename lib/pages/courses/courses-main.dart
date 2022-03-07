@@ -44,11 +44,16 @@ class _CoursesMainState extends State<CoursesMain> {
   late FlutterTts flutterTts;
   String? language;
   String? engine;
-  double volume = 1.0;
-  double pitch = 1.54;
-  double rate = 0.4;
+  double volume = 1.2;
+  double pitch_in = 1.54;
+  double rate_in = 0.5;
+  double pitch_en = 1.2;
+  double rate_en = 0.35;
 
   String? text;
+  bool _isComplete = false;
+  bool _isPauseIn = false;
+  bool _isPauseEn = false;
 
   TtsState ttsState = TtsState.stopped;
 
@@ -59,6 +64,8 @@ class _CoursesMainState extends State<CoursesMain> {
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
   GlobalKey _three = GlobalKey();
+  GlobalKey _four = GlobalKey();
+
   late BuildContext myContext;
   @override
   initState() {
@@ -66,10 +73,13 @@ class _CoursesMainState extends State<CoursesMain> {
     getCourses();
     initTts();
     WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => ShowCaseWidget.of(myContext)!.startShowCase([_one, _two, _three]),
+      (_) => ShowCaseWidget.of(myContext)!
+          .startShowCase([_one, _two, _three, _four]),
     );
     text = "Mari belajar dulu dan ikuti petunjuk untuk bermain aplikasi ini";
     _speak("id-ID");
+    _isPauseIn = false;
+    _isPauseEn = false;
   }
 
   initTts() {
@@ -93,12 +103,24 @@ class _CoursesMainState extends State<CoursesMain> {
 
   Future _speak(String lang) async {
     flutterTts.setLanguage(lang);
+
     await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
+    if (lang == 'id-ID') {
+      await flutterTts.setSpeechRate(rate_in);
+      await flutterTts.setPitch(pitch_in);
+      _isPauseIn = true;
+    } else {
+      await flutterTts.setSpeechRate(rate_en);
+      await flutterTts.setPitch(pitch_en);
+      _isPauseEn = true;
+    }
 
     await flutterTts.awaitSpeakCompletion(true);
     await flutterTts.speak(text!);
+    setState(() {
+      _isPauseIn = false;
+      _isPauseEn = false;
+    });
   }
 
   Future getCourses() async {
@@ -233,20 +255,30 @@ class _CoursesMainState extends State<CoursesMain> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  text = courses.length > 0
-                                      ? courses[indexCourses].indonesia_text
-                                      : "Empty";
-                                  _speak("id-ID");
+                                  if (!_isPauseIn) {
+                                    _isPauseIn = true;
+                                    text = courses.length > 0
+                                        ? courses[indexCourses].indonesia_text
+                                        : "Empty";
+                                    _speak("id-ID");
+                                  }
                                 });
                               },
                               child: Showcase(
                                 key: _one,
                                 description:
                                     'Ketuk tombol ini untuk \nmendengarkan Bahasa Indonesia',
-                                child: Image(
-                                  width: displayWidth(context) * 0.15,
-                                  image: AssetImage("assets/images/sound.png"),
-                                ),
+                                child: _isPauseIn == false
+                                    ? Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/sound.png"),
+                                      )
+                                    : Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/pause.png"),
+                                      ),
                               ),
                             ),
                             Padding(
@@ -265,20 +297,30 @@ class _CoursesMainState extends State<CoursesMain> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  text = courses.length > 0
-                                      ? courses[indexCourses].english_text
-                                      : "Empty";
-                                  _speak("en-US");
+                                  if (!_isPauseEn) {
+                                    _isPauseEn = true;
+                                    text = courses.length > 0
+                                        ? courses[indexCourses].english_text
+                                        : "Empty";
+                                    _speak("en-US");
+                                  }
                                 });
                               },
                               child: Showcase(
                                 key: _two,
                                 description:
                                     'Ketuk tombol ini untuk mendengarkan Bahasa Inggris',
-                                child: Image(
-                                  width: displayWidth(context) * 0.15,
-                                  image: AssetImage("assets/images/sound.png"),
-                                ),
+                                child: _isPauseEn == false
+                                    ? Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/sound.png"),
+                                      )
+                                    : Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/pause.png"),
+                                      ),
                               ),
                             ),
                             Padding(
@@ -296,10 +338,17 @@ class _CoursesMainState extends State<CoursesMain> {
                             setState(() {
                               if (indexCourses < courses.length - 1) {
                                 indexCourses++;
+                                if (indexCourses == courses.length - 1 &&
+                                    _isComplete == false) {
+                                  text =
+                                      "Ketuk tombol ini untuk melakukan ujian";
+                                  _speak("id-ID");
+                                  _isComplete = true;
+                                }
                               }
                             });
                           },
-                          child: indexCourses < courses.length - 1
+                          child: indexCourses != courses.length - 1
                               ? Showcase(
                                   key: _three,
                                   description:
@@ -310,8 +359,14 @@ class _CoursesMainState extends State<CoursesMain> {
                                         "assets/images/next-icon.png"),
                                   ),
                                 )
-                              : Image(
-                                  image: AssetImage("assets/images/blank.png"),
+                              : Showcase(
+                                  key: _four,
+                                  description:
+                                      'Ketuk tombol ini untuk melakukan ujian',
+                                  child: Image(
+                                    width: displayWidth(context) * 0.15,
+                                    image: AssetImage("assets/images/exam.png"),
+                                  ),
                                 ),
                         ),
                       ],
