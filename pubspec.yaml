@@ -72,8 +72,7 @@ flutter:
     - assets/images/kindem-logo.png
     - assets/images/logo-text.png
     - assets/images/english.png
-    - assets/images/arrow-left.png
-    - assets/images/arrow-right.png
+    - assets/images/next-icon.png
     - assets/images/blank.png
     - assets/images/complete.png
     - assets/images/home.png
@@ -81,6 +80,7 @@ flutter:
     - assets/images/score.jpg
     - assets/images/next.png
     - assets/images/banner.jpg
+    - assets/images/sound.png
     - assets/images/user_icon.png
     # - images/a_dot_ham.jpeg
 

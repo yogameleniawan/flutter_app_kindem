@@ -10,6 +10,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
@@ -18,6 +19,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'components/skeleton-course-text.dart';
+import 'dart:math' as math;
 
 class CoursesMain extends StatefulWidget {
   CoursesMain(
@@ -54,12 +56,20 @@ class _CoursesMainState extends State<CoursesMain> {
 
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
-
+  GlobalKey _one = GlobalKey();
+  GlobalKey _two = GlobalKey();
+  GlobalKey _three = GlobalKey();
+  late BuildContext myContext;
   @override
   initState() {
     super.initState();
     getCourses();
     initTts();
+    WidgetsBinding.instance!.addPostFrameCallback(
+      (_) => ShowCaseWidget.of(myContext)!.startShowCase([_one, _two, _three]),
+    );
+    text = "Mari belajar dulu dan ikuti petunjuk untuk bermain aplikasi ini";
+    _speak("id-ID");
   }
 
   initTts() {
@@ -113,148 +123,206 @@ class _CoursesMainState extends State<CoursesMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFFF1F1F1),
-        body: Container(
-            child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: displayWidth(context) * 0.05,
-            vertical: displayHeight(context) * 0.05,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: displayWidth(context) * 0.1,
-                  vertical: displayWidth(context) * 0.3,
-                ),
-                child: Skeleton(
-                  skeleton: SkeletonAvatar(
-                    style: SkeletonAvatarStyle(
-                      width: displayWidth(context) * 1,
-                      minHeight: displayHeight(context) * 0.1,
-                      maxHeight: displayHeight(context) * 0.3,
+    return ShowCaseWidget(
+      builder: Builder(builder: (context) {
+        myContext = context;
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Color(0xFFF1F1F1),
+            body: Container(
+                child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: displayWidth(context) * 0.05,
+                vertical: displayHeight(context) * 0.05,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: displayWidth(context) * 0.1,
+                      vertical: displayWidth(context) * 0.3,
                     ),
-                  ),
-                  isLoading: courses.length < 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: CachedNetworkImage(
-                      height: displayHeight(context) * 0.3,
-                      width: displayWidth(context) * 0.8,
-                      imageUrl:
-                          courses.length > 0 ? courses[indexCourses].image : "",
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => SkeletonAvatar(
+                    child: Skeleton(
+                      skeleton: SkeletonAvatar(
                         style: SkeletonAvatarStyle(
                           width: displayWidth(context) * 1,
                           minHeight: displayHeight(context) * 0.1,
                           maxHeight: displayHeight(context) * 0.3,
                         ),
                       ),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      isLoading: courses.length < 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: CachedNetworkImage(
+                          height: displayHeight(context) * 0.3,
+                          width: displayWidth(context) * 0.8,
+                          imageUrl: courses.length > 0
+                              ? courses[indexCourses].image
+                              : "",
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  SkeletonAvatar(
+                            style: SkeletonAvatarStyle(
+                              width: displayWidth(context) * 1,
+                              minHeight: displayHeight(context) * 0.1,
+                              maxHeight: displayHeight(context) * 0.3,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Skeleton(
-                skeleton: SkeletonTextCourse(),
-                isLoading: courses.length < 1,
-                child: Column(
-                  children: [
-                    Text(
-                        courses.length > 0
-                            ? courses[indexCourses].english_text
-                            : "-",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(
-                        courses.length > 0
-                            ? courses[indexCourses].indonesia_text
-                            : "-",
-                        style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (indexCourses > 0) {
-                            indexCourses--;
-                          }
-                        });
-                      },
-                      child: indexCourses == 0
-                          ? Image(
-                              image: AssetImage("assets/images/blank.png"),
-                            )
-                          : Image(
-                              image: AssetImage("assets/images/arrow-left.png"),
+                  Skeleton(
+                    skeleton: SkeletonTextCourse(),
+                    isLoading: courses.length < 1,
+                    child: Column(
+                      children: [
+                        Text(
+                            courses.length > 0
+                                ? courses[indexCourses].english_text
+                                : "-",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            )),
+                        Text(
+                            courses.length > 0
+                                ? courses[indexCourses].indonesia_text
+                                : "-",
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 20)),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (indexCourses > 0) {
+                                indexCourses--;
+                              }
+                            });
+                          },
+                          child: indexCourses == 0
+                              ? Image(
+                                  image: AssetImage("assets/images/blank.png"),
+                                )
+                              : Transform(
+                                  alignment: Alignment.center,
+                                  transform: Matrix4.rotationY(math.pi),
+                                  child: Image(
+                                    width: displayWidth(context) * 0.15,
+                                    image: AssetImage(
+                                        "assets/images/next-icon.png"),
+                                  ),
+                                ),
+                        ),
+                        Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  text = courses.length > 0
+                                      ? courses[indexCourses].indonesia_text
+                                      : "Empty";
+                                  _speak("id-ID");
+                                });
+                              },
+                              child: Showcase(
+                                key: _one,
+                                description:
+                                    'Ketuk tombol ini untuk \nmendengarkan Bahasa Indonesia',
+                                child: Image(
+                                  width: displayWidth(context) * 0.15,
+                                  image: AssetImage("assets/images/sound.png"),
+                                ),
+                              ),
                             ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          text = courses.length > 0
-                              ? courses[indexCourses].indonesia_text
-                              : "Empty";
-                          _speak("id-ID");
-                        });
-                      },
-                      child: Image(
-                        image: AssetImage("assets/images/indonesia.png"),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          text = courses.length > 0
-                              ? courses[indexCourses].english_text
-                              : "Empty";
-                          _speak("en-US");
-                        });
-                      },
-                      child: Image(
-                        image: AssetImage("assets/images/english.png"),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (indexCourses < courses.length - 1) {
-                            indexCourses++;
-                          }
-                        });
-                      },
-                      child: indexCourses < courses.length - 1
-                          ? Image(
-                              image:
-                                  AssetImage("assets/images/arrow-right.png"),
-                            )
-                          : Image(
-                              image: AssetImage("assets/images/blank.png"),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: displayHeight(context) * 0.01),
+                              child: Image(
+                                width: displayWidth(context) * 0.1,
+                                image:
+                                    AssetImage("assets/images/indonesia.png"),
+                              ),
                             ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  text = courses.length > 0
+                                      ? courses[indexCourses].english_text
+                                      : "Empty";
+                                  _speak("en-US");
+                                });
+                              },
+                              child: Showcase(
+                                key: _two,
+                                description:
+                                    'Ketuk tombol ini untuk mendengarkan Bahasa Inggris',
+                                child: Image(
+                                  width: displayWidth(context) * 0.15,
+                                  image: AssetImage("assets/images/sound.png"),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: displayHeight(context) * 0.01),
+                              child: Image(
+                                width: displayWidth(context) * 0.1,
+                                image: AssetImage("assets/images/english.png"),
+                              ),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (indexCourses < courses.length - 1) {
+                                indexCourses++;
+                              }
+                            });
+                          },
+                          child: indexCourses < courses.length - 1
+                              ? Showcase(
+                                  key: _three,
+                                  description:
+                                      'Ketuk tombol ini untuk berpindah materi',
+                                  child: Image(
+                                    width: displayWidth(context) * 0.15,
+                                    image: AssetImage(
+                                        "assets/images/next-icon.png"),
+                                  ),
+                                )
+                              : Image(
+                                  image: AssetImage("assets/images/blank.png"),
+                                ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            )),
           ),
-        )),
-      ),
+        );
+      }),
     );
   }
 }
