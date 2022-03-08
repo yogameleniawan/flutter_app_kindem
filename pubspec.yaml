@@ -84,6 +84,8 @@ flutter:
     - assets/images/user_icon.png
     - assets/images/exam.png
     - assets/images/pause.png
+    - assets/images/mic-on.png
+    - assets/images/mic-off.png
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

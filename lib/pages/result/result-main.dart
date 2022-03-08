@@ -13,15 +13,13 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 
 class ResultMain extends StatefulWidget {
-  ResultMain(
-      {Key? key,
-      required this.id_user,
-      required this.id_sub_category,
-      required this.image_sub_category})
-      : super(key: key);
+  ResultMain({
+    Key? key,
+    required this.id_user,
+    required this.id_sub_category,
+  }) : super(key: key);
   final int id_user;
   final String id_sub_category;
-  final String image_sub_category;
   @override
   _ResultMainState createState() => _ResultMainState();
 }
@@ -84,27 +82,6 @@ class _ResultMainState extends State<ResultMain> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    InkWell(
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: CachedNetworkImage(
-                          width: 80,
-                          imageUrl: widget.image_sub_category,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  CircularProgressIndicator(
-                                      value: downloadProgress.progress),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 Column(
                   children: [
                     Text("YOUR SCORE IS ",

@@ -144,8 +144,6 @@ class _SubCategoriesMainState extends State<SubCategoriesMain> {
                                     return ResultMain(
                                       id_user: user.id,
                                       id_sub_category: sub_categories[index].id,
-                                      image_sub_category:
-                                          sub_categories[index].image,
                                     );
                                   }));
                                 } else {

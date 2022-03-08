@@ -4,8 +4,10 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/courses/components/image-course.dart';
 import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
@@ -23,16 +25,11 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
+import 'components/next-button.dart';
+
 class CourseTest extends StatefulWidget {
-  CourseTest(
-      {Key? key,
-      required this.id_sub_category,
-      required this.image,
-      required this.sub_name})
-      : super(key: key);
+  CourseTest({Key? key, required this.id_sub_category}) : super(key: key);
   final String id_sub_category;
-  final String image;
-  final String sub_name;
 
   @override
   _CourseTestState createState() => _CourseTestState();
@@ -228,102 +225,35 @@ class _CourseTestState extends State<CourseTest> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: AvatarGlow(
-          animate: onMic,
-          glowColor: Theme.of(context).primaryColor,
-          endRadius: 40.0,
-          duration: const Duration(milliseconds: 2000),
-          repeatPauseDuration: const Duration(milliseconds: 100),
-          repeat: true,
-          child: FloatingActionButton(
-            backgroundColor: Color(0xFFFFD900),
-            onPressed: startListening,
-            child: Icon(onMic ? Icons.mic_none : Icons.mic),
-          ),
-        ),
-        backgroundColor: Color(0xFF007251),
+        backgroundColor: Color(0xFFF1F1F1),
         body: Container(
             child: Padding(
-          padding: const EdgeInsets.only(top: 40, right: 20, left: 20),
+          padding: EdgeInsets.symmetric(
+            horizontal: displayWidth(context) * 0.05,
+            vertical: displayHeight(context) * 0.05,
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: CachedNetworkImage(
-                        width: 80,
-                        imageUrl: widget.image,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                CircularProgressIndicator(
-                                    value: downloadProgress.progress),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Text(widget.sub_name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold)),
-                  )
-                ],
-              ),
               Center(
                   child: FAProgressBar(
                 backgroundColor: Colors.white,
-                progressColor: Color(0xFFFFD900),
+                progressColor: Color(0xFFF5A71F),
                 currentValue: (indexCourses + 1) * 10,
                 maxValue: courses.length * 10,
                 size: 15,
               )),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    text = courses.length > 0
-                        ? courses[indexCourses].english_text
-                        : "Empty";
-                    _speak("en-US");
-                  });
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: CachedNetworkImage(
-                    width: 250,
-                    imageUrl: courses.length > 0
-                        ? courses[indexCourses].image
-                        : "https://i.stack.imgur.com/5ykYD.png",
-                    progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                                value: downloadProgress.progress),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
-                  ),
-                ),
-              ),
+              ImageCourse(courses: courses, indexCourses: indexCourses),
               Column(
                 children: [
                   Text("What is this?",
                       style: TextStyle(
                         fontSize: 20,
-                        color: Colors.white,
+                        color: Colors.black,
                         fontWeight: FontWeight.bold,
                       )),
                   Text(lastWords,
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                      style: TextStyle(color: Colors.black, fontSize: 20)),
                 ],
               ),
               Padding(
@@ -331,10 +261,19 @@ class _CourseTestState extends State<CourseTest> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Image(
+                      width: displayWidth(context) * 0.15,
+                      image: AssetImage("assets/images/blank.png"),
+                    ),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        startListening();
+                      },
                       child: Image(
-                        image: AssetImage("assets/images/blank.png"),
+                        width: displayWidth(context) * 0.15,
+                        image: onMic
+                            ? AssetImage("assets/images/mic-on.png")
+                            : AssetImage("assets/images/mic-off.png"),
                       ),
                     ),
                     InkWell(
@@ -354,11 +293,9 @@ class _CourseTestState extends State<CourseTest> {
                         });
                       },
                       child: indexCourses < courses.length - 1
-                          ? Image(
-                              image:
-                                  AssetImage("assets/images/arrow-right.png"),
-                            )
+                          ? NextButton()
                           : Image(
+                              width: displayWidth(context) * 0.15,
                               image: AssetImage("assets/images/complete.png"),
                             ),
                     ),
@@ -378,7 +315,6 @@ class _CourseTestState extends State<CourseTest> {
       return ResultMain(
         id_user: user.id,
         id_sub_category: widget.id_sub_category,
-        image_sub_category: widget.image,
       );
     }));
     if (result == true) {
