@@ -1,3 +1,4 @@
+import 'package:coachmaker/coachmaker.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
