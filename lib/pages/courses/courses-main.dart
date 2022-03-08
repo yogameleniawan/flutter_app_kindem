@@ -76,10 +76,9 @@ class _CoursesMainState extends State<CoursesMain> {
     super.initState();
     getCourses();
     initTts();
-    WidgetsBinding.instance!.addPostFrameCallback(
-      (_) => ShowCaseWidget.of(myContext)!
-          .startShowCase([_one, _two, _three, _four]),
-    );
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      ShowCaseWidget.of(myContext)!.startShowCase([_one, _two, _three, _four]);
+    });
     text = "Mari belajar dulu dan ikuti petunjuk untuk bermain aplikasi ini";
     _speak("id-ID");
     _isPauseIn = false;
