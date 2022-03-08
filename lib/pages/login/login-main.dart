@@ -17,11 +17,18 @@ class _LoginMainState extends State<LoginMain> {
   TextEditingController passwordController = new TextEditingController();
   String _errorMessage = "";
   bool _isLoading = false;
+  bool _obscureText = true;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  void _visibilityPassword() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
   }
 
   @override
@@ -101,11 +108,23 @@ class _LoginMainState extends State<LoginMain> {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: TextFormField(
                           controller: passwordController,
-                          obscureText: true,
+                          obscureText: _obscureText,
                           decoration: InputDecoration(
                             labelText: 'Password',
                             prefixIcon:
                                 Icon(Icons.lock_outline, color: Colors.black),
+                            suffixIcon: InkWell(
+                              onTap: _visibilityPassword,
+                              child: this._obscureText
+                                  ? Icon(
+                                      Icons.visibility_off,
+                                      color: Colors.grey,
+                                    )
+                                  : Icon(
+                                      Icons.visibility,
+                                      color: Colors.blue,
+                                    ),
+                            ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),

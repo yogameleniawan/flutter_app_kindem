@@ -165,7 +165,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           ),
                           child: TextFormField(
                             // controller: ,
-                            
                             controller: usernameController,
                             style: TextStyle(
                                 color: Colors.black,
@@ -318,7 +317,94 @@ class _ProfileSettingState extends State<ProfileSetting> {
         BouncingWidget(
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0)),
+                    child: Container(
+                      constraints: BoxConstraints(
+                          maxHeight: displayHeight(context) * 0.4),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: displayWidth(context) * 0.06),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: TextFormField(
+                                // controller: ,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Password Lama',
+                                  hintText: 'Password Lama',
+                                  
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 10.0),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+
+                                    // borderSide: ,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 20),
+                              child: TextFormField(
+                                // controller: ,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Password Baru',
+                                  hintText: 'Password Baru',
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 10.0),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+
+                                    // borderSide: ,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(top: 30),
+                              width: displayWidth(context) * 0.33,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: displayHeight(context) * 0.02),
+                              // height: displayHeight(context) * 0.04,
+                              // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                              // margin: EdgeInsets.symmetric(horizontal: 6),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFF5A720),
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.20),
+                                      offset: Offset(2, 6),
+                                      blurRadius: 7,
+                                      spreadRadius: 2),
+                                ],
+                              ),
+                              child: Text(
+                                "UBAH",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                });
+          },
           child: Container(
             width: displayWidth(context) * 0.35,
             padding:
