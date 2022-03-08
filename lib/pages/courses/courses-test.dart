@@ -25,6 +25,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
+import 'components/dialog-message.dart';
 import 'components/next-button.dart';
 
 class CourseTest extends StatefulWidget {
@@ -222,90 +223,96 @@ class _CourseTestState extends State<CourseTest> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: Color(0xFFF1F1F1),
-        body: Container(
-            child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: displayWidth(context) * 0.05,
-            vertical: displayHeight(context) * 0.05,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Center(
-                  child: FAProgressBar(
-                backgroundColor: Colors.white,
-                progressColor: Color(0xFFF5A71F),
-                currentValue: (indexCourses + 1) * 10,
-                maxValue: courses.length * 10,
-                size: 15,
-              )),
-              ImageCourse(courses: courses, indexCourses: indexCourses),
-              Column(
-                children: [
-                  Text("What is this?",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      )),
-                  Text(lastWords,
-                      style: TextStyle(color: Colors.black, fontSize: 20)),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return WillPopScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          backgroundColor: Color(0xFFF1F1F1),
+          body: Container(
+              child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: displayWidth(context) * 0.05,
+              vertical: displayHeight(context) * 0.05,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Center(
+                    child: FAProgressBar(
+                  backgroundColor: Colors.white,
+                  progressColor: Color(0xFFF5A71F),
+                  currentValue: (indexCourses + 1) * 10,
+                  maxValue: courses.length * 10,
+                  size: 15,
+                )),
+                ImageCourse(courses: courses, indexCourses: indexCourses),
+                Column(
                   children: [
-                    Image(
-                      width: displayWidth(context) * 0.15,
-                      image: AssetImage("assets/images/blank.png"),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        startListening();
-                      },
-                      child: Image(
-                        width: displayWidth(context) * 0.15,
-                        image: onMic
-                            ? AssetImage("assets/images/mic-on.png")
-                            : AssetImage("assets/images/mic-off.png"),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        storeAnswer(
-                            lastWords,
-                            courses[indexCourses].english_text,
-                            courses[indexCourses].id,
-                            user.id);
-                        setState(() {
-                          if (indexCourses < courses.length - 1) {
-                            indexCourses++;
-                            lastWords = '____________';
-                          } else if (indexCourses == courses.length - 1) {
-                            _navigateNextTest(context);
-                          }
-                        });
-                      },
-                      child: indexCourses < courses.length - 1
-                          ? NextButton()
-                          : Image(
-                              width: displayWidth(context) * 0.15,
-                              image: AssetImage("assets/images/complete.png"),
-                            ),
-                    ),
+                    Text("What is this?",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Text(lastWords,
+                        style: TextStyle(color: Colors.black, fontSize: 20)),
                   ],
                 ),
-              )
-            ],
-          ),
-        )),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Image(
+                        width: displayWidth(context) * 0.15,
+                        image: AssetImage("assets/images/blank.png"),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          startListening();
+                        },
+                        child: Image(
+                          width: displayWidth(context) * 0.15,
+                          image: onMic
+                              ? AssetImage("assets/images/mic-on.png")
+                              : AssetImage("assets/images/mic-off.png"),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          storeAnswer(
+                              lastWords,
+                              courses[indexCourses].english_text,
+                              courses[indexCourses].id,
+                              user.id);
+                          setState(() {
+                            if (indexCourses < courses.length - 1) {
+                              indexCourses++;
+                              lastWords = '____________';
+                            } else if (indexCourses == courses.length - 1) {
+                              _navigateNextTest(context);
+                            }
+                          });
+                        },
+                        child: indexCourses < courses.length - 1
+                            ? NextButton()
+                            : Image(
+                                width: displayWidth(context) * 0.15,
+                                image: AssetImage("assets/images/complete.png"),
+                              ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          )),
+        ),
       ),
+      onWillPop: () {
+        showAlertDialog(context);
+        return Future.value(false); // if true allow back else block it
+      },
     );
   }
 
@@ -323,5 +330,27 @@ class _CourseTestState extends State<CourseTest> {
         lastWords = '____________';
       });
     }
+  }
+
+  showAlertDialog(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "Dialog",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (context, anim1, anim2) {
+        return DialogMessage(
+          textDialog: "Apakah kamu ingin mengakhiri ujian ini?",
+        );
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
+    );
   }
 }

@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'package:flutter_tts/flutter_tts.dart';
 
+import 'components/dialog-message.dart';
 import 'components/image-course.dart';
 import 'components/next-button.dart';
 import 'components/prev-button.dart';
@@ -148,173 +149,205 @@ class _CoursesMainState extends State<CoursesMain> {
 
   @override
   Widget build(BuildContext context) {
-    return ShowCaseWidget(
-      builder: Builder(builder: (context) {
-        myContext = context;
-        return Scaffold(
-          backgroundColor: Color(0xFFF1F1F1),
-          body: Container(
-              child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: displayWidth(context) * 0.05,
-              vertical: displayHeight(context) * 0.05,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ImageCourse(courses: courses, indexCourses: indexCourses),
-                TextCourse(courses: courses, indexCourses: indexCourses),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (indexCourses > 0) {
-                              indexCourses--;
-                            }
-                          });
-                        },
-                        child: indexCourses == 0
-                            ? Image(
-                                image: AssetImage("assets/images/blank.png"),
-                              )
-                            : PrevButton(),
-                      ),
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (!_isPauseIn) {
-                                  _isPauseIn = true;
-                                  text = courses.length > 0
-                                      ? courses[indexCourses].indonesia_text
-                                      : "Empty";
-                                  _speak("id-ID");
-                                }
-                              });
-                            },
-                            child: Showcase(
-                              key: _one,
-                              description:
-                                  'Ketuk tombol ini untuk \nmendengarkan Bahasa Indonesia',
-                              child: _isPauseIn == false
-                                  ? Image(
-                                      width: displayWidth(context) * 0.15,
-                                      image:
-                                          AssetImage("assets/images/sound.png"),
-                                    )
-                                  : Image(
-                                      width: displayWidth(context) * 0.15,
-                                      image:
-                                          AssetImage("assets/images/pause.png"),
-                                    ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: displayHeight(context) * 0.01),
-                            child: Image(
-                              width: displayWidth(context) * 0.1,
-                              image: AssetImage("assets/images/indonesia.png"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (!_isPauseEn) {
-                                  _isPauseEn = true;
-                                  text = courses.length > 0
-                                      ? courses[indexCourses].english_text
-                                      : "Empty";
-                                  _speak("en-US");
-                                }
-                              });
-                            },
-                            child: Showcase(
-                              key: _two,
-                              description:
-                                  'Ketuk tombol ini untuk mendengarkan Bahasa Inggris',
-                              child: _isPauseEn == false
-                                  ? Image(
-                                      width: displayWidth(context) * 0.15,
-                                      image:
-                                          AssetImage("assets/images/sound.png"),
-                                    )
-                                  : Image(
-                                      width: displayWidth(context) * 0.15,
-                                      image:
-                                          AssetImage("assets/images/pause.png"),
-                                    ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: displayHeight(context) * 0.01),
-                            child: Image(
-                              width: displayWidth(context) * 0.1,
-                              image: AssetImage("assets/images/english.png"),
-                            ),
-                          ),
-                        ],
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (indexCourses < courses.length - 1) {
-                              indexCourses++;
-                              if (indexCourses == courses.length - 1 &&
-                                  _isComplete == false) {
-                                text = "Ketuk tombol ini untuk melakukan ujian";
-                                _speak("id-ID");
-                                _isComplete = true;
+    return WillPopScope(
+      child: ShowCaseWidget(
+        builder: Builder(builder: (context) {
+          myContext = context;
+          return Scaffold(
+            backgroundColor: Color(0xFFF1F1F1),
+            body: Container(
+                child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: displayWidth(context) * 0.05,
+                vertical: displayHeight(context) * 0.05,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ImageCourse(courses: courses, indexCourses: indexCourses),
+                  TextCourse(courses: courses, indexCourses: indexCourses),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (indexCourses > 0) {
+                                indexCourses--;
                               }
-                            }
-                          });
-                        },
-                        child: indexCourses != courses.length - 1
-                            ? Showcase(
-                                key: _three,
+                            });
+                          },
+                          child: indexCourses == 0
+                              ? Image(
+                                  image: AssetImage("assets/images/blank.png"),
+                                )
+                              : PrevButton(),
+                        ),
+                        Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (!_isPauseIn) {
+                                    _isPauseIn = true;
+                                    text = courses.length > 0
+                                        ? courses[indexCourses].indonesia_text
+                                        : "Empty";
+                                    _speak("id-ID");
+                                  }
+                                });
+                              },
+                              child: Showcase(
+                                key: _one,
                                 description:
-                                    'Ketuk tombol ini untuk berpindah materi',
-                                child: NextButton(),
-                              )
-                            : Showcase(
-                                key: _four,
+                                    'Ketuk tombol ini untuk \nmendengarkan Bahasa Indonesia',
+                                child: _isPauseIn == false
+                                    ? Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/sound.png"),
+                                      )
+                                    : Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/pause.png"),
+                                      ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: displayHeight(context) * 0.01),
+                              child: Image(
+                                width: displayWidth(context) * 0.1,
+                                image:
+                                    AssetImage("assets/images/indonesia.png"),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (!_isPauseEn) {
+                                    _isPauseEn = true;
+                                    text = courses.length > 0
+                                        ? courses[indexCourses].english_text
+                                        : "Empty";
+                                    _speak("en-US");
+                                  }
+                                });
+                              },
+                              child: Showcase(
+                                key: _two,
                                 description:
-                                    'Ketuk tombol ini untuk melakukan ujian',
-                                child: InkWell(
-                                  onTap: () {
-                                    print("tap");
-                                    Navigator.push(context, MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                      return CourseTest(
-                                        id_sub_category: widget.id_sub_category,
-                                      );
-                                    }));
-                                  },
-                                  child: Image(
-                                    width: displayWidth(context) * 0.15,
-                                    image: AssetImage("assets/images/exam.png"),
+                                    'Ketuk tombol ini untuk mendengarkan Bahasa Inggris',
+                                child: _isPauseEn == false
+                                    ? Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/sound.png"),
+                                      )
+                                    : Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/pause.png"),
+                                      ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: displayHeight(context) * 0.01),
+                              child: Image(
+                                width: displayWidth(context) * 0.1,
+                                image: AssetImage("assets/images/english.png"),
+                              ),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (indexCourses < courses.length - 1) {
+                                indexCourses++;
+                                if (indexCourses == courses.length - 1 &&
+                                    _isComplete == false) {
+                                  text =
+                                      "Ketuk tombol ini untuk melakukan ujian";
+                                  _speak("id-ID");
+                                  _isComplete = true;
+                                }
+                              }
+                            });
+                          },
+                          child: indexCourses != courses.length - 1
+                              ? Showcase(
+                                  key: _three,
+                                  description:
+                                      'Ketuk tombol ini untuk berpindah materi',
+                                  child: NextButton(),
+                                )
+                              : Showcase(
+                                  key: _four,
+                                  description:
+                                      'Ketuk tombol ini untuk melakukan ujian',
+                                  child: InkWell(
+                                    onTap: () {
+                                      print("tap");
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return CourseTest(
+                                          id_sub_category:
+                                              widget.id_sub_category,
+                                        );
+                                      }));
+                                    },
+                                    child: Image(
+                                      width: displayWidth(context) * 0.15,
+                                      image:
+                                          AssetImage("assets/images/exam.png"),
+                                    ),
                                   ),
                                 ),
-                              ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            )),
+          );
+        }),
+      ),
+      onWillPop: () {
+        showAlertDialog(context);
+        return Future.value(false); // if true allow back else block it
+      },
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "Dialog",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (context, anim1, anim2) {
+        return DialogMessage(
+          textDialog: "Apakah kamu ingin mengakhiri pembelajaran ini?",
         );
-      }),
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return SlideTransition(
+          position:
+              Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim1),
+          child: child,
+        );
+      },
     );
   }
 }

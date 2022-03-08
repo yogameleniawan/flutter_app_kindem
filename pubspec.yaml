@@ -50,6 +50,7 @@ dependencies:
   skeletons: ^0.0.3
   percent_indicator: ^4.0.0
   showcaseview: ^1.1.5
+  adaptive_dialog: ^1.2.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
