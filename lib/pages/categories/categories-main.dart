@@ -98,206 +98,187 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: ResponsiveSizer(builder: (context, orientation, screenType) {
-          return Scaffold(
-              backgroundColor: Color(0xFFF1F1F1),
-              body: Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40, right: 20, left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Skeleton(
-                        skeleton: SkeletonParagraph(
-                          style: SkeletonParagraphStyle(
-                              lines: 1,
-                              spacing: 6,
-                              lineStyle: SkeletonLineStyle(
-                                randomLength: true,
-                                height: 10,
-                                borderRadius: BorderRadius.circular(8),
-                                minLength:
-                                    MediaQuery.of(context).size.width / 6,
-                                maxLength:
-                                    MediaQuery.of(context).size.width / 3,
-                              )),
-                        ),
-                        isLoading: _isLoading,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: Text("Cari Materi",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                      Skeleton(
-                        isLoading: _isLoadingCategory,
-                        skeleton: SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                            width: displayWidth(context) * 1,
-                            minHeight: displayHeight(context) * 0.1,
-                            maxHeight: displayHeight(context) / 3,
-                          ),
-                        ),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            initialPage: 0,
-                            aspectRatio: 2.0,
-                            enlargeCenterPage: true,
-                            height: 30.0.h,
-                            onPageChanged: (index, reason) async {
-                              setState(() {
-                                _chapter = map_category[index]['name'];
-                                _isLoadingChapter = true;
-                                print(_isLoadingChapter);
-                              });
-                              await getAllSubCategories(
-                                  map_category[index]['id']);
-                            },
-                          ),
-                          items: categories.map((data) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 5.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: ExtendedImage.network(
-                                      data.image,
-                                      width: 200,
-                                      fit: BoxFit.fill,
-                                      cache: true,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30.0)),
-                                    ));
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      Skeleton(
-                        skeleton: SkeletonParagraph(
-                          style: SkeletonParagraphStyle(
-                              lines: 1,
-                              spacing: 6,
-                              lineStyle: SkeletonLineStyle(
-                                randomLength: true,
-                                height: 10,
-                                borderRadius: BorderRadius.circular(8),
-                                minLength:
-                                    MediaQuery.of(context).size.width / 6,
-                                maxLength:
-                                    MediaQuery.of(context).size.width / 3,
-                              )),
-                        ),
-                        isLoading: _isLoading,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 10),
-                          child: Text(
-                            "Chapter " + _chapter,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20.sp),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Skeleton(
-                          skeleton: SkeletonChapter(),
-                          isLoading: _isLoadingChapter,
-                          child: ListView.builder(
-                              itemCount: sub_categories.length,
-                              itemBuilder: (context, int index) {
-                                return Builder(builder: (context) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                          builder: (BuildContext context) {
-                                        return CoursesMain(
-                                          id_sub_category:
-                                              sub_categories[index].id,
-                                          image: sub_categories[index].image,
-                                          sub_name: sub_categories[index].name,
-                                        );
-                                      }));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Container(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          right: 5),
-                                                  child: Text(
-                                                    "|",
-                                                    style: TextStyle(
-                                                      fontSize: 30.sp,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 5,
-                                                              bottom: 5),
-                                                      child: Text(
-                                                        sub_categories[index]
-                                                            .name,
-                                                        style: TextStyle(
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      sub_categories[index]
-                                                          .name,
-                                                      style: TextStyle(
-                                                        fontSize: 14.sp,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                            Image(
-                                              width: 40,
-                                              image: AssetImage(
-                                                  "assets/images/next.png"),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                });
-                              }),
-                        ),
-                      )
-                    ],
+    return Scaffold(
+        backgroundColor: Color(0xFFF1F1F1),
+        body: Container(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 40, right: 20, left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Skeleton(
+                  skeleton: SkeletonParagraph(
+                    style: SkeletonParagraphStyle(
+                        lines: 1,
+                        spacing: 6,
+                        lineStyle: SkeletonLineStyle(
+                          randomLength: true,
+                          height: 10,
+                          borderRadius: BorderRadius.circular(8),
+                          minLength: MediaQuery.of(context).size.width / 6,
+                          maxLength: MediaQuery.of(context).size.width / 3,
+                        )),
+                  ),
+                  isLoading: _isLoading,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Text("Cari Materi",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold)),
                   ),
                 ),
-              ));
-        }));
+                Skeleton(
+                  isLoading: _isLoadingCategory,
+                  skeleton: SkeletonAvatar(
+                    style: SkeletonAvatarStyle(
+                      width: displayWidth(context) * 1,
+                      minHeight: displayHeight(context) * 0.1,
+                      maxHeight: displayHeight(context) / 3,
+                    ),
+                  ),
+                  child: CarouselSlider(
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      aspectRatio: 2.0,
+                      enlargeCenterPage: true,
+                      height: displayHeight(context) * 0.3,
+                      onPageChanged: (index, reason) async {
+                        setState(() {
+                          _chapter = map_category[index]['name'];
+                          _isLoadingChapter = true;
+                          print(_isLoadingChapter);
+                        });
+                        await getAllSubCategories(map_category[index]['id']);
+                      },
+                    ),
+                    items: categories.map((data) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: ExtendedImage.network(
+                                data.image,
+                                width: 200,
+                                fit: BoxFit.fill,
+                                cache: true,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(30.0)),
+                              ));
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Skeleton(
+                  skeleton: SkeletonParagraph(
+                    style: SkeletonParagraphStyle(
+                        lines: 1,
+                        spacing: 6,
+                        lineStyle: SkeletonLineStyle(
+                          randomLength: true,
+                          height: 10,
+                          borderRadius: BorderRadius.circular(8),
+                          minLength: MediaQuery.of(context).size.width / 6,
+                          maxLength: MediaQuery.of(context).size.width / 3,
+                        )),
+                  ),
+                  isLoading: _isLoading,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 10),
+                    child: Text(
+                      "Chapter " + _chapter,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Skeleton(
+                    skeleton: SkeletonChapter(),
+                    isLoading: _isLoadingChapter,
+                    child: ListView.builder(
+                        itemCount: sub_categories.length,
+                        itemBuilder: (context, int index) {
+                          return Builder(builder: (context) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                  return CoursesMain(
+                                    id_sub_category: sub_categories[index].id,
+                                    image: sub_categories[index].image,
+                                    sub_name: sub_categories[index].name,
+                                  );
+                                }));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 5),
+                                            child: Text(
+                                              "|",
+                                              style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                child: Text(
+                                                  sub_categories[index].name,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                sub_categories[index].name,
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Image(
+                                        width: 40,
+                                        image: AssetImage(
+                                            "assets/images/next.png"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                        }),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
