@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
+import 'package:flutter_app_stulish/pages/components/choach-maker.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +12,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:skeletons/skeletons.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -22,20 +21,12 @@ import 'components/dialog-message.dart';
 import 'components/image-course.dart';
 import 'components/next-button.dart';
 import 'components/prev-button.dart';
-import 'components/skeleton-course-text.dart';
 import 'components/text-course.dart';
 import 'package:coachmaker/coachmaker.dart';
 
 class CoursesMain extends StatefulWidget {
-  CoursesMain(
-      {Key? key,
-      required this.id_sub_category,
-      required this.image,
-      required this.sub_name})
-      : super(key: key);
+  CoursesMain({Key? key, required this.id_sub_category}) : super(key: key);
   final String id_sub_category;
-  final String image;
-  final String sub_name;
   @override
   _CoursesMainState createState() => _CoursesMainState();
 }
@@ -50,10 +41,10 @@ class _CoursesMainState extends State<CoursesMain> {
   String? language;
   String? engine;
   double volume = 1.2;
-  double pitch_in = 1.54;
-  double rate_in = 0.5;
-  double pitch_en = 1.2;
-  double rate_en = 0.35;
+  double pitchIn = 1.54;
+  double rateIn = 0.5;
+  double pitchEn = 1.2;
+  double rateEn = 0.35;
 
   String? text;
   bool _isComplete = false;
@@ -67,10 +58,6 @@ class _CoursesMainState extends State<CoursesMain> {
 
   bool get isIOS => !kIsWeb && Platform.isIOS;
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
-  GlobalKey _one = GlobalKey();
-  GlobalKey _two = GlobalKey();
-  GlobalKey _three = GlobalKey();
-  GlobalKey _four = GlobalKey();
   List<CoachModel> listCoachModel = [];
 
   late BuildContext myContext;
@@ -79,13 +66,10 @@ class _CoursesMainState extends State<CoursesMain> {
     super.initState();
     getCourses();
     initTts();
-    initializeCoachModel();
-    coachMaker(context, listCoachModel).show();
-    text = "Mari belajar dulu dan ikuti petunjuk untuk bermain aplikasi ini";
-    _speak("id-ID");
-    _isPauseIn = false;
-    _isPauseEn = false;
+    initTutorial();
   }
+
+  // Text To Speech
 
   initTts() {
     flutterTts = FlutterTts();
@@ -100,6 +84,75 @@ class _CoursesMainState extends State<CoursesMain> {
         ttsState = TtsState.playing;
       });
     });
+  }
+
+  Future _getDefaultEngine() async {
+    var engine = "com.google.android.tts";
+  }
+
+  Future _speak(String lang) async {
+    flutterTts.setLanguage(lang);
+
+    await flutterTts.setVolume(volume);
+    if (lang == 'id-ID') {
+      if (_isStartPage == false) {
+        await flutterTts.setSpeechRate(rateIn);
+        await flutterTts.setPitch(pitchIn);
+      } else {
+        await flutterTts.setSpeechRate(rateIn);
+        await flutterTts.setPitch(pitchIn);
+        _isPauseIn = true;
+      }
+    } else {
+      await flutterTts.setSpeechRate(rateEn);
+      await flutterTts.setPitch(pitchEn);
+      _isPauseEn = true;
+    }
+
+    await flutterTts.awaitSpeakCompletion(true);
+    await flutterTts.speak(text!);
+    setState(() {
+      _isPauseIn = false;
+      _isPauseEn = false;
+    });
+  }
+
+  // Text To Speech
+
+  initTutorial() {
+    initializeCoachModel();
+    coachMaker(context, listCoachModel).show();
+    text = "Mari belajar dulu dan ikuti petunjuk untuk bermain aplikasi ini";
+    _speak("id-ID");
+    _isPauseIn = false;
+    _isPauseEn = false;
+  }
+
+  doTutorialExam() {
+    // make coach maker btn_exam
+    listCoachModel = [
+      CoachModel(
+          initial: 'btn_exam',
+          title: 'Tombol untuk Berpindah ke Halaman Ujian',
+          maxWidth: 400,
+          subtitle: [
+            '1. Kamu dapat menekan tombol ini untuk berpindah ke halaman ujian',
+            '2. Pastikan kamu sudah mempelajari materi sebelumnya ya',
+          ],
+          header: Image.asset(
+            'assets/images/exam.png',
+            height: 50,
+            width: 50,
+          )),
+    ];
+    coachMaker(context, listCoachModel).show();
+    // make coach maker btn_exam
+
+    // make speaker
+    text = "Ketuk tombol ini untuk melakukan ujian";
+    _speak("id-ID");
+    _isComplete = true;
+    // make speaker
   }
 
   initializeCoachModel() {
@@ -147,37 +200,6 @@ class _CoursesMainState extends State<CoursesMain> {
     });
   }
 
-  Future _getDefaultEngine() async {
-    var engine = "com.google.android.tts";
-  }
-
-  Future _speak(String lang) async {
-    flutterTts.setLanguage(lang);
-
-    await flutterTts.setVolume(volume);
-    if (lang == 'id-ID') {
-      if (_isStartPage == false) {
-        await flutterTts.setSpeechRate(rate_in);
-        await flutterTts.setPitch(pitch_in);
-      } else {
-        await flutterTts.setSpeechRate(rate_in);
-        await flutterTts.setPitch(pitch_in);
-        _isPauseIn = true;
-      }
-    } else {
-      await flutterTts.setSpeechRate(rate_en);
-      await flutterTts.setPitch(pitch_en);
-      _isPauseEn = true;
-    }
-
-    await flutterTts.awaitSpeakCompletion(true);
-    await flutterTts.speak(text!);
-    setState(() {
-      _isPauseIn = false;
-      _isPauseEn = false;
-    });
-  }
-
   Future getCourses() async {
     final String uri =
         "https://stulish-rest-api.herokuapp.com/api/v1/getCoursesById/" +
@@ -221,11 +243,7 @@ class _CoursesMainState extends State<CoursesMain> {
                   children: [
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          if (indexCourses > 0) {
-                            indexCourses--;
-                          }
-                        });
+                        doPrevCourse();
                       },
                       child: indexCourses == 0
                           ? Image(
@@ -237,15 +255,7 @@ class _CoursesMainState extends State<CoursesMain> {
                       children: [
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              if (!_isPauseIn) {
-                                _isPauseIn = true;
-                                text = courses.length > 0
-                                    ? courses[indexCourses].indonesia_text
-                                    : "Empty";
-                                _speak("id-ID");
-                              }
-                            });
+                            speakIndonesia();
                           },
                           child: CoachPoint(
                             initial: 'btn_indo',
@@ -276,15 +286,7 @@ class _CoursesMainState extends State<CoursesMain> {
                       children: [
                         InkWell(
                           onTap: () {
-                            setState(() {
-                              if (!_isPauseEn) {
-                                _isPauseEn = true;
-                                text = courses.length > 0
-                                    ? courses[indexCourses].english_text
-                                    : "Empty";
-                                _speak("en-US");
-                              }
-                            });
+                            speakEnglish();
                           },
                           child: _isPauseEn == false
                               ? CoachPoint(
@@ -312,34 +314,7 @@ class _CoursesMainState extends State<CoursesMain> {
                     ),
                     InkWell(
                       onTap: () {
-                        setState(() {
-                          if (indexCourses < courses.length - 1) {
-                            indexCourses++;
-                          }
-                        });
-                        if (indexCourses == courses.length - 1 &&
-                            _isComplete == false) {
-                          List<CoachModel> list = [
-                            CoachModel(
-                                initial: 'btn_exam',
-                                title:
-                                    'Tombol untuk Berpindah ke Halaman Ujian',
-                                maxWidth: 400,
-                                subtitle: [
-                                  '1. Kamu dapat menekan tombol ini untuk berpindah ke halaman ujian',
-                                  '2. Pastikan kamu sudah mempelajari materi sebelumnya ya',
-                                ],
-                                header: Image.asset(
-                                  'assets/images/exam.png',
-                                  height: 50,
-                                  width: 50,
-                                )),
-                          ];
-                          coachMaker(context, list).show();
-                          text = "Ketuk tombol ini untuk melakukan ujian";
-                          _speak("id-ID");
-                          _isComplete = true;
-                        }
+                        doNextCourse();
                       },
                       child: indexCourses != courses.length - 1
                           ? CoachPoint(initial: "btn_next", child: NextButton())
@@ -375,15 +350,45 @@ class _CoursesMainState extends State<CoursesMain> {
     );
   }
 
-  CoachMaker coachMaker(BuildContext context, List<CoachModel> list) {
-    return CoachMaker(context,
-        initialList: list,
-        nextStep: CoachMakerControl.next,
-        buttonOptions: CoachButtonOptions(
-            buttonTitle: 'Lanjut',
-            buttonStyle: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFFF5A71F)),
-                elevation: MaterialStateProperty.all(0))));
+  void speakEnglish() {
+    return setState(() {
+      if (!_isPauseEn) {
+        _isPauseEn = true;
+        text =
+            courses.length > 0 ? courses[indexCourses].english_text : "Empty";
+        _speak("en-US");
+      }
+    });
+  }
+
+  void speakIndonesia() {
+    return setState(() {
+      if (!_isPauseIn) {
+        _isPauseIn = true;
+        text =
+            courses.length > 0 ? courses[indexCourses].indonesia_text : "Empty";
+        _speak("id-ID");
+      }
+    });
+  }
+
+  void doNextCourse() {
+    setState(() {
+      if (indexCourses < courses.length - 1) {
+        indexCourses++;
+      }
+    });
+    if (indexCourses == courses.length - 1 && _isComplete == false) {
+      doTutorialExam();
+    }
+  }
+
+  void doPrevCourse() {
+    return setState(() {
+      if (indexCourses > 0) {
+        indexCourses--;
+      }
+    });
   }
 
   showAlertDialog(BuildContext context) {
