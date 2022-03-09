@@ -18,13 +18,14 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
-
+import 'package:sweetsheet/sweetsheet.dart';
 import 'components/dialog-message.dart';
 import 'components/next-button.dart';
 
@@ -49,6 +50,8 @@ class _CourseTestState extends State<CourseTest> {
   double pitch = 1.54;
   double rate = 0.4;
 
+  bool _isCheck = false;
+
   String? text;
 
   TtsState ttsState = TtsState.stopped;
@@ -60,14 +63,18 @@ class _CourseTestState extends State<CourseTest> {
 
   // Voice Recognition
   bool _hasSpeech = false;
+  bool _logEvents = false;
   bool onMic = false;
   double level = 0.0;
   double minSoundLevel = 50000;
   double maxSoundLevel = -50000;
   String lastWords = '';
+  String lastError = '';
+  String lastStatus = '';
 
   String _currentLocaleId = '';
-
+  final SweetSheet _trueAnswer = SweetSheet();
+  final SweetSheet _falseAnswer = SweetSheet();
   final SpeechToText speech = SpeechToText();
   // Voice Recognition
 
@@ -83,23 +90,39 @@ class _CourseTestState extends State<CourseTest> {
   }
 
   Future<void> initSpeechState() async {
-    var hasSpeech = await speech.initialize(
-      debugLogging: true,
-    );
-    if (hasSpeech) {
-      _currentLocaleId = 'en_001';
+    _logEvent('Initialize');
+    try {
+      var hasSpeech = await speech.initialize(
+        onError: errorListener,
+        onStatus: statusListener,
+        debugLogging: true,
+      );
+      if (hasSpeech) {
+        var systemLocale = await speech.systemLocale();
+        _currentLocaleId = systemLocale?.localeId ?? '';
+      }
+      if (!mounted) return;
+
+      setState(() {
+        _hasSpeech = hasSpeech;
+      });
+    } catch (e) {
+      setState(() {
+        _hasSpeech = false;
+      });
     }
-
-    if (!mounted) return;
-
-    setState(() {
-      _hasSpeech = hasSpeech;
-    });
   }
 
+  // This is called each time the users wants to start a new speech
+  // recognition session
   void startListening() {
+    _logEvent('start listening');
     lastWords = '';
-
+    lastError = '';
+    // Note that `listenFor` is the maximum, not the minimun, on some
+    // recognition will be stopped before this value is reached.
+    // Similarly `pauseFor` is a maximum not a minimum and may be ignored
+    // on some devices.
     speech.listen(
         onResult: resultListener,
         listenFor: Duration(seconds: 30),
@@ -109,14 +132,32 @@ class _CourseTestState extends State<CourseTest> {
         onSoundLevelChange: soundLevelListener,
         cancelOnError: true,
         listenMode: ListenMode.confirmation);
+    setState(() {});
+  }
+
+  void stopListening() {
+    _logEvent('stop');
+    speech.stop();
     setState(() {
-      onMic = true;
+      level = 0.0;
     });
   }
 
-  void resultListener(SpeechRecognitionResult result) {
+  void cancelListening() {
+    _logEvent('cancel');
+    speech.cancel();
     setState(() {
-      lastWords = '${result.recognizedWords}';
+      level = 0.0;
+    });
+  }
+
+  /// This callback is invoked each time new recognition results are
+  /// available after `listen` is called.
+  void resultListener(SpeechRecognitionResult result) {
+    _logEvent(
+        'Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
+    setState(() {
+      lastWords = '${result.recognizedWords} - ${result.finalResult}';
       onMic = false;
     });
   }
@@ -124,8 +165,38 @@ class _CourseTestState extends State<CourseTest> {
   void soundLevelListener(double level) {
     minSoundLevel = min(minSoundLevel, level);
     maxSoundLevel = max(maxSoundLevel, level);
+    // _logEvent('sound level $level: $minSoundLevel - $maxSoundLevel ');
     setState(() {
       this.level = level;
+    });
+  }
+
+  void errorListener(SpeechRecognitionError error) {
+    _logEvent(
+        'Received error status: $error, listening: ${speech.isListening}');
+    setState(() {
+      lastError = '${error.errorMsg} - ${error.permanent}';
+    });
+  }
+
+  void statusListener(String status) {
+    _logEvent(
+        'Received listener status: $status, listening: ${speech.isListening}');
+    setState(() {
+      lastStatus = '$status';
+    });
+  }
+
+  void _logEvent(String eventDescription) {
+    if (_logEvents) {
+      var eventTime = DateTime.now().toIso8601String();
+      print('$eventTime $eventDescription');
+    }
+  }
+
+  void _switchLogging(bool? val) {
+    setState(() {
+      _logEvents = val ?? false;
     });
   }
 
@@ -261,49 +332,64 @@ class _CourseTestState extends State<CourseTest> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 30),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image(
-                        width: displayWidth(context) * 0.15,
-                        image: AssetImage("assets/images/blank.png"),
-                      ),
                       InkWell(
                         onTap: () {
                           startListening();
                         },
                         child: Image(
                           width: displayWidth(context) * 0.15,
-                          image: onMic
+                          image: speech.isListening
                               ? AssetImage("assets/images/mic-on.png")
                               : AssetImage("assets/images/mic-off.png"),
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          storeAnswer(
-                              lastWords,
-                              courses[indexCourses].english_text,
-                              courses[indexCourses].id,
-                              user.id);
-                          setState(() {
-                            if (indexCourses < courses.length - 1) {
-                              indexCourses++;
-                              lastWords = '____________';
-                            } else if (indexCourses == courses.length - 1) {
-                              _navigateNextTest(context);
-                            }
-                          });
-                        },
-                        child: indexCourses < courses.length - 1
-                            ? NextButton()
-                            : Image(
-                                width: displayWidth(context) * 0.15,
-                                image: AssetImage("assets/images/complete.png"),
-                              ),
-                      ),
                     ],
                   ),
-                )
+                ),
+                InkWell(
+                  onTap: () {
+                    if (lastWords.toUpperCase() ==
+                        courses[indexCourses].english_text) {
+                      _trueAnswerShow();
+                    } else {
+                      _falseAnswerShow(courses[indexCourses].english_text,
+                          courses[indexCourses].indonesia_text);
+                    }
+
+                    // storeAnswer(lastWords, courses[indexCourses].english_text,
+                    //     courses[indexCourses].id, user.id);
+                    setState(() {
+                      // if (indexCourses < courses.length - 1) {
+                      //   indexCourses++;
+                      //   lastWords = '____________';
+                      // } else if (indexCourses == courses.length - 1) {
+                      //   _navigateNextTest(context);
+                      // }
+                      _isCheck = !_isCheck;
+                    });
+                  },
+                  child: indexCourses < courses.length - 1
+                      ? Container(
+                          width: displayWidth(context) * 1,
+                          height: displayHeight(context) * 0.08,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF5A71F),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                              child: _isCheck
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text("PERIKSA JAWABANMU",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold))))
+                      : Text("Selesai"),
+                ),
               ],
             ),
           )),
@@ -313,6 +399,58 @@ class _CourseTestState extends State<CourseTest> {
         showAlertDialog(context);
         return Future.value(false); // if true allow back else block it
       },
+    );
+  }
+
+  _trueAnswerShow() {
+    _trueAnswer.show(
+      useRootNavigator: false,
+      isDismissible: false,
+      context: context,
+      description: Text(
+        'Yey.. Jawabanmu benar!',
+        style: TextStyle(color: Color(0xff2D3748)),
+      ),
+      color: CustomSheetColor(
+        main: Colors.white,
+        accent: Color(0xFF78C83C),
+        icon: Color(0xFF78C83C),
+      ),
+      icon: Icons.check_box,
+      positive: SweetSheetAction(
+        onPressed: () {
+          setState(() {
+            _isCheck = !_isCheck;
+          });
+          Navigator.of(context).pop();
+        },
+        title: 'LANJUT',
+      ),
+    );
+  }
+
+  _falseAnswerShow(String textEn, String textIn) {
+    _falseAnswer.show(
+      context: context,
+      description: Text(
+        'Ups.. Jawabanmu kurang tepat! \nJawabannya adalah ' +
+            textEn +
+            '\nArtinya adalah ' +
+            textIn,
+        style: TextStyle(color: Color(0xff2D3748)),
+      ),
+      color: CustomSheetColor(
+        main: Colors.white,
+        accent: Color(0xFFF5511F),
+        icon: Color(0xFFF5511F),
+      ),
+      icon: Icons.close_outlined,
+      positive: SweetSheetAction(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        title: 'LANJUT',
+      ),
     );
   }
 

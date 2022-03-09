@@ -130,7 +130,7 @@ class _CoursesMainState extends State<CoursesMain> {
 
   doTutorialExam() {
     // make coach maker btn_exam
-    listCoachModel = [
+    List<CoachModel> list = [
       CoachModel(
           initial: 'btn_exam',
           title: 'Tombol untuk Berpindah ke Halaman Ujian',
@@ -145,7 +145,7 @@ class _CoursesMainState extends State<CoursesMain> {
             width: 50,
           )),
     ];
-    coachMaker(context, listCoachModel).show();
+    coachMaker(context, list).show();
     // make coach maker btn_exam
 
     // make speaker
@@ -257,20 +257,19 @@ class _CoursesMainState extends State<CoursesMain> {
                           onTap: () {
                             speakIndonesia();
                           },
-                          child: CoachPoint(
-                            initial: 'btn_indo',
-                            child: _isPauseIn == false
-                                ? Image(
+                          child: _isPauseIn == false
+                              ? CoachPoint(
+                                  initial: 'btn_indo',
+                                  child: Image(
                                     width: displayWidth(context) * 0.15,
                                     image:
                                         AssetImage("assets/images/sound.png"),
-                                  )
-                                : Image(
-                                    width: displayWidth(context) * 0.15,
-                                    image:
-                                        AssetImage("assets/images/pause.png"),
                                   ),
-                          ),
+                                )
+                              : Image(
+                                  width: displayWidth(context) * 0.15,
+                                  image: AssetImage("assets/images/pause.png"),
+                                ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(

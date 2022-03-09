@@ -52,6 +52,7 @@ dependencies:
   showcaseview: ^1.1.5
   adaptive_dialog: ^1.2.0
   coachmaker: ^0.1.1
+  sweetsheet: ^0.3.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
