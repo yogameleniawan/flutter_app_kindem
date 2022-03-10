@@ -85,6 +85,7 @@ flutter:
     - assets/images/banner.jpg
     - assets/images/sound.png
     - assets/images/user_icon.png
+    - assets/images/user_icon_big.png
     - assets/images/exam.png
     - assets/images/pause.png
     - assets/images/mic-on.png

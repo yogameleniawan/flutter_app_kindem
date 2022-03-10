@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/score.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
@@ -75,25 +77,76 @@ class _ResultMainState extends State<ResultMain> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-          backgroundColor: Color(0xFF007251),
+          backgroundColor: Color(0xFF0067B6),
           body: Container(
               child: Padding(
-            padding: const EdgeInsets.only(top: 40, right: 20, left: 20),
+            padding: EdgeInsets.symmetric(
+              horizontal: displayWidth(context) * 0.1,
+              vertical: displayHeight(context) * 0.02,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Image(
+                  width: displayWidth(context) * 1,
+                  image: AssetImage("assets/images/user_icon_big.png"),
+                ),
                 Column(
                   children: [
-                    Text("YOUR SCORE IS ",
+                    Text("SCORE",
                         style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 60,
                             fontWeight: FontWeight.bold,
                             color: Colors.white)),
                     Text(
                       score.is_true.toString() +
                           "/" +
                           score.total_test.toString(),
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ],
+                ),
+                Text(
+                  " + " + score.is_true.toString(),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Center(
+                    child: FAProgressBar(
+                  backgroundColor: Colors.white,
+                  progressColor: Color(0xFFF5A71F),
+                  currentValue: 22,
+                  maxValue: 100,
+                  size: 15,
+                )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      " Citizen ",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      " 40/50 ",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    Text(
+                      " Prince ",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ],
                 ),
@@ -109,6 +162,7 @@ class _ResultMainState extends State<ResultMain> {
                               (route) => false);
                         },
                         child: Image(
+                          width: displayWidth(context) * 0.15,
                           image: AssetImage("assets/images/home.png"),
                         ),
                       ),
@@ -120,6 +174,7 @@ class _ResultMainState extends State<ResultMain> {
                           }
                         },
                         child: Image(
+                          width: displayWidth(context) * 0.15,
                           image: AssetImage("assets/images/reload.png"),
                         ),
                       ),
