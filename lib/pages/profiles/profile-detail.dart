@@ -1,10 +1,12 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:flutter_app_stulish/pages/friend_list/friend_list-main.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
 
 class ProfileDetail extends StatefulWidget {
-  const ProfileDetail({Key? key}) : super(key: key);
+  const ProfileDetail({Key? key, required this.name}) : super(key: key);
+  final String name;
   @override
   _ProfileDetailState createState() => _ProfileDetailState();
 }
@@ -40,7 +42,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 Container(
                   margin: EdgeInsets.only(top: 20),
                   child: Text(
-                    "Nama User",
+                    widget.name,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -218,7 +220,12 @@ class _ProfileDetailState extends State<ProfileDetail> {
         BouncingWidget(
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context,
+                MaterialPageRoute(builder: (BuildContext context) {
+              return FriendList();
+            }));
+          },
           child: Container(
             width: displayWidth(context) * 0.35,
             padding:

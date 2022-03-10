@@ -340,7 +340,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                 decoration: InputDecoration(
                                   labelText: 'Password Lama',
                                   hintText: 'Password Lama',
-                                  
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 1.0, horizontal: 10.0),
                                   border: OutlineInputBorder(
