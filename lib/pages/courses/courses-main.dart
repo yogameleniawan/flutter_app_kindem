@@ -36,6 +36,7 @@ enum TtsState { playing, stopped, paused, continued }
 class _CoursesMainState extends State<CoursesMain> {
   List courses = [];
   int indexCourses = 0;
+  bool _fetchCourse = false;
 
   late FlutterTts flutterTts;
   String? language;
@@ -66,7 +67,6 @@ class _CoursesMainState extends State<CoursesMain> {
     super.initState();
     getCourses();
     initTts();
-    initTutorial();
   }
 
   // Text To Speech
@@ -216,7 +216,10 @@ class _CoursesMainState extends State<CoursesMain> {
       List course = courseMap.map((i) => Courses.fromJson(i)).toList();
       setState(() {
         courses = course;
+        _fetchCourse = true;
       });
+
+      initTutorial();
     }
   }
 

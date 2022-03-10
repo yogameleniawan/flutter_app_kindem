@@ -69,7 +69,6 @@ class _CategoriesMainState extends State<CategoriesMain> {
     super.initState();
     getAllCategory();
     initTts();
-    doTutorialCarousel();
     manager.emptyCache();
   }
 
@@ -210,6 +209,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
       });
       _isLoading = false;
       getAllSubCategories(map_category[0]['id']);
+      doTutorialCarousel();
     }
   }
 
@@ -281,47 +281,42 @@ class _CategoriesMainState extends State<CategoriesMain> {
                     ),
                     CoachPoint(
                       initial: "carousel",
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            bottom: displayHeight(context) * 0.1),
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            initialPage: 0,
-                            aspectRatio: 2.0,
-                            enlargeCenterPage: true,
-                            height: displayHeight(context) * 0.3,
-                            onPageChanged: (index, reason) async {
-                              setState(() {
-                                _chapter = map_category[index]['name'];
-                                _isLoadingChapter = true;
-                                print(_isLoadingChapter);
-                              });
-                              await getAllSubCategories(
-                                  map_category[index]['id']);
-                            },
-                          ),
-                          items: categories.map((data) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    // margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    child: ExtendedImage.network(
-                                      data.image,
-                                      width: 200,
-                                      fit: BoxFit.fill,
-                                      cache: true,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30.0)),
-                                    ));
-                              },
-                            );
-                          }).toList(),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          initialPage: 0,
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          height: displayHeight(context) * 0.3,
+                          onPageChanged: (index, reason) async {
+                            setState(() {
+                              _chapter = map_category[index]['name'];
+                              _isLoadingChapter = true;
+                              print(_isLoadingChapter);
+                            });
+                            await getAllSubCategories(
+                                map_category[index]['id']);
+                          },
                         ),
+                        items: categories.map((data) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  // margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: ExtendedImage.network(
+                                    data.image,
+                                    width: 200,
+                                    fit: BoxFit.fill,
+                                    cache: true,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(30.0)),
+                                  ));
+                            },
+                          );
+                        }).toList(),
                       ),
                     ),
                     Skeleton(
@@ -339,7 +334,8 @@ class _CategoriesMainState extends State<CategoriesMain> {
                       ),
                       isLoading: _isLoading,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(
+                            left: 10, top: displayHeight(context) * 0.1),
                         child: Text(
                           "Chapter " + _chapter,
                           style: TextStyle(
