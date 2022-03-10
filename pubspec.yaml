@@ -53,6 +53,8 @@ dependencies:
   adaptive_dialog: ^1.2.0
   coachmaker: ^0.1.1
   sweetsheet: ^0.3.1
+  animate_do: ^2.1.0
+  loading_animation_widget:
 dev_dependencies:
   flutter_test:
     sdk: flutter
