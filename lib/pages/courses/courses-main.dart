@@ -251,65 +251,67 @@ class _CoursesMainState extends State<CoursesMain> {
                             )
                           : PrevButton(),
                     ),
-                    Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            speakIndonesia();
-                          },
-                          child: _isPauseIn == false
-                              ? CoachPoint(
-                                  initial: 'btn_indo',
-                                  child: Image(
+                    CoachPoint(
+                      initial: 'btn_indo',
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              speakIndonesia();
+                            },
+                            child: _isPauseIn == false
+                                ? Image(
                                     width: displayWidth(context) * 0.15,
                                     image:
                                         AssetImage("assets/images/sound.png"),
+                                  )
+                                : Image(
+                                    width: displayWidth(context) * 0.15,
+                                    image:
+                                        AssetImage("assets/images/pause.png"),
                                   ),
-                                )
-                              : Image(
-                                  width: displayWidth(context) * 0.15,
-                                  image: AssetImage("assets/images/pause.png"),
-                                ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: displayHeight(context) * 0.01),
-                          child: Image(
-                            width: displayWidth(context) * 0.1,
-                            image: AssetImage("assets/images/indonesia.png"),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: displayHeight(context) * 0.01),
+                            child: Image(
+                              width: displayWidth(context) * 0.1,
+                              image: AssetImage("assets/images/indonesia.png"),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            speakEnglish();
-                          },
-                          child: _isPauseEn == false
-                              ? CoachPoint(
-                                  initial: 'btn_en',
-                                  child: Image(
+                    CoachPoint(
+                      initial: 'btn_en',
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              speakEnglish();
+                            },
+                            child: _isPauseEn == false
+                                ? Image(
                                     width: displayWidth(context) * 0.15,
                                     image:
                                         AssetImage("assets/images/sound.png"),
+                                  )
+                                : Image(
+                                    width: displayWidth(context) * 0.15,
+                                    image:
+                                        AssetImage("assets/images/pause.png"),
                                   ),
-                                )
-                              : Image(
-                                  width: displayWidth(context) * 0.15,
-                                  image: AssetImage("assets/images/pause.png"),
-                                ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: displayHeight(context) * 0.01),
-                          child: Image(
-                            width: displayWidth(context) * 0.1,
-                            image: AssetImage("assets/images/english.png"),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: displayHeight(context) * 0.01),
+                            child: Image(
+                              width: displayWidth(context) * 0.1,
+                              image: AssetImage("assets/images/english.png"),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     InkWell(
                       onTap: () {

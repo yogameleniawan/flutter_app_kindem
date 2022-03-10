@@ -98,8 +98,7 @@ class _CourseTestState extends State<CourseTest> {
         debugLogging: true,
       );
       if (hasSpeech) {
-        var systemLocale = await speech.systemLocale();
-        _currentLocaleId = systemLocale?.localeId ?? '';
+        _currentLocaleId = 'en_001';
       }
       if (!mounted) return;
 
@@ -157,7 +156,7 @@ class _CourseTestState extends State<CourseTest> {
     _logEvent(
         'Result listener final: ${result.finalResult}, words: ${result.recognizedWords}');
     setState(() {
-      lastWords = '${result.recognizedWords} - ${result.finalResult}';
+      lastWords = '${result.recognizedWords}';
       onMic = false;
     });
   }
@@ -241,6 +240,18 @@ class _CourseTestState extends State<CourseTest> {
     if (result.statusCode == HttpStatus.ok) {
       print("Success");
     }
+  }
+
+  void processStoreAnswer() {
+    storeAnswer(lastWords, courses[indexCourses].english_text,
+        courses[indexCourses].id, user.id);
+    setState(() {
+      if (indexCourses < courses.length - 1) {
+        indexCourses++;
+        lastWords = '____________';
+      }
+      _isCheck = !_isCheck;
+    });
   }
 
   initTts() {
@@ -349,47 +360,32 @@ class _CourseTestState extends State<CourseTest> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {
-                    if (lastWords.toUpperCase() ==
-                        courses[indexCourses].english_text) {
-                      _trueAnswerShow();
-                    } else {
-                      _falseAnswerShow(courses[indexCourses].english_text,
-                          courses[indexCourses].indonesia_text);
-                    }
-
-                    // storeAnswer(lastWords, courses[indexCourses].english_text,
-                    //     courses[indexCourses].id, user.id);
-                    setState(() {
-                      // if (indexCourses < courses.length - 1) {
-                      //   indexCourses++;
-                      //   lastWords = '____________';
-                      // } else if (indexCourses == courses.length - 1) {
-                      //   _navigateNextTest(context);
-                      // }
-                      _isCheck = !_isCheck;
-                    });
-                  },
-                  child: indexCourses < courses.length - 1
-                      ? Container(
-                          width: displayWidth(context) * 1,
-                          height: displayHeight(context) * 0.08,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF5A71F),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                              child: _isCheck
-                                  ? CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text("PERIKSA JAWABANMU",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold))))
-                      : Text("Selesai"),
-                ),
+                    onTap: () {
+                      if (lastWords.toUpperCase() ==
+                          courses[indexCourses].english_text) {
+                        _trueAnswerShow();
+                      } else {
+                        _falseAnswerShow(courses[indexCourses].english_text,
+                            courses[indexCourses].indonesia_text);
+                      }
+                    },
+                    child: Container(
+                        width: displayWidth(context) * 1,
+                        height: displayHeight(context) * 0.08,
+                        decoration: BoxDecoration(
+                          color: Color(0xFFF5A71F),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Center(
+                            child: _isCheck
+                                ? CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text("PERIKSA JAWABANMU",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold))))),
               ],
             ),
           )),
@@ -402,55 +398,149 @@ class _CourseTestState extends State<CourseTest> {
     );
   }
 
-  _trueAnswerShow() {
-    _trueAnswer.show(
-      useRootNavigator: false,
+  Future _trueAnswerShow() async {
+    return showModalBottomSheet(
       isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
       context: context,
-      description: Text(
-        'Yey.. Jawabanmu benar!',
-        style: TextStyle(color: Color(0xff2D3748)),
-      ),
-      color: CustomSheetColor(
-        main: Colors.white,
-        accent: Color(0xFF78C83C),
-        icon: Color(0xFF78C83C),
-      ),
-      icon: Icons.check_box,
-      positive: SweetSheetAction(
-        onPressed: () {
-          setState(() {
-            _isCheck = !_isCheck;
-          });
-          Navigator.of(context).pop();
-        },
-        title: 'LANJUT',
-      ),
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Icon(
+                Icons.check_box,
+                color: Color(0xFF78C83C),
+                size: 60,
+              ),
+              Text(
+                'Yey.. Jawabanmu benar!',
+                style: TextStyle(
+                    color: Color(0xFF78C83C),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              // Text('text 2'),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isCheck = !_isCheck;
+                    });
+                    processStoreAnswer();
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: displayWidth(context) * 0.01,
+                          vertical: displayHeight(context) * 0.01),
+                      width: displayWidth(context) * 0.9,
+                      height: displayHeight(context) * 0.08,
+                      decoration: BoxDecoration(
+                        color: Color(0xFF78C83C),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'LANJUT',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )))),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  _falseAnswerShow(String textEn, String textIn) {
-    _falseAnswer.show(
+  Future _falseAnswerShow(String textEn, String textIn) async {
+    return showModalBottomSheet(
+      isDismissible: false,
+      enableDrag: false,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+      ),
       context: context,
-      description: Text(
-        'Ups.. Jawabanmu kurang tepat! \nJawabannya adalah ' +
-            textEn +
-            '\nArtinya adalah ' +
-            textIn,
-        style: TextStyle(color: Color(0xff2D3748)),
-      ),
-      color: CustomSheetColor(
-        main: Colors.white,
-        accent: Color(0xFFF5511F),
-        icon: Color(0xFFF5511F),
-      ),
-      icon: Icons.close_outlined,
-      positive: SweetSheetAction(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        title: 'LANJUT',
-      ),
+      builder: (context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Icon(
+                Icons.close_outlined,
+                color: Color(0xFFF5511F),
+                size: 60,
+              ),
+              Text(
+                'Ups.. Jawabanmu kurang tepat!',
+                style: TextStyle(
+                    color: Color(0xFFF5511F),
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'Jawabannya adalah ' + textEn,
+                style: TextStyle(color: Color(0xFFF5511F)),
+              ),
+              Text(
+                'Artinya adalah ' + textIn,
+                style: TextStyle(color: Color(0xFFF5511F)),
+              ),
+              InkWell(
+                  onTap: () {
+                    setState(() {
+                      _isCheck = !_isCheck;
+                    });
+                    processStoreAnswer();
+                    if (indexCourses == courses.length - 1) {
+                      Navigator.of(context).pop();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ResultMain(
+                          id_user: user.id,
+                          id_sub_category: widget.id_sub_category,
+                        );
+                      }));
+                      setState(() {
+                        indexCourses = 0;
+                        lastWords = '____________';
+                      });
+                    } else {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Container(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: displayWidth(context) * 0.01,
+                          vertical: displayHeight(context) * 0.01),
+                      width: displayWidth(context) * 0.9,
+                      height: displayHeight(context) * 0.08,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFF5511F),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'LANJUT',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                      )))),
+            ],
+          ),
+        );
+      },
     );
   }
 
