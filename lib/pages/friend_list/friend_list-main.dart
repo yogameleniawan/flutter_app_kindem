@@ -22,9 +22,11 @@ class FriendList extends StatefulWidget {
 
 class _FriendListState extends State<FriendList> {
   final HttpService service = new HttpService();
+  TextEditingController searchController = new TextEditingController();
   List users = [];
   bool _isLoadingUser = false;
   bool _isLoading = true;
+  List _searchResult = [];
 
   Future getAllUsers() async {
     setState(() {
@@ -45,6 +47,7 @@ class _FriendListState extends State<FriendList> {
       final jsonResponse = json.decode(result.body);
       List userMap = jsonResponse['data'];
       List user = userMap.map((i) => User.fromJson(i)).toList();
+
       setState(() {
         users = user;
         _isLoadingUser = false;
@@ -56,8 +59,24 @@ class _FriendListState extends State<FriendList> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     getAllUsers();
+    super.initState();
+  }
+
+  void _searchUser(String name) {
+    _searchResult.clear();
+    if (name.isEmpty) {
+      setState(() {});
+      return;
+    }
+
+    users.forEach((item) {
+      if (item.name.toLowerCase().contains(name.toLowerCase())) {
+        _searchResult.add(item);
+      }
+    });
+
+    setState(() {});
   }
 
   @override
@@ -78,41 +97,39 @@ class _FriendListState extends State<FriendList> {
                 color: Colors.white,
                 margin: EdgeInsets.only(top: 10),
                 child: TextFormField(
-                  // controller: ,
-                  // controller: usernameController,
+                  controller: searchController,
                   style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-
+                      color: Colors.black, fontWeight: FontWeight.w500),
                   decoration: InputDecoration(
-                    hintText: 'Nama User',
+                    hintText: 'Cari Nama User',
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 1.0, horizontal: 1.0),
                     hintStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w400,
                     ),
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Image.asset(
-                        "assets/images/search.png",
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.fill,
-                      ),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.close, color: Colors.black),
+                      onPressed: () {
+                        searchController.clear();
+                        _searchUser('');
+                      },
                     ),
+                    prefixIcon: Icon(Icons.search, color: Color(0xFFF5A720)),
                     // Icon(Icons.text_fields, color: Colors.black),
                     // suffixIcon: Icon(Icons.edit, color: Colors.black),
                     enabledBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(width: 1, color: Color(0xFFF5A720)),
+                          const BorderSide(width: 2, color: Color(0xFFF5A720)),
                       borderRadius: BorderRadius.circular(6.0),
                       // borderSide: ,
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderSide:
-                          const BorderSide(width: 1, color: Colors.blue),
+                          const BorderSide(width: 3, color: Color(0xFFF5A720)),
                       borderRadius: BorderRadius.circular(6.0),
                     ),
                   ),
+                  onChanged: (value) => _searchUser(value),
                 ),
               ),
               Expanded(
@@ -121,80 +138,176 @@ class _FriendListState extends State<FriendList> {
                   child: Skeleton(
                     skeleton: SkeletonFriendList(),
                     isLoading: _isLoadingUser,
-                    child: ListView.builder(
-                      itemCount: users.length,
-                      itemBuilder: (context, int index) {
-                        return Builder(
-                          builder: (context) {
-                            return InkWell(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                  return ProfileDetail(name: users[index].name);
-                                }));
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    top: displayHeight(context) * 0.01,
-                                    bottom: displayHeight(context) * 0.01),
-                                child: Container(
-                                  padding: EdgeInsets.only(
-                                      left: displayWidth(context) * 0.05),
-                                  width: displayWidth(context) * 1,
-                                  height: displayHeight(context) * 0.1,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Image.asset(
-                                        "assets/images/user_icon.png",
-                                        width: displayWidth(context) * 0.12,
-                                        // height: displayHeight(context) * 0.05,
-                                        fit: BoxFit.fill,
-                                      ),
-                                      Padding(
+                    child: _searchResult.length != 0 ||
+                            searchController.text.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: _searchResult.length,
+                            itemBuilder: (context, int index) {
+                              return Builder(
+                                builder: (context) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return ProfileDetail(
+                                            name: _searchResult[index].name);
+                                      }));
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: displayHeight(context) * 0.01,
+                                          bottom:
+                                              displayHeight(context) * 0.01),
+                                      child: Container(
                                         padding: EdgeInsets.only(
-                                          left: displayWidth(context) * 0.03,
+                                            left: displayWidth(context) * 0.05),
+                                        width: displayWidth(context) * 1,
+                                        height: displayHeight(context) * 0.1,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
-                                        child: Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(users[index].name,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: displayHeight(
-                                                              context) *
-                                                          0.01),
-                                                  child: Text(
-                                                      "CITIZEN/RAKYAT BIASA (LV1)",
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                ),
-                                              ],
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/user_icon.png",
+                                              width:
+                                                  displayWidth(context) * 0.12,
+                                              // height: displayHeight(context) * 0.05,
+                                              fit: BoxFit.fill,
                                             ),
-                                          ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: displayWidth(context) *
+                                                    0.03,
+                                              ),
+                                              child: Expanded(
+                                                child: Container(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                          _searchResult[index]
+                                                              .name,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: displayHeight(
+                                                                    context) *
+                                                                0.01),
+                                                        child: Text(
+                                                            "CITIZEN/RAKYAT BIASA (LV1)",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          )
+                        : ListView.builder(
+                            itemCount: users.length,
+                            itemBuilder: (context, int index) {
+                              return Builder(
+                                builder: (context) {
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                        return ProfileDetail(
+                                            name: users[index].name);
+                                      }));
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                          top: displayHeight(context) * 0.01,
+                                          bottom:
+                                              displayHeight(context) * 0.01),
+                                      child: Container(
+                                        padding: EdgeInsets.only(
+                                            left: displayWidth(context) * 0.05),
+                                        width: displayWidth(context) * 1,
+                                        height: displayHeight(context) * 0.1,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(
+                                              "assets/images/user_icon.png",
+                                              width:
+                                                  displayWidth(context) * 0.12,
+                                              // height: displayHeight(context) * 0.05,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                left: displayWidth(context) *
+                                                    0.03,
+                                              ),
+                                              child: Expanded(
+                                                child: Container(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(users[index].name,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            top: displayHeight(
+                                                                    context) *
+                                                                0.01),
+                                                        child: Text(
+                                                            "CITIZEN/RAKYAT BIASA (LV1)",
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .normal)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
                   ),
                 ),
               )
@@ -204,4 +317,6 @@ class _FriendListState extends State<FriendList> {
       ),
     );
   }
+
+  
 }
