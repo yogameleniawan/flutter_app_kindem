@@ -25,18 +25,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
               children: [
                 Container(
                   alignment: Alignment.center,
-                  child: CircleAvatar(
-                    maxRadius: MediaQuery.of(context).size.height * 0.1 / 1.5,
-                    backgroundColor: Colors.white,
-                    // backgroundColor: Color(color),
-                    child: Container(
-                      height: 100,
-                      child: Image(
-                        width: 100,
-                        // color: Colors.white,
-                        image: AssetImage("assets/images/kindem-logo.png"),
-                      ),
-                    ),
+                  child: Image(
+                    image: AssetImage("assets/images/user_icon_big.png"),
                   ),
                 ),
                 Container(

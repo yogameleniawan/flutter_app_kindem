@@ -1,11 +1,8 @@
 import 'dart:async';
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
-import 'package:flutter_app_stulish/pages/login/login-main.dart';
-import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
-import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
+
+import 'package:flutter_app_stulish/pages/splash/splash-screen.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
 
@@ -23,27 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AnimatedSplashScreen(
-        splash: Image(image: AssetImage("assets/images/logo-text.png")),
-        nextScreen: Center(
-          child: Consumer<AuthProvider>(
-            builder: (context, auth, child) {
-              switch (auth.isAuthenticated) {
-                case true:
-                  return HomeMain();
-                default:
-                  return LoginMain();
-                // return ProfileSetting();
-                // return ProfileDetail();
-              }
-            },
-          ),
-        ),
-        backgroundColor: Colors.white,
-        splashTransition: SplashTransition.scaleTransition,
-        duration: 3000,
-        splashIconSize: 420,
-      ),
+      home: SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

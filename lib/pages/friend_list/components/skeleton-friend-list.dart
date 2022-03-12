@@ -26,10 +26,11 @@ class SkeletonFriendList extends StatelessWidget {
   Widget SkeletonItem(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          top: displayHeight(context) * 0.01,
-          bottom: displayHeight(context) * 0.01,
-          left: displayWidth(context) * 0.05),
+        top: displayHeight(context) * 0.01,
+        bottom: displayHeight(context) * 0.01,
+      ),
       child: Container(
+        padding: EdgeInsets.only(left: displayWidth(context) * 0.05),
         width: displayWidth(context) * 1,
         height: displayHeight(context) * 0.1,
         child: Row(

@@ -2,6 +2,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/login/login-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -57,20 +58,24 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   margin: EdgeInsets.only(bottom: 55),
                   child: Row(
                     children: [
-                      CircleAvatar(
-                        maxRadius:
-                            MediaQuery.of(context).size.height * 0.1 / 1.8,
-                        backgroundColor: Colors.white,
-                        // backgroundColor: Color(color),
-                        child: Container(
-                          height: 100,
-                          child: Image(
-                            width: 100,
-                            // color: Colors.white,
-                            image: AssetImage("assets/images/kindem-logo.png"),
-                          ),
-                        ),
+                      Image(
+                        image: AssetImage("assets/images/user_icon_big.png"),
+                        width: 80,
                       ),
+                      // CircleAvatar(
+                      //   maxRadius:
+                      //       MediaQuery.of(context).size.height * 0.1 / 1.8,
+                      //   backgroundColor: Colors.white,
+                      //   // backgroundColor: Color(color),
+                      //   child: Container(
+                      //     height: 100,
+                      //     child: Image(
+                      //       width: 100,
+                      //       // color: Colors.white,
+                      //       image: AssetImage("assets/images/kindem-logo.png"),
+                      //     ),
+                      //   ),
+                      // ),
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(left: 20),
@@ -199,6 +204,131 @@ class _ProfileSettingState extends State<ProfileSetting> {
                         Container(
                           margin: EdgeInsets.only(top: 33),
                           child: Button(),
+                        ),
+
+                        //button logout
+                        Container(
+                          margin: EdgeInsets.only(top: 33),
+                          child: Center(
+                            child: BouncingWidget(
+                                duration: Duration(milliseconds: 90),
+                                scaleFactor: 2.0,
+                                child: Container(
+                                  width: displayWidth(context) * 0.26,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: displayHeight(context) * 0.02),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.20),
+                                          offset: Offset(2, 6),
+                                          blurRadius: 7,
+                                          spreadRadius: 2),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    "LOGOUT",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title:
+                                            Text("Kamu yakin ingin Logout ?"),
+                                        actions: [
+                                          //BUTTON "Yes"
+                                          MaterialButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Text(
+                                              "YA",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            onPressed: () async {
+                                              await Provider.of<AuthProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .logout()
+                                                  .then((value) =>
+                                                      Navigator.of(context)
+                                                          .pushAndRemoveUntil(
+                                                              PageRouteBuilder(
+                                                                transitionDuration:
+                                                                    Duration(
+                                                                        milliseconds:
+                                                                            500),
+                                                                pageBuilder: (BuildContext context,
+                                                                    Animation<
+                                                                            double>
+                                                                        animation,
+                                                                    Animation<
+                                                                            double>
+                                                                        secondaryAnimation) {
+                                                                  return LoginMain();
+                                                                },
+                                                                transitionsBuilder: (BuildContext context,
+                                                                    Animation<
+                                                                            double>
+                                                                        animation,
+                                                                    Animation<
+                                                                            double>
+                                                                        secondaryAnimation,
+                                                                    Widget
+                                                                        child) {
+                                                                  return Align(
+                                                                    child:
+                                                                        FadeTransition(
+                                                                      opacity:
+                                                                          animation,
+                                                                      child:
+                                                                          child,
+                                                                    ),
+                                                                  );
+                                                                },
+                                                              ),
+                                                              (route) =>
+                                                                  false));
+                                            },
+                                            color: Colors.red,
+                                          ),
+
+                                          //BUTTON "Cancel"
+                                          MaterialButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: Text(
+                                              "Batal",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            color: Color(0xFFF5A720),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }),
+                          ),
                         ),
                       ],
                     ),
