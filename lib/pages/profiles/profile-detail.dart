@@ -17,87 +17,95 @@ class _ProfileDetailState extends State<ProfileDetail> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color(0xFF0074CD),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  child: Image(
-                    image: AssetImage("assets/images/user_icon_big.png"),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: Text(
-                    widget.name,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                      fontSize: 25.0,
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg-rounded.png"),
+                  fit: BoxFit.cover)),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: Image(
+                        image: AssetImage("assets/images/user_icon_big.png"),
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10),
-                  child: Text(
-                    "CITIZEN/RAKYAT BIASA (LVL1)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15.0,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20.0),
-                  width: displayWidth(context) * 40,
-                  height: displayHeight(context) * 0.60,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          offset: Offset(0, 9),
-                          blurRadius: 20,
-                          spreadRadius: 1),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(top: 10),
-                        child: Image(
-                          width: 120.0,
-                          image: AssetImage("assets/images/kindem-logo.png"),
+                    Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text(
+                        widget.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 25.0,
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          horizontal: 18.0,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                      child: Text(
+                        "CITIZEN/RAKYAT BIASA (LVL1)",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15.0,
                         ),
-                        padding: EdgeInsets.symmetric(vertical: 20.0),
-                        // color: Colors.red,
-                        child: Column(
-                          children: [
-                            ResultDetail(),
-
-                            //button
-                            Container(
-                              margin: EdgeInsets.only(top: 35),
-                              child: Button(),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      width: displayWidth(context) * 40,
+                      height: displayHeight(context) * 0.60,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              offset: Offset(0, 9),
+                              blurRadius: 20,
+                              spreadRadius: 1),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            child: Image(
+                              width: 120.0,
+                              image:
+                                  AssetImage("assets/images/kindem-logo.png"),
                             ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 18.0,
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 20.0),
+                            // color: Colors.red,
+                            child: Column(
+                              children: [
+                                ResultDetail(),
+
+                                //button
+                                Container(
+                                  margin: EdgeInsets.only(top: 35),
+                                  child: Button(),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),

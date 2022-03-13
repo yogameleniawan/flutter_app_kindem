@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/login/login-main.dart';
+import 'package:flutter_app_stulish/pages/profiles/change-avatar.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -48,293 +49,317 @@ class _ProfileSettingState extends State<ProfileSetting> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: Color(0xFF0074CD),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
-            child: Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(bottom: 55),
-                  child: Row(
-                    children: [
-                      Image(
-                        image: AssetImage("assets/images/user_icon_big.png"),
-                        width: 80,
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bg-rounded.png"),
+                  fit: BoxFit.cover)),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 55),
+                      child: Row(
+                        children: [
+                          Image(
+                            image:
+                                AssetImage("assets/images/user_icon_big.png"),
+                            width: 70,
+                          ),
+                          // CircleAvatar(
+                          //   maxRadius:
+                          //       MediaQuery.of(context).size.height * 0.1 / 1.8,
+                          //   backgroundColor: Colors.white,
+                          //   // backgroundColor: Color(color),
+                          //   child: Container(
+                          //     height: 100,
+                          //     child: Image(
+                          //       width: 100,
+                          //       // color: Colors.white,
+                          //       image: AssetImage("assets/images/kindem-logo.png"),
+                          //     ),
+                          //   ),
+                          // ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(left: 20),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      user.name,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 25.0,
+                                      ),
+                                    ),
+                                    Text(
+                                      "CITIZEN/RAKYAT BIASA (LVL1)",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15.0,
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          )
+                        ],
                       ),
-                      // CircleAvatar(
-                      //   maxRadius:
-                      //       MediaQuery.of(context).size.height * 0.1 / 1.8,
-                      //   backgroundColor: Colors.white,
-                      //   // backgroundColor: Color(color),
-                      //   child: Container(
-                      //     height: 100,
-                      //     child: Image(
-                      //       width: 100,
-                      //       // color: Colors.white,
-                      //       image: AssetImage("assets/images/kindem-logo.png"),
-                      //     ),
-                      //   ),
-                      // ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(left: 20),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  user.name,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 25.0,
-                                  ),
-                                ),
-                                Text(
-                                  "CITIZEN/RAKYAT BIASA (LVL1)",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15.0,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 15.0),
-                  width: displayWidth(context) * 40,
-                  height: displayHeight(context) * 0.65,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          offset: Offset(0, 9),
-                          blurRadius: 20,
-                          spreadRadius: 1),
-                    ],
-                  ),
-                  child: Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 18.0,
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 35.0),
-                    // color: Colors.red,
-                    child: Column(
-                      children: [
-                        ResultDetail(),
-                        // Container(
-                        //   child: ResultDetail(),
-                        // ),
-
-                        Container(
-                          margin: EdgeInsets.only(top: 27),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.grey[400],
+                    Container(
+                      margin: EdgeInsets.only(top: 15.0),
+                      width: displayWidth(context) * 40,
+                      height: displayHeight(context) * 0.67,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              offset: Offset(0, 9),
+                              blurRadius: 20,
+                              spreadRadius: 1),
+                        ],
+                      ),
+                      child: Center(
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 18.0,
                           ),
-                          child: TextFormField(
-                            // controller: ,
-                            obscureText: true,
-                            enabled: false,
-                            decoration: InputDecoration(
-                              hintText: '123456789',
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 1.0, horizontal: 1.0),
-                              prefixIcon: Icon(Icons.person_outline,
-                                  color: Colors.black),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                // borderSide: ,
-                              ),
-                            ),
-                          ),
-                        ),
+                          padding: EdgeInsets.symmetric(
+                              vertical: displayHeight(context) * 0.033),
+                          // color: Colors.red,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ResultDetail(),
+                              // Container(
+                              //   child: ResultDetail(),
+                              // ),
 
-                        Container(
-                          margin: EdgeInsets.only(top: 17),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Color(0xFFF5A720),
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          child: TextFormField(
-                            // controller: ,
-                            controller: usernameController,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-
-                            decoration: InputDecoration(
-                              hintText: 'Nama User',
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 1.0, horizontal: 1.0),
-                              hintStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                              prefixIcon:
-                                  Icon(Icons.text_fields, color: Colors.black),
-                              suffixIcon: Icon(Icons.edit, color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 1, color: Color(0xFFF5A720)),
-                                borderRadius: BorderRadius.circular(6.0),
-                                // borderSide: ,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    width: 1, color: Colors.red),
-                                borderRadius: BorderRadius.circular(6.0),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        //button
-                        Container(
-                          margin: EdgeInsets.only(top: 33),
-                          child: Button(),
-                        ),
-
-                        //button logout
-                        Container(
-                          margin: EdgeInsets.only(top: 33),
-                          child: Center(
-                            child: BouncingWidget(
-                                duration: Duration(milliseconds: 90),
-                                scaleFactor: 2.0,
-                                child: Container(
-                                  width: displayWidth(context) * 0.26,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: displayHeight(context) * 0.02),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withOpacity(0.20),
-                                          offset: Offset(2, 6),
-                                          blurRadius: 7,
-                                          spreadRadius: 2),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    "LOGOUT",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
+                              Container(
+                                margin: EdgeInsets.only(top: 27),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  color: Colors.grey[400],
+                                ),
+                                child: TextFormField(
+                                  // controller: ,
+                                  obscureText: true,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    hintText: '123456789',
+                                    hintStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
+                                    ),
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 1.0, horizontal: 1.0),
+                                    prefixIcon: Icon(Icons.person_outline,
+                                        color: Colors.black),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8.0),
+                                      // borderSide: ,
                                     ),
                                   ),
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title:
-                                            Text("Kamu yakin ingin Logout ?"),
-                                        actions: [
-                                          //BUTTON "Yes"
-                                          MaterialButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: Text(
-                                              "YA",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            onPressed: () async {
-                                              await Provider.of<AuthProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .logout()
-                                                  .then((value) =>
-                                                      Navigator.of(context)
-                                                          .pushAndRemoveUntil(
-                                                              PageRouteBuilder(
-                                                                transitionDuration:
-                                                                    Duration(
-                                                                        milliseconds:
-                                                                            500),
-                                                                pageBuilder: (BuildContext context,
-                                                                    Animation<
-                                                                            double>
-                                                                        animation,
-                                                                    Animation<
-                                                                            double>
-                                                                        secondaryAnimation) {
-                                                                  return LoginMain();
-                                                                },
-                                                                transitionsBuilder: (BuildContext context,
-                                                                    Animation<
-                                                                            double>
-                                                                        animation,
-                                                                    Animation<
-                                                                            double>
-                                                                        secondaryAnimation,
-                                                                    Widget
-                                                                        child) {
-                                                                  return Align(
-                                                                    child:
-                                                                        FadeTransition(
-                                                                      opacity:
-                                                                          animation,
-                                                                      child:
-                                                                          child,
-                                                                    ),
-                                                                  );
-                                                                },
-                                                              ),
-                                                              (route) =>
-                                                                  false));
-                                            },
-                                            color: Colors.red,
-                                          ),
+                              ),
 
-                                          //BUTTON "Cancel"
-                                          MaterialButton(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: Text(
-                                              "Batal",
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            color: Color(0xFFF5A720),
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: displayHeight(context) * 0.015),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xFFF5A720),
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: TextFormField(
+                                  // controller: ,
+                                  controller: usernameController,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+
+                                  decoration: InputDecoration(
+                                    hintText: 'Nama User',
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 1.0, horizontal: 1.0),
+                                    hintStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    prefixIcon: Icon(Icons.text_fields,
+                                        color: Colors.black),
+                                    suffixIcon:
+                                        Icon(Icons.edit, color: Colors.black),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Colors.red),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              //button
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: displayHeight(context) * 0.03),
+                                child: Button(),
+                              ),
+
+                              //button logout
+                              Container(
+                                margin: EdgeInsets.only(
+                                    top: displayHeight(context) * 0.03),
+                                child: Center(
+                                  child: BouncingWidget(
+                                      duration: Duration(milliseconds: 90),
+                                      scaleFactor: 2.0,
+                                      child: Container(
+                                        width: displayWidth(context) * 0.26,
+                                        padding: EdgeInsets.symmetric(
+                                            vertical:
+                                                displayHeight(context) * 0.02),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.20),
+                                                offset: Offset(2, 6),
+                                                blurRadius: 7,
+                                                spreadRadius: 2),
+                                          ],
+                                        ),
+                                        child: Text(
+                                          "LOGOUT",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  "Kamu yakin ingin Logout ?"),
+                                              actions: [
+                                                //BUTTON "Yes"
+                                                MaterialButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Text(
+                                                    "YA",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  onPressed: () async {
+                                                    await Provider.of<
+                                                                AuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .logout()
+                                                        .then((value) => Navigator
+                                                                .of(context)
+                                                            .pushAndRemoveUntil(
+                                                                PageRouteBuilder(
+                                                                  transitionDuration:
+                                                                      Duration(
+                                                                          milliseconds:
+                                                                              500),
+                                                                  pageBuilder: (BuildContext context,
+                                                                      Animation<
+                                                                              double>
+                                                                          animation,
+                                                                      Animation<
+                                                                              double>
+                                                                          secondaryAnimation) {
+                                                                    return LoginMain();
+                                                                  },
+                                                                  transitionsBuilder: (BuildContext context,
+                                                                      Animation<
+                                                                              double>
+                                                                          animation,
+                                                                      Animation<
+                                                                              double>
+                                                                          secondaryAnimation,
+                                                                      Widget
+                                                                          child) {
+                                                                    return Align(
+                                                                      child:
+                                                                          FadeTransition(
+                                                                        opacity:
+                                                                            animation,
+                                                                        child:
+                                                                            child,
+                                                                      ),
+                                                                    );
+                                                                  },
+                                                                ),
+                                                                (route) =>
+                                                                    false));
+                                                  },
+                                                  color: Colors.red,
+                                                ),
+
+                                                //BUTTON "Cancel"
+                                                MaterialButton(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Text(
+                                                    "Batal",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  color: Color(0xFFF5A720),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -566,7 +591,10 @@ class _ProfileSettingState extends State<ProfileSetting> {
         BouncingWidget(
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => ChangeAvatar()));
+          },
           child: Container(
             width: displayWidth(context) * 0.35,
             // margin: EdgeInsets.symmetric(horizontal: 6),

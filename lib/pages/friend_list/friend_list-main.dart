@@ -137,6 +137,7 @@ class _FriendListState extends State<FriendList> {
                 child: _searchResult.length != 0 ||
                         searchController.text.isNotEmpty
                     ? ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: _searchResult.length,
                         itemBuilder: (context, int index) {
                           return Builder(
@@ -214,6 +215,7 @@ class _FriendListState extends State<FriendList> {
                         },
                       )
                     : ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
                         itemCount: users.length,
                         itemBuilder: (context, int index) {
                           return Builder(
