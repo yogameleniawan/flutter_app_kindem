@@ -71,27 +71,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/study.png
-    - assets/images/test.png
-    - assets/images/indonesia.png
-    - assets/images/kindem-logo.png
-    - assets/images/logo-text.png
-    - assets/images/english.png
-    - assets/images/next-icon.png
-    - assets/images/blank.png
-    - assets/images/complete.png
-    - assets/images/home.png
-    - assets/images/reload.png
-    - assets/images/score.jpg
-    - assets/images/next.png
-    - assets/images/banner.jpg
-    - assets/images/sound.png
-    - assets/images/user_icon.png
-    - assets/images/user_icon_big.png
-    - assets/images/exam.png
-    - assets/images/pause.png
-    - assets/images/mic-on.png
-    - assets/images/mic-off.png
+    - assets/images/
     # - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

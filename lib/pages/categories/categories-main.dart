@@ -41,6 +41,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
   bool _isLoadingCategory = false;
   bool _isLoadingChapter = false;
   bool _isDoTutorial = false;
+  bool _isChange = false;
   String _chapter = "";
   List<CoachModel> listCoachModel = [];
   GlobalKey _one = GlobalKey();
@@ -126,7 +127,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
               'Kamu bisa menggeser untuk mencari materi yang akan kamu pelajari',
             ],
             header: Image.asset(
-              'assets/images/exam.png',
+              'assets/images/slider.png',
               height: 50,
               width: 50,
             )),
@@ -149,7 +150,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
     // make coach maker btn_exam
 
     // make speaker
-    text = "Geser gambar ini untuk berpindah materi";
+    text = "Kamu bisa menggeser untuk mencari materi yang akan kamu pelajari";
     _speak("id-ID");
     setState(() {
       _isComplete = true;
@@ -188,8 +189,10 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   Future getAllSubCategories(String id) async {
     setState(() {
+      _isChange = true;
       _isLoadingChapter = true;
     });
+
     final String uri =
         "https://stulish-rest-api.herokuapp.com/api/v1/getSubCategoriesById/" +
             id;
@@ -200,21 +203,27 @@ class _CategoriesMainState extends State<CategoriesMain> {
       'Authorization': 'Bearer $token',
     });
 
+    print(result.statusCode);
+
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);
       List subCategoryMap = jsonResponse['data'];
       List subCategory =
           subCategoryMap.map((i) => SubCategory.fromJson(i)).toList();
+
       setState(() {
         sub_categories = subCategory;
         _isLoadingChapter = false;
       });
 
-      if (!_isDoTutorial) {
+      if (categories.length > 0 &&
+          sub_categories.length > 0 &&
+          _isDoTutorial == false) {
         doTutorialCarousel();
       }
       setState(() {
         _isDoTutorial = true;
+        _isChange = false;
       });
     }
   }
@@ -223,7 +232,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   @override
   Widget build(BuildContext context) {
-    if (categories.length > 0 && sub_categories.length > 0) {
+    if (categories.length > 0) {
       return ShowCaseWidget(
         builder: Builder(builder: (context) {
           myContext = context;
@@ -266,6 +275,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
                         initial: "carousel",
                         child: CarouselSlider(
                           options: CarouselOptions(
+                            enableInfiniteScroll: false,
                             initialPage: 0,
                             aspectRatio: 2.0,
                             enlargeCenterPage: true,
@@ -274,10 +284,15 @@ class _CategoriesMainState extends State<CategoriesMain> {
                               setState(() {
                                 _chapter = map_category[index]['name'];
                                 _isLoadingChapter = true;
-                                print(reason);
+                                sub_categories = [];
                               });
-                              await getAllSubCategories(
-                                  map_category[index]['id']);
+                              print(sub_categories.length);
+                              if (sub_categories.length == 0) {
+                                await getAllSubCategories(
+                                    map_category[index]['id']);
+                              }
+
+                              print(sub_categories.length);
                             },
                           ),
                           items: categories.map((data) {
@@ -332,7 +347,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
                       Expanded(
                         child: Skeleton(
                           skeleton: SkeletonChapter(),
-                          isLoading: _isLoadingChapter,
+                          isLoading: _isLoadingChapter && _isChange,
                           child: CoachPoint(
                             initial: "chapter",
                             child: ListView.builder(

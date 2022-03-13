@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:coachmaker/coachmaker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
@@ -16,6 +17,7 @@ import 'dart:io';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -42,6 +44,8 @@ enum TtsState { playing, stopped, paused, continued }
 class _CourseTestState extends State<CourseTest> {
   List courses = [];
   int indexCourses = 0;
+  int _selectedIndexAnswer = 10;
+  final answers = List<String>.generate(3, (i) => 'Answer $i');
 
   late FlutterTts flutterTts;
   String? language;
@@ -328,37 +332,8 @@ class _CourseTestState extends State<CourseTest> {
                   size: 15,
                 )),
                 ImageCourse(courses: courses, indexCourses: indexCourses),
-                Column(
-                  children: [
-                    Text("What is this?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Text(lastWords,
-                        style: TextStyle(color: Colors.black, fontSize: 20)),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          startListening();
-                        },
-                        child: Image(
-                          width: displayWidth(context) * 0.15,
-                          image: speech.isListening
-                              ? AssetImage("assets/images/mic-on.png")
-                              : AssetImage("assets/images/mic-off.png"),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ChooseTest(),
+                // VoiceTest(context),
                 InkWell(
                     onTap: () {
                       if (lastWords.toUpperCase() ==
@@ -395,6 +370,81 @@ class _CourseTestState extends State<CourseTest> {
         showAlertDialog(context);
         return Future.value(false); // if true allow back else block it
       },
+    );
+  }
+
+  Widget ChooseTest() {
+    return Expanded(
+      child: ListView.builder(
+          itemCount: answers.length,
+          itemBuilder: (context, int index) {
+            return Builder(builder: (context) {
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    _selectedIndexAnswer = index;
+                  });
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        vertical: displayHeight(context) * 0.01,
+                        horizontal: displayWidth(context) * 0.1,
+                      ),
+                      decoration: BoxDecoration(
+                        color: index == _selectedIndexAnswer
+                            ? Color(0xFFF5A71F)
+                            : Colors.white,
+                      ),
+                      child: Text(
+                        answers[index],
+                        style: TextStyle(
+                          color: index == _selectedIndexAnswer
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            });
+          }),
+    );
+  }
+
+  Widget VoiceTest(BuildContext context) {
+    return Column(
+      children: [
+        Text("What is this?",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            )),
+        Text(lastWords, style: TextStyle(color: Colors.black, fontSize: 20)),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  startListening();
+                },
+                child: Image(
+                  width: displayWidth(context) * 0.15,
+                  image: speech.isListening
+                      ? AssetImage("assets/images/mic-on.png")
+                      : AssetImage("assets/images/mic-off.png"),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
