@@ -19,14 +19,14 @@ class ImageCourse extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: displayWidth(context) * 0.1,
-        vertical: displayWidth(context) * 0.3,
+        vertical: displayWidth(context) * 0.28,
       ),
       child: Skeleton(
         skeleton: SkeletonAvatar(
           style: SkeletonAvatarStyle(
             width: displayWidth(context) * 1,
             minHeight: displayHeight(context) * 0.1,
-            maxHeight: displayHeight(context) * 0.3,
+            maxHeight: displayHeight(context) * 0.28,
           ),
         ),
         isLoading: courses.length < 1,
@@ -34,7 +34,7 @@ class ImageCourse extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
           child: CachedNetworkImage(
-            height: displayHeight(context) * 0.3,
+            height: displayHeight(context) * 0.25,
             width: displayWidth(context) * 0.8,
             imageUrl: courses.length > 0 ? courses[indexCourses].image : "",
             progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -42,7 +42,7 @@ class ImageCourse extends StatelessWidget {
               style: SkeletonAvatarStyle(
                 width: displayWidth(context) * 1,
                 minHeight: displayHeight(context) * 0.1,
-                maxHeight: displayHeight(context) * 0.3,
+                maxHeight: displayHeight(context) * 0.28,
               ),
             ),
             errorWidget: (context, url, error) => Icon(Icons.error),

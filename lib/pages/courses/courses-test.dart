@@ -45,7 +45,9 @@ class _CourseTestState extends State<CourseTest> {
   List courses = [];
   int indexCourses = 0;
   int _selectedIndexAnswer = 10;
-  final answers = List<String>.generate(3, (i) => 'Answer $i');
+  bool _isVoice = false;
+  final answers = List<String>.generate(
+      3, (i) => 'Answer Answer Answer Answer Answer Answer $i');
 
   late FlutterTts flutterTts;
   String? language;
@@ -332,8 +334,20 @@ class _CourseTestState extends State<CourseTest> {
                   size: 15,
                 )),
                 ImageCourse(courses: courses, indexCourses: indexCourses),
-                ChooseTest(),
-                // VoiceTest(context),
+                _isVoice
+                    ? Text("Apa ini?",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ))
+                    : Text("Pilih Jawabanmu!",
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        )),
+                _isVoice ? VoiceTest(context) : ChooseTest(),
                 InkWell(
                     onTap: () {
                       if (lastWords.toUpperCase() ==
@@ -386,7 +400,8 @@ class _CourseTestState extends State<CourseTest> {
                   });
                 },
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding:
+                      EdgeInsets.only(bottom: displayHeight(context) * 0.01),
                   child: Center(
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -418,12 +433,6 @@ class _CourseTestState extends State<CourseTest> {
   Widget VoiceTest(BuildContext context) {
     return Column(
       children: [
-        Text("What is this?",
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            )),
         Text(lastWords, style: TextStyle(color: Colors.black, fontSize: 20)),
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
