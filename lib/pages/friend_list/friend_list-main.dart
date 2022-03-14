@@ -99,22 +99,30 @@ class _FriendListState extends State<FriendList> {
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
                 decoration: InputDecoration(
-                  hintText: 'Cari Nama User',
+                  hintText: 'Cari',
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 1.0, horizontal: 1.0),
                   hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
                   ),
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.close, color: Colors.black),
-                    onPressed: () {
-                      searchController.clear();
-                      _searchUser('');
-                    },
+                  suffixIcon: searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.close, color: Colors.black),
+                          onPressed: () {
+                            searchController.clear();
+                            _searchUser('');
+                          },
+                        )
+                      : null,
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Image.asset(
+                      'assets/images/search.png',
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                  prefixIcon: Icon(Icons.search, color: Color(0xFFF5A720)),
-                  // Icon(Icons.text_fields, color: Colors.black),
-                  // suffixIcon: Icon(Icons.edit, color: Colors.black),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
                         const BorderSide(width: 2, color: Color(0xFFF5A720)),
