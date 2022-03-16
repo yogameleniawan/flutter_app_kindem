@@ -22,4 +22,8 @@ class Category {
     this.name = parsedJson['name'];
     this.image = parsedJson['image'];
   }
+
+  Category.finishedJson(Map<String, dynamic> parsedJson) {
+    this.id = parsedJson['category_id'];
+  }
 }

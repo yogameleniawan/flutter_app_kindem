@@ -21,7 +21,7 @@ class LevelMain extends StatefulWidget {
 
 class _LevelMainState extends State<LevelMain> {
   List categories = [];
-  List map_category = [];
+  List courses = [];
 
   @override
   void initState() {
@@ -43,8 +43,28 @@ class _LevelMainState extends State<LevelMain> {
       List category = categoryMap.map((i) => Category.fromJson(i)).toList();
       setState(() {
         categories = category;
-        map_category = categoryMap;
       });
+    }
+
+    getFinishedCourse();
+  }
+
+  Future getFinishedCourse() async {
+    final String uri =
+        "https://stulish-rest-api.herokuapp.com/api/v1/getFinishCourses";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      List courseMap = jsonResponse['data'];
+      List course = courseMap.map((i) => Category.finishedJson(i)).toList();
+      setState(() {
+        courses = course;
+      });
+      print(courses.length);
     }
   }
 
@@ -61,14 +81,16 @@ class _LevelMainState extends State<LevelMain> {
                 return Builder(builder: (context) {
                   return InkWell(
                     onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return CategoriesMain(
-                          id_category: categories[index].id,
-                          image_category: categories[index].image,
-                          name_category: categories[index].name,
-                        );
-                      }));
+                      if (index < courses.length + 1) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return CategoriesMain(
+                            id_category: categories[index].id,
+                            image_category: categories[index].image,
+                            name_category: categories[index].name,
+                          );
+                        }));
+                      }
                     },
                     child: Container(
                       child: Row(
@@ -97,14 +119,24 @@ class _LevelMainState extends State<LevelMain> {
                                   borderRadius: BorderRadius.circular(
                                       displayWidth(context) * 0.1),
                                 ),
-                                child: ExtendedImage.network(
-                                  categories[index].image,
-                                  width: displayWidth(context) * 0.3,
-                                  fit: BoxFit.fill,
-                                  // color: Colors.black12,
-                                  cache: true,
-                                  borderRadius: BorderRadius.circular(100.0),
-                                ),
+                                child: index < courses.length + 1
+                                    ? ExtendedImage.network(
+                                        categories[index].image,
+                                        width: displayWidth(context) * 0.3,
+                                        fit: BoxFit.fill,
+                                        cache: true,
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                      )
+                                    : ExtendedImage.network(
+                                        categories[index].image,
+                                        width: displayWidth(context) * 0.3,
+                                        fit: BoxFit.fill,
+                                        color: Colors.black12,
+                                        cache: true,
+                                        borderRadius:
+                                            BorderRadius.circular(100.0),
+                                      ),
                               ),
                               index == categories.length - 1
                                   ? Padding(
