@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
+import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
+import 'package:flutter_app_stulish/pages/level/level-main.dart';
 
 class BannerHome extends StatelessWidget {
   const BannerHome({
@@ -25,7 +26,8 @@ class BannerHome extends StatelessWidget {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (BuildContext context) {
-                  return CategoriesMain();
+                  // return CategoriesMain();
+                  return LevelMain();
                 }));
               },
               child: Container(

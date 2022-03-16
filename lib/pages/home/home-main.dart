@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/categories/categories-main.dart';
+import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
 import 'package:flutter_app_stulish/pages/home/components/banner.dart';
 import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
 import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
