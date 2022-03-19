@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/pages/courses/components/image-course.dart';
 import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
@@ -45,10 +46,9 @@ class _CourseTestState extends State<CourseTest> {
   List courses = [];
   int indexCourses = 0;
   int _selectedIndexAnswer = 10;
-  bool _isVoice = false;
-  final answers = List<String>.generate(
-      3, (i) => 'Answer Answer Answer Answer Answer Answer $i');
-
+  // final answers = List<String>.generate(
+  //     3, (i) => 'Answer Answer Answer Answer Answer Answer $i');
+  List answers = [];
   late FlutterTts flutterTts;
   String? language;
   String? engine;
@@ -257,7 +257,33 @@ class _CourseTestState extends State<CourseTest> {
         lastWords = '____________';
       }
       _isCheck = !_isCheck;
+      _selectedIndexAnswer = 10;
+      answers = [];
     });
+  }
+
+  Future getChoiceAnswer(String id, String sub_category_id) async {
+    final String uri =
+        "https://stulish-rest-api.herokuapp.com/api/v1/getAnswerChoices";
+    Map data = {'id': id, 'sub_category_id': sub_category_id};
+    var body = json.encode(data);
+
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: body);
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      List answer = jsonResponse.map((i) => Courses.choiceAnswer(i)).toList();
+      setState(() {
+        answers = answer;
+      });
+      print(answers);
+    }
   }
 
   initTts() {
@@ -306,85 +332,98 @@ class _CourseTestState extends State<CourseTest> {
       setState(() {
         courses = course;
       });
+      getChoiceAnswer(courses[0].id, courses[0].sub_category_id);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          backgroundColor: Color(0xFFF1F1F1),
-          body: Container(
-              child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: displayWidth(context) * 0.05,
-              vertical: displayHeight(context) * 0.05,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Center(
-                    child: FAProgressBar(
-                  backgroundColor: Colors.white,
-                  progressColor: Color(0xFFF5A71F),
-                  currentValue: (indexCourses + 1) * 10,
-                  maxValue: courses.length * 10,
-                  size: 15,
-                )),
-                ImageCourse(courses: courses, indexCourses: indexCourses),
-                _isVoice
-                    ? Text("Apa ini?",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ))
-                    : Text("Pilih Jawabanmu!",
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        )),
-                _isVoice ? VoiceTest(context) : ChooseTest(),
-                InkWell(
-                    onTap: () {
-                      if (lastWords.toUpperCase() ==
-                          courses[indexCourses].english_text) {
-                        _trueAnswerShow();
-                      } else {
-                        _falseAnswerShow(courses[indexCourses].english_text,
-                            courses[indexCourses].indonesia_text);
-                      }
-                    },
-                    child: Container(
-                        width: displayWidth(context) * 1,
-                        height: displayHeight(context) * 0.08,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF5A71F),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                            child: _isCheck
-                                ? CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
-                                : Text("PERIKSA JAWABANMU",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.bold))))),
-              ],
-            ),
-          )),
+    if (courses.length > 0) {
+      return WillPopScope(
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: Scaffold(
+            backgroundColor: Color(0xFFF1F1F1),
+            body: Container(
+                child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: displayWidth(context) * 0.05,
+                vertical: displayHeight(context) * 0.05,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Center(
+                      child: FAProgressBar(
+                    backgroundColor: Colors.white,
+                    progressColor: Color(0xFFF5A71F),
+                    currentValue: (indexCourses + 1) * 10,
+                    maxValue: courses.length * 10,
+                    size: 15,
+                  )),
+                  ImageCourse(courses: courses, indexCourses: indexCourses),
+                  courses[indexCourses].is_voice
+                      ? Text("Apa ini?",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ))
+                      : Text("Pilih Jawabanmu!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          )),
+                  courses[indexCourses].is_voice
+                      ? VoiceTest(context)
+                      : ChooseTest(),
+                  InkWell(
+                      onTap: () {
+                        if (lastWords.toUpperCase() ==
+                            courses[indexCourses].english_text) {
+                          _trueAnswerShow();
+                        } else {
+                          _falseAnswerShow(courses[indexCourses].english_text,
+                              courses[indexCourses].indonesia_text);
+                        }
+
+                        if (!courses[indexCourses + 1].is_voice) {
+                          print('request');
+                          getChoiceAnswer(courses[indexCourses + 1].id,
+                              courses[indexCourses + 1].sub_category_id);
+                        }
+                      },
+                      child: Container(
+                          width: displayWidth(context) * 1,
+                          height: displayHeight(context) * 0.08,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF5A71F),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                              child: _isCheck
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text("PERIKSA JAWABANMU",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold))))),
+                ],
+              ),
+            )),
+          ),
         ),
-      ),
-      onWillPop: () {
-        showAlertDialog(context);
-        return Future.value(false); // if true allow back else block it
-      },
-    );
+        onWillPop: () {
+          showAlertDialog(context);
+          return Future.value(false); // if true allow back else block it
+        },
+      );
+    } else {
+      return PreloaderPage();
+    }
   }
 
   Widget ChooseTest() {
@@ -396,6 +435,7 @@ class _CourseTestState extends State<CourseTest> {
               return InkWell(
                 onTap: () {
                   setState(() {
+                    lastWords = answers[index].english_text;
                     _selectedIndexAnswer = index;
                   });
                 },
@@ -414,7 +454,7 @@ class _CourseTestState extends State<CourseTest> {
                             : Colors.white,
                       ),
                       child: Text(
-                        answers[index],
+                        answers[index].english_text,
                         style: TextStyle(
                           color: index == _selectedIndexAnswer
                               ? Colors.white
