@@ -5,6 +5,7 @@ import 'package:flutter_app_stulish/pages/friend_list/components/skeleton-friend
 import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_app_stulish/services/httpservice.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:http/http.dart' as http;
@@ -32,15 +33,14 @@ class _FriendListState extends State<FriendList> {
       _isLoadingUser = true;
     });
 
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getAllUsers";
+    final String uri = dotenv.get('API_URL') + "/api/v1/getAllUsers";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {
       'Authorization': 'Bearer $token',
     });
 
-    // final String uri = "http://10.0.2.2:8000/api/getAllUsers";
+    // final String uri = dotenv.get('API_URL') + "/api/getAllUsers";
     // http.Response result = await http.get(Uri.parse(uri));
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);

@@ -12,6 +12,7 @@ import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/pages/courses/components/image-course.dart';
 import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -43,12 +44,11 @@ class CourseTest extends StatefulWidget {
 enum TtsState { playing, stopped, paused, continued }
 
 class _CourseTestState extends State<CourseTest> {
-  List courses = [];
-  int indexCourses = 0;
-  int _selectedIndexAnswer = 10;
-  // final answers = List<String>.generate(
-  //     3, (i) => 'Answer Answer Answer Answer Answer Answer $i');
-  List answers = [];
+  List courses = []; // untuk menyimpan data soal
+  int indexCourses = 0; // untuk menyimpan nilai index dari soal
+  int _selectedIndexAnswer =
+      10; // untuk menyimpan nilai index jawaban yang dipilih - terdapat 3 index 0 - 2
+  List answers = []; // untuk menyimpan value random jawaban
   late FlutterTts flutterTts;
   String? language;
   String? engine;
@@ -89,10 +89,10 @@ class _CourseTestState extends State<CourseTest> {
   @override
   initState() {
     super.initState();
-    getCourses();
-    initTts();
+    getCourses(); // mengambil data soal dari REST API
+    initTts(); // inisialisasi text to speech
     initSpeechState();
-    getUser();
+    getUser(); // mengambil data user
   }
 
   Future<void> initSpeechState() async {
@@ -206,7 +206,7 @@ class _CourseTestState extends State<CourseTest> {
   }
 
   Future getUser() async {
-    final String uri = "https://stulish-rest-api.herokuapp.com/api/v1/user";
+    final String uri = dotenv.get('API_URL') + "/api/v1/user";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {
@@ -223,8 +223,7 @@ class _CourseTestState extends State<CourseTest> {
 
   void storeAnswer(
       String answer, String courseText, String course_id, int user_id) async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/storeAnswer";
+    final String uri = dotenv.get('API_URL') + "/api/v1/storeAnswer";
     Map data = {
       'answer': answer,
       'checked': true,
@@ -257,14 +256,15 @@ class _CourseTestState extends State<CourseTest> {
         lastWords = '____________';
       }
       _isCheck = !_isCheck;
-      _selectedIndexAnswer = 10;
-      answers = [];
+      _selectedIndexAnswer =
+          10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
+      answers =
+          []; // mengosongkan data jawaban yang dilakukan proses fetch sebelumnya
     });
   }
 
   Future getChoiceAnswer(String id, String sub_category_id) async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getAnswerChoices";
+    final String uri = dotenv.get('API_URL') + "/api/v1/getAnswerChoices";
     Map data = {'id': id, 'sub_category_id': sub_category_id};
     var body = json.encode(data);
 
@@ -282,7 +282,6 @@ class _CourseTestState extends State<CourseTest> {
       setState(() {
         answers = answer;
       });
-      print(answers);
     }
   }
 
@@ -316,9 +315,9 @@ class _CourseTestState extends State<CourseTest> {
   }
 
   Future getCourses() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getCoursesById/" +
-            widget.id_sub_category;
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/getCoursesById/" +
+        widget.id_sub_category;
 
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();

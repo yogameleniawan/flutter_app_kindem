@@ -7,6 +7,7 @@ import 'package:flutter_app_stulish/models/score.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -37,11 +38,11 @@ class _ResultMainState extends State<ResultMain> {
   }
 
   Future getScore() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getScore?user_id=" +
-            widget.id_user.toString() +
-            "&sub_category_id=" +
-            widget.id_sub_category;
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/getScore?user_id=" +
+        widget.id_user.toString() +
+        "&sub_category_id=" +
+        widget.id_sub_category;
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {
@@ -57,11 +58,11 @@ class _ResultMainState extends State<ResultMain> {
   }
 
   Future reloadTest() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/reloadTest?user_id=" +
-            widget.id_user.toString() +
-            "&sub_category_id=" +
-            widget.id_sub_category;
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/reloadTest?user_id=" +
+        widget.id_user.toString() +
+        "&sub_category_id=" +
+        widget.id_sub_category;
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {

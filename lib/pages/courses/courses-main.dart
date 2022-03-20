@@ -5,6 +5,7 @@ import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/pages/components/choach-maker.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
@@ -201,9 +202,9 @@ class _CoursesMainState extends State<CoursesMain> {
   }
 
   Future getCourses() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getCoursesById/" +
-            widget.id_sub_category;
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/getCoursesById/" +
+        widget.id_sub_category;
 
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();

@@ -1,6 +1,7 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/models/score.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:http/http.dart' as http;
@@ -30,9 +31,9 @@ class _ScoreMainState extends State<ScoreMain> {
   }
 
   Future getAllScores() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getAllScore?user_id=" +
-            widget.id_user.toString();
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/getAllScore?user_id=" +
+        widget.id_user.toString();
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {

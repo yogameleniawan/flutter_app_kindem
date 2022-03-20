@@ -13,6 +13,7 @@ import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_app_stulish/services/httpservice.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -150,8 +151,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   Future getAllSubCategories(String id) async {
     final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getSubCategoriesById/" +
-            id;
+        dotenv.get('API_URL') + "/api/v1/getSubCategoriesById/" + id;
 
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();

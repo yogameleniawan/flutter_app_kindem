@@ -5,6 +5,7 @@ import 'package:flutter_app_stulish/models/category.dart';
 import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
 import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 import 'dart:convert';
@@ -30,8 +31,7 @@ class _LevelMainState extends State<LevelMain> {
   }
 
   Future getAllCategory() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getAllCategories";
+    final String uri = dotenv.get('API_URL') + "/api/v1/getAllCategories";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {
@@ -50,8 +50,7 @@ class _LevelMainState extends State<LevelMain> {
   }
 
   Future getFinishedCourse() async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/v1/getFinishCourses";
+    final String uri = dotenv.get('API_URL') + "/api/v1/getFinishCourses";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info/device_info.dart';
 import 'package:http/http.dart' as http;
@@ -12,8 +13,7 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
 
   Future<bool> login(String email, String password) async {
-    final String uri =
-        "https://stulish-rest-api.herokuapp.com/api/requestToken";
+    final String uri = dotenv.get('API_URL') + "/api/requestToken";
     final response = await http.post(Uri.parse(uri), body: {
       'email': email,
       'password': password,

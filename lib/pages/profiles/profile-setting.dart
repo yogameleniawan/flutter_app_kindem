@@ -5,6 +5,7 @@ import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/login/login-main.dart';
 import 'package:flutter_app_stulish/pages/profiles/change-avatar.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -29,7 +30,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
   }
 
   void getUser() async {
-    final String uri = "https://stulish-rest-api.herokuapp.com/api/v1/user";
+    final String uri = dotenv.get('API_URL') + "/api/v1/user";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.get(Uri.parse(uri), headers: {

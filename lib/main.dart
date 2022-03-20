@@ -4,9 +4,11 @@ import 'package:flutter_app_stulish/pages/home/home-main.dart';
 
 import 'package:flutter_app_stulish/pages/splash/splash-screen.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load();
   runApp(ChangeNotifierProvider(
     create: (BuildContext context) => AuthProvider(),
     child: MyApp(),
