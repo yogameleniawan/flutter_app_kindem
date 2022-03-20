@@ -206,7 +206,7 @@ class _HomeMainState extends State<HomeMain> {
                                                 fit: BoxFit.fill,
                                                 cache: true,
                                                 borderRadius: BorderRadius.all(
-                                                    Radius.circular(10.0)),
+                                                    Radius.circular(20.0)),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(
