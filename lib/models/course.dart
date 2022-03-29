@@ -11,6 +11,10 @@ class Courses {
 
   int? complete;
   int? total;
+  int? is_voice;
+  int? get isvoice => this.is_voice;
+
+  set isvoice(int? value) => this.is_voice = value;
 
   get subimage => this.sub_image;
 
@@ -35,8 +39,6 @@ class Courses {
 
   set setTotal(total) => this.total = total;
 
-  bool? is_voice;
-
   String? get getId => this.id;
 
   set setId(String? id) => this.id = id;
@@ -57,10 +59,6 @@ class Courses {
 
   set subcategory_id(value) => this.sub_category_id = value;
 
-  bool? get isvoice => this.is_voice;
-
-  set isvoice(bool? value) => this.is_voice = value;
-
   Courses(this.id, this.indonesia_text, this.english_text, this.image,
       this.sub_category_id, this.is_voice);
 
@@ -78,6 +76,7 @@ class Courses {
   }
 
   Courses.incompleteCourse(Map<String, dynamic> parsedJson) {
+    this.id = parsedJson['id'];
     this.sub_name = parsedJson['sub_name'];
     this.sub_image = parsedJson['sub_image'];
     this.category_name = parsedJson['category_name'];

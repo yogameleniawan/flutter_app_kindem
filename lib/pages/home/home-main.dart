@@ -4,6 +4,7 @@ import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
+import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'package:flutter_app_stulish/pages/home/components/banner.dart';
 import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
 import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
@@ -77,7 +78,6 @@ class _HomeMainState extends State<HomeMain> {
       setState(() {
         courses = course;
       });
-      print(courses);
     }
   }
 
@@ -172,13 +172,17 @@ class _HomeMainState extends State<HomeMain> {
                             return Builder(builder: (context) {
                               return InkWell(
                                 onTap: () {
-                                  // Navigator.push(context, MaterialPageRoute(
-                                  //     builder: (BuildContext context) {
-                                  //   return CoursesMain(
-                                  //     id_sub_category:
-                                  //         sub_categories[index].id,
-                                  //   );
-                                  // }));
+                                  Navigator.push(context, MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    return CourseTest(
+                                      id_sub_category:
+                                          courses[index].sub_category_id,
+                                      is_redirect: true,
+                                    );
+                                  })).then((value) {
+                                    getCourses();
+                                  });
+                                  ;
                                 },
                                 child: Padding(
                                   padding: EdgeInsets.only(
@@ -205,8 +209,6 @@ class _HomeMainState extends State<HomeMain> {
                                                 courses[index].category_image,
                                                 fit: BoxFit.fill,
                                                 cache: true,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(20.0)),
                                               ),
                                               Padding(
                                                 padding: EdgeInsets.only(
@@ -214,6 +216,8 @@ class _HomeMainState extends State<HomeMain> {
                                                       0.03,
                                                 ),
                                                 child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
@@ -257,7 +261,7 @@ class _HomeMainState extends State<HomeMain> {
                                                                 courses[index]
                                                                     .total) *
                                                             100)
-                                                        .toString() +
+                                                        .toStringAsFixed(0) +
                                                     "%"),
                                             progressColor: Color(0xFFF5A71F),
                                           ),

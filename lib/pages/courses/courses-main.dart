@@ -38,6 +38,8 @@ class _CoursesMainState extends State<CoursesMain> {
   List courses = [];
   int indexCourses = 0;
   bool _fetchCourse = false;
+  bool _playIndo = false;
+  bool _playEnglish = false;
 
   late FlutterTts flutterTts;
   String? language;
@@ -127,6 +129,10 @@ class _CoursesMainState extends State<CoursesMain> {
     _speak("id-ID");
     _isPauseIn = false;
     _isPauseEn = false;
+    setState(() {
+      _playEnglish = true;
+      _playIndo = true;
+    });
   }
 
   doTutorialExam() {
@@ -317,30 +323,40 @@ class _CoursesMainState extends State<CoursesMain> {
                         ],
                       ),
                     ),
-                    InkWell(
-                      onTap: () {
-                        doNextCourse();
-                      },
-                      child: indexCourses != courses.length - 1
-                          ? CoachPoint(initial: "btn_next", child: NextButton())
-                          : CoachPoint(
-                              initial: "btn_exam",
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                    return CourseTest(
-                                      id_sub_category: widget.id_sub_category,
-                                    );
-                                  }));
-                                },
-                                child: Image(
-                                  width: displayWidth(context) * 0.15,
-                                  image: AssetImage("assets/images/exam.png"),
-                                ),
-                              ),
-                            ),
-                    ),
+                    _playEnglish && _playIndo
+                        ? InkWell(
+                            onTap: () {
+                              doNextCourse();
+                            },
+                            child: indexCourses != courses.length - 1
+                                ? CoachPoint(
+                                    initial: "btn_next", child: NextButton())
+                                : CoachPoint(
+                                    initial: "btn_exam",
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder:
+                                                (BuildContext context) {
+                                          return CourseTest(
+                                            id_sub_category:
+                                                widget.id_sub_category,
+                                            is_redirect: false,
+                                          );
+                                        }));
+                                      },
+                                      child: Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/exam.png"),
+                                      ),
+                                    ),
+                                  ),
+                          )
+                        : Image(
+                            width: displayWidth(context) * 0.15,
+                            image: AssetImage("assets/images/blank.png"),
+                          ),
                   ],
                 ),
               )
@@ -363,6 +379,7 @@ class _CoursesMainState extends State<CoursesMain> {
             courses.length > 0 ? courses[indexCourses].english_text : "Empty";
         _speak("en-US");
       }
+      _playEnglish = !_playEnglish;
     });
   }
 
@@ -374,18 +391,25 @@ class _CoursesMainState extends State<CoursesMain> {
             courses.length > 0 ? courses[indexCourses].indonesia_text : "Empty";
         _speak("id-ID");
       }
+      _playIndo = !_playIndo;
     });
   }
 
   void doNextCourse() {
+    if (indexCourses == courses.length - 1 && _isComplete == false) {
+      setState(() {
+        _playEnglish = !_playEnglish;
+        _playIndo = !_playIndo;
+      });
+      doTutorialExam();
+    }
     setState(() {
       if (indexCourses < courses.length - 1) {
         indexCourses++;
       }
+      _playEnglish = !_playEnglish;
+      _playIndo = !_playIndo;
     });
-    if (indexCourses == courses.length - 1 && _isComplete == false) {
-      doTutorialExam();
-    }
   }
 
   void doPrevCourse() {

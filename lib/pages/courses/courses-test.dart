@@ -34,8 +34,11 @@ import 'components/dialog-message.dart';
 import 'components/next-button.dart';
 
 class CourseTest extends StatefulWidget {
-  CourseTest({Key? key, required this.id_sub_category}) : super(key: key);
+  CourseTest(
+      {Key? key, required this.id_sub_category, required this.is_redirect})
+      : super(key: key);
   final String id_sub_category;
+  bool is_redirect;
 
   @override
   _CourseTestState createState() => _CourseTestState();
@@ -55,6 +58,9 @@ class _CourseTestState extends State<CourseTest> {
   double volume = 1.0;
   double pitch = 1.54;
   double rate = 0.4;
+
+  int courses_total = 0;
+  int course_answer_total = 0;
 
   bool _isCheck = false;
 
@@ -89,7 +95,11 @@ class _CourseTestState extends State<CourseTest> {
   @override
   initState() {
     super.initState();
-    getCourses(); // mengambil data soal dari REST API
+    if (widget.is_redirect) {
+      getCourseAnswered();
+    } else {
+      getCourses(); // mengambil data soal dari REST API
+    }
     initTts(); // inisialisasi text to speech
     initSpeechState();
     getUser(); // mengambil data user
@@ -242,24 +252,20 @@ class _CourseTestState extends State<CourseTest> {
           'Authorization': 'Bearer $token',
         },
         body: body);
-    if (result.statusCode == HttpStatus.ok) {
-      print("Success");
-    }
   }
 
   void processStoreAnswer() {
     storeAnswer(lastWords, courses[indexCourses].english_text,
         courses[indexCourses].id, user.id);
     setState(() {
-      if (indexCourses < courses.length - 1) {
+      if (indexCourses < courses.length) {
         indexCourses++;
         lastWords = '____________';
       }
       _isCheck = !_isCheck;
+      widget.is_redirect = false;
       _selectedIndexAnswer =
           10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
-      answers =
-          []; // mengosongkan data jawaban yang dilakukan proses fetch sebelumnya
     });
   }
 
@@ -280,8 +286,10 @@ class _CourseTestState extends State<CourseTest> {
       final jsonResponse = json.decode(result.body);
       List answer = jsonResponse.map((i) => Courses.choiceAnswer(i)).toList();
       setState(() {
+        print(jsonResponse);
         answers = answer;
       });
+      print(answers.length);
     }
   }
 
@@ -335,6 +343,30 @@ class _CourseTestState extends State<CourseTest> {
     }
   }
 
+  Future getCourseAnswered() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/redirectCourse";
+    print(widget.id_sub_category);
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'sub_category_id': widget.id_sub_category
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      List courseMap = jsonResponse['data'];
+      print(jsonResponse);
+      List course = courseMap.map((i) => Courses.fromJson(i)).toList();
+      setState(() {
+        courses = course;
+        courses_total = jsonResponse['courses_total'];
+        course_answer_total = jsonResponse['course_answer_total'];
+      });
+      getChoiceAnswer(courses[0].id, courses[0].sub_category_id);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (courses.length > 0) {
@@ -356,12 +388,16 @@ class _CourseTestState extends State<CourseTest> {
                       child: FAProgressBar(
                     backgroundColor: Colors.white,
                     progressColor: Color(0xFFF5A71F),
-                    currentValue: (indexCourses + 1) * 10,
-                    maxValue: courses.length * 10,
+                    currentValue: widget.is_redirect
+                        ? course_answer_total
+                        : (indexCourses + 1) * 10,
+                    maxValue: widget.is_redirect
+                        ? courses_total
+                        : courses.length * 10,
                     size: 15,
                   )),
                   ImageCourse(courses: courses, indexCourses: indexCourses),
-                  courses[indexCourses].is_voice
+                  courses[indexCourses].is_voice == 1
                       ? Text("Apa ini?",
                           style: TextStyle(
                             fontSize: 20,
@@ -374,7 +410,7 @@ class _CourseTestState extends State<CourseTest> {
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                           )),
-                  courses[indexCourses].is_voice
+                  courses[indexCourses].is_voice == 1
                       ? VoiceTest(context)
                       : ChooseTest(),
                   InkWell(
@@ -387,8 +423,7 @@ class _CourseTestState extends State<CourseTest> {
                               courses[indexCourses].indonesia_text);
                         }
 
-                        if (!courses[indexCourses + 1].is_voice) {
-                          print('request');
+                        if (courses[indexCourses + 1].is_voice == 0) {
                           getChoiceAnswer(courses[indexCourses + 1].id,
                               courses[indexCourses + 1].sub_category_id);
                         }
@@ -600,7 +635,10 @@ class _CourseTestState extends State<CourseTest> {
                       _isCheck = !_isCheck;
                     });
                     processStoreAnswer();
-                    if (indexCourses == courses.length - 1) {
+                    print('prinnnntttt');
+                    print(indexCourses);
+                    print(courses.length);
+                    if (indexCourses == courses.length) {
                       Navigator.of(context).pop();
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
