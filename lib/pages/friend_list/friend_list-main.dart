@@ -148,6 +148,10 @@ class _FriendListState extends State<FriendList> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: _searchResult.length,
                         itemBuilder: (context, int index) {
+                          if (_searchResult[index].photo == null) {
+                            _searchResult[index].photo =
+                                "assets/images/user_icon_big.png";
+                          }
                           return Builder(
                             builder: (context) {
                               return InkWell(
@@ -155,7 +159,7 @@ class _FriendListState extends State<FriendList> {
                                   Navigator.push(context, MaterialPageRoute(
                                       builder: (BuildContext context) {
                                     return ProfileDetail(
-                                        name: _searchResult[index].name);
+                                        user: _searchResult[index]);
                                   }));
                                 },
                                 child: Padding(
@@ -177,7 +181,8 @@ class _FriendListState extends State<FriendList> {
                                           maxRadius:
                                               displayWidth(context) * 0.072,
                                           backgroundImage: AssetImage(
-                                              "assets/images/user_icon.png"),
+                                                  _searchResult[index].photo)
+                                              ,
                                         ),
                                         // Image.asset(
                                         //   "assets/images/user_icon.png",
@@ -234,12 +239,15 @@ class _FriendListState extends State<FriendList> {
                         itemBuilder: (context, int index) {
                           return Builder(
                             builder: (context) {
+                              if (users[index].photo == null) {
+                            users[index].photo =
+                                "assets/images/user_icon_big.png";
+                          }
                               return InkWell(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(
                                       builder: (BuildContext context) {
-                                    return ProfileDetail(
-                                        name: users[index].name);
+                                    return ProfileDetail(user: users[index]);
                                   }));
                                 },
                                 child: Padding(
@@ -260,8 +268,8 @@ class _FriendListState extends State<FriendList> {
                                         CircleAvatar(
                                           maxRadius:
                                               displayWidth(context) * 0.072,
-                                          backgroundImage: AssetImage(
-                                              "assets/images/user_icon.png"),
+                                          backgroundImage: AssetImage(users[index].photo)
+                                              ,
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(

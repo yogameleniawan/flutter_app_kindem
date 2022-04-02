@@ -1,12 +1,13 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/friend_list/friend_list-main.dart';
 import 'package:flutter_app_stulish/pages/home/home-main.dart';
 
 class ProfileDetail extends StatefulWidget {
-  const ProfileDetail({Key? key, required this.name}) : super(key: key);
-  final String name;
+  const ProfileDetail({Key? key, required this.user}) : super(key: key);
+  final User user;
   @override
   _ProfileDetailState createState() => _ProfileDetailState();
 }
@@ -29,16 +30,14 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                 child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.center,
-                      child: Image(
-                        image: AssetImage("assets/images/user_icon_big.png"),
-                      ),
+                    CircleAvatar(
+                      maxRadius: displayHeight(context) * 0.09,
+                      backgroundImage: AssetImage(widget.user.photo.toString()),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 20),
                       child: Text(
-                        widget.name,
+                        widget.user.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,

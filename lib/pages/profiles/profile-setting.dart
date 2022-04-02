@@ -47,7 +47,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
   }
 
   Future updateName(String name) async {
-    final String uri = dotenv.get('API_URL') + "/api/v1/updateName";
+    final String uri = dotenv.get('API_URL') + "/api/v1/updateProfile";
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.post(Uri.parse(uri), headers: {
@@ -56,7 +56,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }, body: {
       'name': name,
     });
-    if (result.statusCode == HttpStatus.ok){
+    if (result.statusCode == HttpStatus.ok) {
       setState(() {
         getUser();
       });
@@ -84,25 +84,13 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       margin: EdgeInsets.only(bottom: 55),
                       child: Row(
                         children: [
-                          Image(
-                            image:
-                                AssetImage("assets/images/user_icon_big.png"),
-                            width: 70,
+                          CircleAvatar(
+                            maxRadius: displayHeight(context) * 0.052,
+                            backgroundImage: user.photo.toString().isNotEmpty
+                                ? AssetImage(user.photo.toString())
+                                : AssetImage("assets/images/user_icon_big.png"),
                           ),
-                          // CircleAvatar(
-                          //   maxRadius:
-                          //       MediaQuery.of(context).size.height * 0.1 / 1.8,
-                          //   backgroundColor: Colors.white,
-                          //   // backgroundColor: Color(color),
-                          //   child: Container(
-                          //     height: 100,
-                          //     child: Image(
-                          //       width: 100,
-                          //       // color: Colors.white,
-                          //       image: AssetImage("assets/images/kindem-logo.png"),
-                          //     ),
-                          //   ),
-                          // ),
+                          
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.only(left: 20),
@@ -224,7 +212,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                             print(usernameController.text);
                                             await updateName(
                                                 usernameController.text);
-                                            
+
                                             MotionToast(
                                                     icon: Icons
                                                         .check_circle_outline_outlined,

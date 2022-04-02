@@ -1,6 +1,15 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:motion_toast/motion_toast.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 class ChangeAvatar extends StatefulWidget {
   const ChangeAvatar({Key? key}) : super(key: key);
@@ -10,6 +19,7 @@ class ChangeAvatar extends StatefulWidget {
 }
 
 class _ChangeAvatarState extends State<ChangeAvatar> {
+  User user = new User();
   List<bool> isSelected = [true, false, false, false, false, false];
   List<String> avatarList = [
     "assets/images/avatar-1.jpg",
@@ -19,6 +29,65 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
     "assets/images/avatar-5.jpg",
     "assets/images/avatar-6.jpg",
   ];
+  String? avatarPath;
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  void getUser() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user = users;
+      });
+    }
+  }
+
+  int indexAvatar = 0;
+  void setAvatar() {
+    setState(() {
+      if (indexAvatar == 0) {
+        avatarPath = "assets/images/avatar-1.jpg";
+      } else if (indexAvatar == 1) {
+        avatarPath = "assets/images/avatar-2.jpg";
+      } else if (indexAvatar == 2) {
+        avatarPath = "assets/images/avatar-3.jpg";
+      } else if (indexAvatar == 3) {
+        avatarPath = "assets/images/avatar-4.jpg";
+      } else if (indexAvatar == 4) {
+        avatarPath = "assets/images/avatar-5.jpg";
+      } else if (indexAvatar == 5) {
+        avatarPath = "assets/images/avatar-6.jpg";
+      }
+    });
+  }
+
+  Future updateAvatar(String avatar) async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/updateProfile";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'profile_photo_path': avatar,
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      setState(() {
+        getUser();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +102,8 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
               icon: Icon(Icons.arrow_back_ios_new_rounded,
                   color: Color(0xFFF5A720)),
               onPressed: () {
+                // Navigator.of(context)
+                //     .pop(MaterialPageRoute(builder: (context) => ProfileSetting()));
                 Navigator.of(context).pop();
               },
             ),
@@ -55,8 +126,9 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                             child: Text("Avatar Kamu")),
                         CircleAvatar(
                           maxRadius: displayHeight(context) * 0.11,
-                          backgroundImage:
-                              AssetImage("assets/images/user_icon_big.png"),
+                          backgroundImage: user.photo.toString().isNotEmpty
+                              ? AssetImage(user.photo.toString())
+                              : AssetImage("assets/images/user_icon_big.png"),
                           // backgroundColor: Colors.blue,
                           // child: Image(
                           //   image:
@@ -95,6 +167,7 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                             indexBtn++) {
                                           if (indexBtn == index) {
                                             isSelected[indexBtn] = true;
+                                            indexAvatar = indexBtn;
                                           } else {
                                             isSelected[indexBtn] = false;
                                           }
@@ -109,7 +182,7 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                         borderRadius:
                                             BorderRadius.circular(100),
                                         border: Border.all(
-                                          width: 2,
+                                          width: 3.5,
                                           color: isSelected[index]
                                               ? Color(0xFF0074CD)
                                               : Color(0xFFF5A720),
@@ -160,7 +233,45 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                     ),
                                   ),
                                 ),
-                                onPressed: () {}),
+                                onPressed: () async {
+                                  setAvatar();
+                                  print(avatarPath);
+                                  await updateAvatar(avatarPath.toString());
+
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      transitionDuration:
+                                          Duration(milliseconds: 500),
+                                      pageBuilder: (BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double>
+                                              secondaryAnimation) {
+                                        return ProfileSetting();
+                                      },
+                                      transitionsBuilder: (BuildContext context,
+                                          Animation<double> animation,
+                                          Animation<double> secondaryAnimation,
+                                          Widget child) {
+                                        return Align(
+                                          child: FadeTransition(
+                                            opacity: animation,
+                                            child: child,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                  // Navigator.of(context).pop();
+                                  MotionToast(
+                                          icon: Icons
+                                              .check_circle_outline_outlined,
+                                          primaryColor: Color(0xFFBBDDFB),
+                                          height: displayHeight(context) * 0.07,
+                                          width: displayWidth(context) * 0.8,
+                                          description:
+                                              Text("Avatar berhasil diubah"))
+                                      .show(context);
+                                }),
                           ),
                         ),
                       ],
