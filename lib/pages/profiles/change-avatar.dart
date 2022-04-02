@@ -106,7 +106,8 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                         color: isSelected[index]
                                             ? Color(0xffD6EAF8)
                                             : Colors.white,
-                                        borderRadius: BorderRadius.circular(50),
+                                        borderRadius:
+                                            BorderRadius.circular(100),
                                         border: Border.all(
                                           width: 2,
                                           color: isSelected[index]

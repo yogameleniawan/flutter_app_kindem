@@ -6,6 +6,7 @@ import 'package:flutter_app_stulish/pages/login/login-main.dart';
 import 'package:flutter_app_stulish/pages/profiles/change-avatar.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:motion_toast/motion_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -45,6 +46,23 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }
   }
 
+  Future updateName(String name) async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/updateName";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'name': name,
+    });
+    if (result.statusCode == HttpStatus.ok){
+      setState(() {
+        getUser();
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     usernameController.text = user.name;
     return MaterialApp(
@@ -57,8 +75,9 @@ class _ProfileSettingState extends State<ProfileSetting> {
                   fit: BoxFit.cover)),
           child: Center(
             child: SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                 child: Column(
                   children: [
                     Container(
@@ -121,9 +140,9 @@ class _ProfileSettingState extends State<ProfileSetting> {
                         borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withOpacity(0.1),
                               offset: Offset(0, 9),
-                              blurRadius: 20,
+                              blurRadius: 10,
                               spreadRadius: 1),
                         ],
                       ),
@@ -185,7 +204,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                   controller: usernameController,
                                   style: TextStyle(
                                       color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.w500),
 
                                   decoration: InputDecoration(
                                     hintText: 'Nama User',
@@ -196,8 +215,32 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                     ),
                                     prefixIcon: Icon(Icons.text_fields,
                                         color: Colors.black),
-                                    suffixIcon:
-                                        Icon(Icons.edit, color: Colors.black),
+                                    suffixIcon: Container(
+                                        color: Color(0xFFF5A720),
+                                        child: IconButton(
+                                          icon: Icon(Icons.edit,
+                                              color: Colors.white),
+                                          onPressed: () async {
+                                            print(usernameController.text);
+                                            await updateName(
+                                                usernameController.text);
+                                            
+                                            MotionToast(
+                                                    icon: Icons
+                                                        .check_circle_outline_outlined,
+                                                    primaryColor:
+                                                        Color(0xFFBBDDFB),
+                                                    height:
+                                                        displayHeight(context) *
+                                                            0.07,
+                                                    width:
+                                                        displayWidth(context) *
+                                                            0.8,
+                                                    description: Text(
+                                                        "Nama berhasil diubah"))
+                                                .show(context);
+                                          },
+                                        )),
                                     enabledBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
                                           width: 1, color: Color(0xFFF5A720)),
@@ -206,7 +249,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                     ),
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: const BorderSide(
-                                          width: 1, color: Colors.red),
+                                          width: 1, color: Color(0xFFF5A720)),
                                       borderRadius: BorderRadius.circular(6.0),
                                     ),
                                   ),

@@ -24,8 +24,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
                   fit: BoxFit.cover)),
           child: Center(
             child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 50),
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                 child: Column(
                   children: [
                     Container(
@@ -66,9 +67,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
                         borderRadius: BorderRadius.circular(20.0),
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
+                              color: Colors.black.withOpacity(0.1),
                               offset: Offset(0, 9),
-                              blurRadius: 20,
+                              blurRadius: 10,
                               spreadRadius: 1),
                         ],
                       ),

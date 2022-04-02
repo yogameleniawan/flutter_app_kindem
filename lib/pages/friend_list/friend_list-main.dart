@@ -173,12 +173,18 @@ class _FriendListState extends State<FriendList> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Image.asset(
-                                          "assets/images/user_icon.png",
-                                          width: displayWidth(context) * 0.12,
-                                          // height: displayHeight(context) * 0.05,
-                                          fit: BoxFit.fill,
+                                        CircleAvatar(
+                                          maxRadius:
+                                              displayWidth(context) * 0.072,
+                                          backgroundImage: AssetImage(
+                                              "assets/images/user_icon.png"),
                                         ),
+                                        // Image.asset(
+                                        //   "assets/images/user_icon.png",
+                                        //   width: displayWidth(context) * 0.12,
+                                        //   // height: displayHeight(context) * 0.05,
+                                        //   fit: BoxFit.fill,
+                                        // ),
                                         Padding(
                                           padding: EdgeInsets.only(
                                             left: displayWidth(context) * 0.03,
@@ -251,11 +257,11 @@ class _FriendListState extends State<FriendList> {
                                     ),
                                     child: Row(
                                       children: [
-                                        Image.asset(
-                                          "assets/images/user_icon.png",
-                                          width: displayWidth(context) * 0.12,
-                                          // height: displayHeight(context) * 0.05,
-                                          fit: BoxFit.fill,
+                                        CircleAvatar(
+                                          maxRadius:
+                                              displayWidth(context) * 0.072,
+                                          backgroundImage: AssetImage(
+                                              "assets/images/user_icon.png"),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(
