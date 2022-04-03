@@ -5,19 +5,15 @@ import 'package:flutter_app_stulish/models/course.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
-import 'package:flutter_app_stulish/pages/home/components/banner.dart';
-import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
+import 'package:flutter_app_stulish/pages/level/level-main.dart';
 import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
-import 'package:flutter_app_stulish/pages/scores/score-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'components/course-card.dart';
 import 'components/search-friend.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -160,8 +156,46 @@ class _HomeMainState extends State<HomeMain> {
                       )
                     ],
                   ),
-                  BannerHome(
-                    getCourses: getCourses(),
+                  Padding(
+                    padding:
+                        EdgeInsets.only(top: displayHeight(context) * 0.05),
+                    child: Stack(children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image(
+                          image: AssetImage("assets/images/banner.jpg"),
+                        ),
+                      ),
+                      Positioned(
+                          top: displayHeight(context) * 0.15,
+                          left: displayWidth(context) * 0.05,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                // return CategoriesMain();
+                                return LevelMain();
+                              })).then((value) {
+                                getCourses();
+                              });
+                            },
+                            child: Container(
+                                padding: EdgeInsets.fromLTRB(
+                                  displayWidth(context) * 0.02,
+                                  displayHeight(context) * 0.01,
+                                  displayWidth(context) * 0.02,
+                                  displayHeight(context) * 0.01,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Color(0xFFF5A71F),
+                                ),
+                                child: Text(
+                                  'Cari Materi',
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                          ))
+                    ]),
                   ),
                   SearchFriend(),
                   Text("Materi yang sedang kamu kerjakan"),

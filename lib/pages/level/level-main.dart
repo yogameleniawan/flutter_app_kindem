@@ -45,26 +45,6 @@ class _LevelMainState extends State<LevelMain> {
         categories = category;
       });
     }
-
-    getFinishedCourse();
-  }
-
-  Future getFinishedCourse() async {
-    final String uri = dotenv.get('API_URL') + "/api/v1/getFinishCourses";
-    String? token =
-        await Provider.of<AuthProvider>(context, listen: false).getToken();
-    http.Response result = await http.get(Uri.parse(uri), headers: {
-      'Authorization': 'Bearer $token',
-    });
-    if (result.statusCode == HttpStatus.ok) {
-      final jsonResponse = json.decode(result.body);
-      List courseMap = jsonResponse['data'];
-      List course = courseMap.map((i) => Category.finishedJson(i)).toList();
-      setState(() {
-        courses = course;
-      });
-      print(courses.length);
-    }
   }
 
   @override
@@ -80,7 +60,7 @@ class _LevelMainState extends State<LevelMain> {
                 return Builder(builder: (context) {
                   return InkWell(
                     onTap: () {
-                      if (index < courses.length + 1) {
+                      if (index == 0) {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return CategoriesMain(
@@ -89,6 +69,17 @@ class _LevelMainState extends State<LevelMain> {
                             name_category: categories[index].name,
                           );
                         }));
+                      } else {
+                        if (categories[index - 1].is_complete == 1) {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return CategoriesMain(
+                              id_category: categories[index].id,
+                              image_category: categories[index].image,
+                              name_category: categories[index].name,
+                            );
+                          }));
+                        }
                       }
                     },
                     child: Container(
@@ -118,7 +109,7 @@ class _LevelMainState extends State<LevelMain> {
                                   borderRadius: BorderRadius.circular(
                                       displayWidth(context) * 0.1),
                                 ),
-                                child: index < courses.length + 1
+                                child: index == 0
                                     ? ExtendedImage.network(
                                         categories[index].image,
                                         width: displayWidth(context) * 0.3,
@@ -127,15 +118,24 @@ class _LevelMainState extends State<LevelMain> {
                                         borderRadius:
                                             BorderRadius.circular(100.0),
                                       )
-                                    : ExtendedImage.network(
-                                        categories[index].image,
-                                        width: displayWidth(context) * 0.3,
-                                        fit: BoxFit.fill,
-                                        color: Colors.black12,
-                                        cache: true,
-                                        borderRadius:
-                                            BorderRadius.circular(100.0),
-                                      ),
+                                    : categories[index - 1].is_complete == 1
+                                        ? ExtendedImage.network(
+                                            categories[index].image,
+                                            width: displayWidth(context) * 0.3,
+                                            fit: BoxFit.fill,
+                                            cache: true,
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                          )
+                                        : ExtendedImage.network(
+                                            categories[index].image,
+                                            width: displayWidth(context) * 0.3,
+                                            fit: BoxFit.fill,
+                                            color: Colors.black12,
+                                            cache: true,
+                                            borderRadius:
+                                                BorderRadius.circular(100.0),
+                                          ),
                               ),
                               index == categories.length - 1
                                   ? Padding(
@@ -162,77 +162,3 @@ class _LevelMainState extends State<LevelMain> {
     }
   }
 }
-
-const List<Step> spr = <Step>[
-  // const Step( title:  ,'SubTitle1', 'This is Content', state: StepState.indexed, true)
-
-  Step(
-      title: const Text('Hello1'),
-      subtitle: Text('SubTitle1'),
-      content: const Text('This is Content1'),
-      state: StepState.indexed,
-      isActive: true),
-
-  Step(
-      title: const Text('Hello2'),
-      subtitle: Text('SubTitle2'),
-      content: const Text('This is Content2'),
-      state: StepState.indexed,
-      isActive: true),
-
-  Step(
-      title: const Text('Hello3'),
-      subtitle: Text('SubTitle3'),
-      content: const Text('This is Content3'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello4'),
-      subtitle: Text('SubTitle4'),
-      content: const Text('This is Content4'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello5'),
-      subtitle: Text('SubTitle5'),
-      content: const Text('This is Content5'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello6'),
-      subtitle: Text('SubTitle6'),
-      content: const Text('This is Content6'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello7'),
-      subtitle: Text('SubTitle7'),
-      content: const Text('This is Content7'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello8'),
-      subtitle: Text('SubTitle8'),
-      content: const Text('This is Content8'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello9'),
-      subtitle: Text('SubTitle9'),
-      content: const Text('This is Content9'),
-      state: StepState.indexed,
-      isActive: false),
-
-  Step(
-      title: const Text('Hello10'),
-      subtitle: Text('SubTitle10'),
-      content: const Text('This is Content10'),
-      state: StepState.indexed,
-      isActive: false),
-];

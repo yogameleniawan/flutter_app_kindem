@@ -18,10 +18,8 @@ import 'package:provider/provider.dart';
 class ResultMain extends StatefulWidget {
   ResultMain({
     Key? key,
-    required this.id_user,
     required this.id_sub_category,
   }) : super(key: key);
-  final int id_user;
   final String id_sub_category;
   @override
   _ResultMainState createState() => _ResultMainState();
@@ -39,9 +37,7 @@ class _ResultMainState extends State<ResultMain> {
 
   Future getScore() async {
     final String uri = dotenv.get('API_URL') +
-        "/api/v1/getScore?user_id=" +
-        widget.id_user.toString() +
-        "&sub_category_id=" +
+        "/api/v1/getScore?sub_category_id=" +
         widget.id_sub_category;
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
@@ -59,9 +55,7 @@ class _ResultMainState extends State<ResultMain> {
 
   Future reloadTest() async {
     final String uri = dotenv.get('API_URL') +
-        "/api/v1/reloadTest?user_id=" +
-        widget.id_user.toString() +
-        "&sub_category_id=" +
+        "/api/v1/reloadTest?sub_category_id=" +
         widget.id_sub_category;
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();

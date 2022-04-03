@@ -9,6 +9,7 @@ import 'package:flutter_app_stulish/models/sub_category.dart';
 import 'package:flutter_app_stulish/pages/components/choach-maker.dart';
 import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-main.dart';
+import 'package:flutter_app_stulish/pages/result/result-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_app_stulish/services/httpservice.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -170,12 +171,22 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                                 id_sub_category:
                                                     sub_categories[index].id,
                                               )
-                                            : CourseTest(
-                                                id_sub_category:
-                                                    sub_categories[index].id,
-                                                is_redirect: true,
-                                              );
-                                      }));
+                                            : sub_categories[index].complete ==
+                                                    sub_categories[index].total
+                                                ? ResultMain(
+                                                    id_sub_category:
+                                                        sub_categories[index]
+                                                            .id,
+                                                  )
+                                                : CourseTest(
+                                                    id_sub_category:
+                                                        sub_categories[index]
+                                                            .id,
+                                                    is_redirect: true,
+                                                  );
+                                      })).then((value) {
+                                        getAllSubCategories(widget.id_category);
+                                      });
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),

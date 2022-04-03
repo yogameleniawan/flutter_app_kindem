@@ -2,6 +2,10 @@ class Category {
   String? id;
   String? name;
   String? image;
+  int? is_complete;
+  int? get iscomplete => this.is_complete;
+
+  set iscomplete(int? value) => this.is_complete = value;
 
   String? get getId => this.id;
 
@@ -21,6 +25,7 @@ class Category {
     this.id = parsedJson['id'];
     this.name = parsedJson['name'];
     this.image = parsedJson['image'];
+    this.is_complete = parsedJson['is_complete'];
   }
 
   Category.finishedJson(Map<String, dynamic> parsedJson) {

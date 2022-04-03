@@ -422,10 +422,11 @@ class _CourseTestState extends State<CourseTest> {
                           _falseAnswerShow(courses[indexCourses].english_text,
                               courses[indexCourses].indonesia_text);
                         }
-
-                        if (courses[indexCourses + 1].is_voice == 0) {
-                          getChoiceAnswer(courses[indexCourses + 1].id,
-                              courses[indexCourses + 1].sub_category_id);
+                        if (indexCourses < courses.length) {
+                          if (courses[indexCourses + 1].is_voice == 0) {
+                            getChoiceAnswer(courses[indexCourses + 1].id,
+                                courses[indexCourses + 1].sub_category_id);
+                          }
                         }
                       },
                       child: Container(
@@ -635,15 +636,13 @@ class _CourseTestState extends State<CourseTest> {
                       _isCheck = !_isCheck;
                     });
                     processStoreAnswer();
-                    print('prinnnntttt');
-                    print(indexCourses);
-                    print(courses.length);
+                    print('sub caategory id');
+                    print(widget.id_sub_category);
                     if (indexCourses == courses.length) {
                       Navigator.of(context).pop();
                       Navigator.push(context,
                           MaterialPageRoute(builder: (BuildContext context) {
                         return ResultMain(
-                          id_user: user.id,
                           id_sub_category: widget.id_sub_category,
                         );
                       }));
@@ -684,7 +683,6 @@ class _CourseTestState extends State<CourseTest> {
     final result = await Navigator.push(context,
         MaterialPageRoute(builder: (BuildContext context) {
       return ResultMain(
-        id_user: user.id,
         id_sub_category: widget.id_sub_category,
       );
     }));
