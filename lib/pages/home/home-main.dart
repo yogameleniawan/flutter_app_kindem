@@ -156,19 +156,13 @@ class _HomeMainState extends State<HomeMain> {
                                 ? AssetImage(user.photo.toString())
                                 : AssetImage("assets/images/user_icon_big.png"),
                           ),
-                          //     Container(
-                          //   decoration: BoxDecoration(
-                          //     borderRadius: BorderRadius.circular(10),
-                          //   ),
-                          //   child: Image(
-                          //     image: AssetImage("assets/images/user_icon.png"),
-                          //   ),
-                          // ),
                         ),
                       )
                     ],
                   ),
-                  BannerHome(),
+                  BannerHome(
+                    getCourses: getCourses(),
+                  ),
                   SearchFriend(),
                   Text("Materi yang sedang kamu kerjakan"),
                   Expanded(

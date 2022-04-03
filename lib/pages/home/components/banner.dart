@@ -4,10 +4,8 @@ import 'package:flutter_app_stulish/pages/chapter/categories-main.dart';
 import 'package:flutter_app_stulish/pages/level/level-main.dart';
 
 class BannerHome extends StatelessWidget {
-  const BannerHome({
-    Key? key,
-  }) : super(key: key);
-
+  BannerHome({Key? key, required this.getCourses}) : super(key: key);
+  final Future getCourses;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -28,7 +26,9 @@ class BannerHome extends StatelessWidget {
                     MaterialPageRoute(builder: (BuildContext context) {
                   // return CategoriesMain();
                   return LevelMain();
-                }));
+                })).then((value) {
+                  getCourses;
+                });
               },
               child: Container(
                   padding: EdgeInsets.fromLTRB(

@@ -17,13 +17,14 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:skeletons/skeletons.dart';
-
+import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'components/skeleton-chapter.dart';
 
 class CategoriesMain extends StatefulWidget {
@@ -50,71 +51,12 @@ class _CategoriesMainState extends State<CategoriesMain> {
   GlobalKey _one = GlobalKey();
   late BuildContext myContext;
 
-  // Text to Speech Variable
-  late FlutterTts flutterTts;
-  String? language;
-  String? engine;
-  double volume = 1.2;
-  double pitch = 1.54;
-  double rate = 0.5;
-
-  String? text;
-  bool _isPauseIn = false;
-  bool _isPauseEn = false;
-  bool _isStartPage = false;
-  TtsState ttsState = TtsState.stopped;
-
-  get isPlaying => ttsState == TtsState.playing;
-
-  bool get isIOS => Platform.isIOS;
-  bool get isAndroid => Platform.isAndroid;
-  // Text to Speech Variable
-
   @override
   void initState() {
     super.initState();
-    initTts();
     getAllSubCategories(widget.id_category);
     manager.emptyCache();
   }
-
-  // Text To Speech
-
-  initTts() {
-    flutterTts = FlutterTts();
-
-    if (isAndroid) {
-      _getDefaultEngine();
-    }
-
-    flutterTts.setStartHandler(() {
-      setState(() {
-        print("Playing");
-        ttsState = TtsState.playing;
-      });
-    });
-  }
-
-  Future _getDefaultEngine() async {
-    var engine = "com.google.android.tts";
-  }
-
-  Future _speak(String lang) async {
-    flutterTts.setLanguage(lang);
-
-    await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
-
-    await flutterTts.awaitSpeakCompletion(true);
-    await flutterTts.speak(text!);
-    setState(() {
-      _isPauseIn = false;
-      _isPauseEn = false;
-    });
-  }
-
-  // Text To Speech
 
   // Do Tutorial
   doTutorialCarousel() {
@@ -138,11 +80,6 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
     coachMaker(context, listCoachModel).show();
     // make coach maker btn_exam
-
-    // make speaker
-    text = "Kamu bisa menggeser untuk mencari materi yang akan kamu pelajari";
-    _speak("id-ID");
-    // make speaker
   }
 
   // Do Tutorial
@@ -227,10 +164,17 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                     onTap: () {
                                       Navigator.push(context, MaterialPageRoute(
                                           builder: (BuildContext context) {
-                                        return CoursesMain(
-                                          id_sub_category:
-                                              sub_categories[index].id,
-                                        );
+                                        return sub_categories[index].complete ==
+                                                0
+                                            ? CoursesMain(
+                                                id_sub_category:
+                                                    sub_categories[index].id,
+                                              )
+                                            : CourseTest(
+                                                id_sub_category:
+                                                    sub_categories[index].id,
+                                                is_redirect: true,
+                                              );
                                       }));
                                     },
                                     child: Padding(
@@ -285,11 +229,33 @@ class _CategoriesMainState extends State<CategoriesMain> {
                                                 ),
                                               ],
                                             ),
-                                            Image(
-                                              width: 40,
-                                              image: AssetImage(
-                                                  "assets/images/next.png"),
-                                            ),
+                                            sub_categories[index].complete == 0
+                                                ? Image(
+                                                    width: 40,
+                                                    image: AssetImage(
+                                                        "assets/images/next.png"),
+                                                  )
+                                                : CircularPercentIndicator(
+                                                    radius: 20.0,
+                                                    lineWidth: 3.0,
+                                                    percent: ((sub_categories[
+                                                                index]
+                                                            .complete /
+                                                        sub_categories[index]
+                                                            .total)),
+                                                    center: new Text(((sub_categories[
+                                                                            index]
+                                                                        .complete /
+                                                                    sub_categories[
+                                                                            index]
+                                                                        .total) *
+                                                                100)
+                                                            .toStringAsFixed(
+                                                                0) +
+                                                        "%"),
+                                                    progressColor:
+                                                        Color(0xFFF5A71F),
+                                                  ),
                                           ],
                                         ),
                                       ),

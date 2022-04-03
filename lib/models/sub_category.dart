@@ -2,6 +2,15 @@ class SubCategory {
   String? id;
   String? name;
   String? image;
+  int? complete;
+  int? total;
+  int? get getComplete => this.complete;
+
+  set setComplete(int? complete) => this.complete = complete;
+
+  get getTotal => this.total;
+
+  set setTotal(total) => this.total = total;
 
   String? get getId => this.id;
 
@@ -21,5 +30,7 @@ class SubCategory {
     this.id = parsedJson['id'];
     this.name = parsedJson['name'];
     this.image = parsedJson['image'];
+    this.complete = parsedJson['complete'];
+    this.total = parsedJson['total'];
   }
 }

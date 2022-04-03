@@ -225,7 +225,6 @@ class _CoursesMainState extends State<CoursesMain> {
         courses = course;
         _fetchCourse = true;
       });
-
       initTutorial();
     }
   }
