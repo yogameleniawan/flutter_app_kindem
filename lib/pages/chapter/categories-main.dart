@@ -47,7 +47,6 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   List sub_categories = [];
   DefaultCacheManager manager = new DefaultCacheManager();
-  bool _isDoTutorial = false;
   List<CoachModel> listCoachModel = [];
   GlobalKey _one = GlobalKey();
   late BuildContext myContext;
@@ -85,6 +84,26 @@ class _CategoriesMainState extends State<CategoriesMain> {
 
   // Do Tutorial
 
+  Future tutorialCheck() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/tutorialCheck";
+
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'page': 'chapter',
+    });
+
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+
+      if (jsonResponse['is_done'] == false) {
+        doTutorialCarousel();
+      }
+    }
+  }
+
   // Fetching Data
 
   Future getAllSubCategories(String id) async {
@@ -107,12 +126,7 @@ class _CategoriesMainState extends State<CategoriesMain> {
         sub_categories = subCategory;
       });
 
-      if (sub_categories.length > 0 && _isDoTutorial == false) {
-        doTutorialCarousel();
-      }
-      setState(() {
-        _isDoTutorial = true;
-      });
+      tutorialCheck();
     }
   }
 

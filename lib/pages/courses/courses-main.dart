@@ -135,33 +135,6 @@ class _CoursesMainState extends State<CoursesMain> {
     });
   }
 
-  doTutorialExam() {
-    // make coach maker btn_exam
-    List<CoachModel> list = [
-      CoachModel(
-          initial: 'btn_exam',
-          title: 'Tombol untuk Berpindah ke Halaman Ujian',
-          maxWidth: 400,
-          subtitle: [
-            '1. Kamu dapat menekan tombol ini untuk berpindah ke halaman ujian',
-            '2. Pastikan kamu sudah mempelajari materi sebelumnya ya',
-          ],
-          header: Image.asset(
-            'assets/images/exam.png',
-            height: 50,
-            width: 50,
-          )),
-    ];
-    coachMaker(context, list).show();
-    // make coach maker btn_exam
-
-    // make speaker
-    text = "Ketuk tombol ini untuk melakukan ujian";
-    _speak("id-ID");
-    _isComplete = true;
-    // make speaker
-  }
-
   initializeCoachModel() {
     setState(() {
       listCoachModel = [
@@ -225,7 +198,27 @@ class _CoursesMainState extends State<CoursesMain> {
         courses = course;
         _fetchCourse = true;
       });
-      initTutorial();
+      tutorialCheck();
+    }
+  }
+
+  Future tutorialCheck() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/tutorialCheck";
+
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'page': 'courses-main',
+    });
+
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+
+      if (jsonResponse['is_done'] == false) {
+        initTutorial();
+      }
     }
   }
 
@@ -400,7 +393,6 @@ class _CoursesMainState extends State<CoursesMain> {
         _playEnglish = !_playEnglish;
         _playIndo = !_playIndo;
       });
-      doTutorialExam();
     }
     setState(() {
       if (indexCourses < courses.length - 1) {

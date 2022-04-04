@@ -65,7 +65,7 @@ class _CourseTestState extends State<CourseTest> {
   bool _isCheck = false;
 
   String? text;
-
+  var _isPauseIn = false;
   TtsState ttsState = TtsState.stopped;
 
   get isPlaying => ttsState == TtsState.playing;
@@ -314,12 +314,14 @@ class _CourseTestState extends State<CourseTest> {
 
   Future _speak(String lang) async {
     flutterTts.setLanguage(lang);
+
     await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
 
     await flutterTts.awaitSpeakCompletion(true);
     await flutterTts.speak(text!);
+    setState(() {
+      _isPauseIn = false;
+    });
   }
 
   Future getCourses() async {
@@ -398,12 +400,43 @@ class _CourseTestState extends State<CourseTest> {
                   )),
                   ImageCourse(courses: courses, indexCourses: indexCourses),
                   courses[indexCourses].is_voice == 1
-                      ? Text("Apa ini?",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ))
+                      ? Column(
+                          children: [
+                            InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (!_isPauseIn) {
+                                      _isPauseIn = true;
+                                      text = text =
+                                          courses[indexCourses].english_text;
+                                      _speak("en-US");
+                                    }
+                                    // _isPauseIn = !_isPauseIn;
+                                  });
+                                },
+                                child: _isPauseIn == false
+                                    ? Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/sound.png"),
+                                      )
+                                    : Image(
+                                        width: displayWidth(context) * 0.15,
+                                        image: AssetImage(
+                                            "assets/images/pause.png"),
+                                      )),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                  "Tekan tombol diatas kemudian tekan tombol dibawah lalu tirukan!",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                          ],
+                        )
                       : Text("Pilih Jawabanmu!",
                           style: TextStyle(
                             fontSize: 20,
@@ -510,13 +543,15 @@ class _CourseTestState extends State<CourseTest> {
       children: [
         Text(lastWords, style: TextStyle(color: Colors.black, fontSize: 20)),
         Padding(
-          padding: const EdgeInsets.only(bottom: 30),
+          padding: const EdgeInsets.only(bottom: 30, top: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InkWell(
                 onTap: () {
-                  startListening();
+                  if (_isPauseIn == false) {
+                    startListening();
+                  }
                 },
                 child: Image(
                   width: displayWidth(context) * 0.15,

@@ -7,7 +7,6 @@ import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:skeletons/skeletons.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
@@ -23,7 +22,6 @@ class LevelMain extends StatefulWidget {
 class _LevelMainState extends State<LevelMain> {
   List categories = [];
   List courses = [];
-
   @override
   void initState() {
     super.initState();
