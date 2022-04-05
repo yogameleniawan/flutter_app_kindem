@@ -20,7 +20,13 @@ class ProfileSetting extends StatefulWidget {
 
 class _ProfileSettingState extends State<ProfileSetting> {
   PageController pageController = new PageController();
+
   TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController confirmPasswordController = new TextEditingController();
+  String _errorMessage = "";
+  bool _isLoading = false;
+
   User user = new User();
 
   @override
@@ -63,6 +69,37 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }
   }
 
+  bool _isPasswordValid = false;
+  bool changePasswordValidation(String password, String confirmPassword) {
+    setState(() {
+      if (password != confirmPassword ||
+          password.isEmpty ||
+          confirmPassword.isEmpty) {
+        _isPasswordValid = false;
+      } else {
+        _isPasswordValid = true;
+      }
+    });
+    return _isPasswordValid;
+  }
+
+  Future updatePassword(String password) async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/updateProfile";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.post(Uri.parse(uri), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'password': password,
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      setState(() {
+        getUser();
+      });
+    }
+  }
+
   Widget build(BuildContext context) {
     usernameController.text = user.name;
     return MaterialApp(
@@ -90,7 +127,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                 ? AssetImage(user.photo.toString())
                                 : AssetImage("assets/images/user_icon_big.png"),
                           ),
-                          
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.only(left: 20),
@@ -243,12 +279,22 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                   ),
                                 ),
                               ),
-
+                              // Padding(
+                              //   padding: EdgeInsets.fromLTRB(
+                              //       0.0,
+                              //       displayHeight(context) * 0.02,
+                              //       0.0,
+                              //       displayHeight(context) * 0.001),
+                              //   child: Text(
+                              //     _errorMessage,
+                              //     style: TextStyle(color: Colors.red),
+                              //   ),
+                              // ),
                               //button
                               Container(
                                 margin: EdgeInsets.only(
                                     top: displayHeight(context) * 0.03),
-                                child: Button(),
+                                child: Button(context),
                               ),
 
                               //button logout
@@ -497,7 +543,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
     );
   }
 
-  Widget Button() {
+  Widget Button(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -505,9 +551,11 @@ class _ProfileSettingState extends State<ProfileSetting> {
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
           onPressed: () {
+            BuildContext dialogContext;
             showDialog(
                 context: context,
                 builder: (BuildContext context) {
+                  dialogContext = context;
                   return Dialog(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0)),
@@ -522,25 +570,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                           children: [
                             Container(
                               child: TextFormField(
-                                // controller: ,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Password Lama',
-                                  hintText: 'Password Lama',
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 1.0, horizontal: 10.0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-
-                                    // borderSide: ,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 20),
-                              child: TextFormField(
-                                // controller: ,
+                                controller: passwordController,
                                 obscureText: true,
                                 decoration: InputDecoration(
                                   labelText: 'Password Baru',
@@ -556,34 +586,108 @@ class _ProfileSettingState extends State<ProfileSetting> {
                               ),
                             ),
                             Container(
-                              margin: EdgeInsets.only(top: 30),
-                              width: displayWidth(context) * 0.33,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: displayHeight(context) * 0.02),
-                              // height: displayHeight(context) * 0.04,
-                              // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                              // margin: EdgeInsets.symmetric(horizontal: 6),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF5A720),
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.black.withOpacity(0.20),
-                                      offset: Offset(2, 6),
-                                      blurRadius: 7,
-                                      spreadRadius: 2),
-                                ],
-                              ),
-                              child: Text(
-                                "UBAH",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                              margin: EdgeInsets.only(top: 20),
+                              child: TextFormField(
+                                controller: confirmPasswordController,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  labelText: 'Konfirmasi Password Baru',
+                                  hintText: 'Ketik Ulang Password Baru',
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 1.0, horizontal: 10.0),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    // borderSide: ,
+                                  ),
                                 ),
                               ),
                             ),
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(
+                                  0.0,
+                                  displayHeight(context) * 0.02,
+                                  0.0,
+                                  displayHeight(context) * 0.001),
+                              child: Text(
+                                _errorMessage,
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            _isLoading == false
+                                ? BouncingWidget(
+                                    duration: Duration(milliseconds: 90),
+                                    scaleFactor: 2.0,
+                                    onPressed: () async {
+                                      setState(() {
+                                        _errorMessage = "";
+                                        _isLoading = !_isLoading;
+                                      });
+                                      await changePasswordValidation(
+                                          passwordController.text,
+                                          confirmPasswordController.text);
+                                      print(_isPasswordValid);
+                                      if (_isPasswordValid == false) {
+                                        setState(() {
+                                          _errorMessage =
+                                              'Password and Confirm Password must be filled in and matched';
+                                          _isLoading = !_isLoading;
+                                        });
+                                      } else {
+                                        updatePassword(passwordController.text);
+                                      }
+                                      // bool result
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 30),
+                                      width: displayWidth(context) * 0.33,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical:
+                                              displayHeight(context) * 0.02),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFF5A720),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.20),
+                                              offset: Offset(2, 6),
+                                              blurRadius: 7,
+                                              spreadRadius: 2),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        "UBAH",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.only(top: 30),
+                                    width: displayWidth(context) * 0.33,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical:
+                                            displayHeight(context) * 0.02),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF5A720),
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.20),
+                                            offset: Offset(2, 6),
+                                            blurRadius: 7,
+                                            spreadRadius: 2),
+                                      ],
+                                    ),
+                                    child: CircularProgressIndicator(
+                                        color: Colors.white),
+                                  ),
                           ],
                         ),
                       ),
@@ -595,9 +699,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
             width: displayWidth(context) * 0.35,
             padding:
                 EdgeInsets.symmetric(vertical: displayHeight(context) * 0.02),
-            // height: displayHeight(context) * 0.04,
-            // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            // margin: EdgeInsets.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               color: Color(0xFFF5A720),
               borderRadius: BorderRadius.circular(15.0),
