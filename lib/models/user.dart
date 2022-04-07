@@ -3,6 +3,7 @@ class User {
   String name = "";
   String email = "";
   String? photo = "";
+  String level = "";
 
   int get getId => this.id;
   set setId(int id) => this.id = id;
@@ -15,6 +16,9 @@ class User {
 
   get getPhoto => this.photo;
   set setPhoto(photo) => this.photo = photo;
+
+  get getLevel => this.level;
+  set setLevel(level) => this.level = level;
 
   User() {}
 
@@ -30,5 +34,13 @@ class User {
     this.name = parsedJson['name'];
     this.email = parsedJson['email'];
     this.photo = parsedJson['profile_photo_path'];
+  }
+
+  User.allUser(Map<String, dynamic> parsedJson) {
+    this.id = parsedJson['id'];
+    this.name = parsedJson['name'];
+    this.email = parsedJson['email'];
+    this.photo = parsedJson['profile_photo_path'];
+    this.level = parsedJson['level'];
   }
 }

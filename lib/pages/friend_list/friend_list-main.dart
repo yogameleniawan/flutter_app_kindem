@@ -45,7 +45,7 @@ class _FriendListState extends State<FriendList> {
     if (result.statusCode == HttpStatus.ok) {
       final jsonResponse = json.decode(result.body);
       List userMap = jsonResponse['data'];
-      List user = userMap.map((i) => User.fromJson(i)).toList();
+      List user = userMap.map((i) => User.allUser(i)).toList();
 
       setState(() {
         users = user;
@@ -181,8 +181,7 @@ class _FriendListState extends State<FriendList> {
                                           maxRadius:
                                               displayWidth(context) * 0.072,
                                           backgroundImage: AssetImage(
-                                                  _searchResult[index].photo)
-                                              ,
+                                              _searchResult[index].photo),
                                         ),
                                         // Image.asset(
                                         //   "assets/images/user_icon.png",
@@ -213,7 +212,7 @@ class _FriendListState extends State<FriendList> {
                                                                 context) *
                                                             0.01),
                                                     child: Text(
-                                                        "CITIZEN/RAKYAT BIASA (LV1)",
+                                                        users[index].level,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight
@@ -240,9 +239,9 @@ class _FriendListState extends State<FriendList> {
                           return Builder(
                             builder: (context) {
                               if (users[index].photo == null) {
-                            users[index].photo =
-                                "assets/images/user_icon_big.png";
-                          }
+                                users[index].photo =
+                                    "assets/images/user_icon_big.png";
+                              }
                               return InkWell(
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(
@@ -268,8 +267,8 @@ class _FriendListState extends State<FriendList> {
                                         CircleAvatar(
                                           maxRadius:
                                               displayWidth(context) * 0.072,
-                                          backgroundImage: AssetImage(users[index].photo)
-                                              ,
+                                          backgroundImage:
+                                              AssetImage(users[index].photo),
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(
@@ -293,7 +292,7 @@ class _FriendListState extends State<FriendList> {
                                                                 context) *
                                                             0.01),
                                                     child: Text(
-                                                        "CITIZEN/RAKYAT BIASA (LV1)",
+                                                        users[index].level,
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight

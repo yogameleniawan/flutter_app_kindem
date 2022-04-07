@@ -49,7 +49,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     Container(
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
-                        "CITIZEN/RAKYAT BIASA (LVL1)",
+                        widget.user.level,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
