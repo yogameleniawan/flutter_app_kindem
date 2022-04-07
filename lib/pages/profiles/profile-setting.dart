@@ -725,8 +725,11 @@ class _ProfileSettingState extends State<ProfileSetting> {
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => ChangeAvatar()));
+            Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => new ChangeAvatar()))
+                .then((_) {
+              getUser();
+            });
           },
           child: Container(
             width: displayWidth(context) * 0.35,

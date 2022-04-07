@@ -176,7 +176,8 @@ class _HomeMainState extends State<HomeMain> {
                     initial: 'profile',
                     child: InkWell(
                       onTap: () {
-                        Navigator.of(context).push(
+                        Navigator.push(
+                          context,
                           PageRouteBuilder(
                             transitionDuration: Duration(milliseconds: 500),
                             pageBuilder: (BuildContext context,
@@ -196,7 +197,9 @@ class _HomeMainState extends State<HomeMain> {
                               );
                             },
                           ),
-                        );
+                        ).then((_) {
+                          getUser();
+                        });
                       },
                       child: CircleAvatar(
                         maxRadius: displayHeight(context) * 0.043,

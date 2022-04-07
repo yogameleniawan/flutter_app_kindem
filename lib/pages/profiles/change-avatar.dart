@@ -2,7 +2,6 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/profiles/profile-setting.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -13,7 +12,7 @@ import 'dart:io';
 
 class ChangeAvatar extends StatefulWidget {
   const ChangeAvatar({Key? key}) : super(key: key);
-
+  
   @override
   State<ChangeAvatar> createState() => _ChangeAvatarState();
 }
@@ -82,11 +81,6 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
     }, body: {
       'profile_photo_path': avatar,
     });
-    if (result.statusCode == HttpStatus.ok) {
-      setState(() {
-        getUser();
-      });
-    }
   }
 
   @override
@@ -237,31 +231,7 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                   setAvatar();
                                   print(avatarPath);
                                   await updateAvatar(avatarPath.toString());
-
-                                  Navigator.of(context).push(
-                                    PageRouteBuilder(
-                                      transitionDuration:
-                                          Duration(milliseconds: 500),
-                                      pageBuilder: (BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double>
-                                              secondaryAnimation) {
-                                        return ProfileSetting();
-                                      },
-                                      transitionsBuilder: (BuildContext context,
-                                          Animation<double> animation,
-                                          Animation<double> secondaryAnimation,
-                                          Widget child) {
-                                        return Align(
-                                          child: FadeTransition(
-                                            opacity: animation,
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  );
-                                  // Navigator.of(context).pop();
+                                  Navigator.pop(context, false);
                                   MotionToast(
                                           icon: Icons
                                               .check_circle_outline_outlined,
