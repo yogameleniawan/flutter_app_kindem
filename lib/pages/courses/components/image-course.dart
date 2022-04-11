@@ -36,7 +36,11 @@ class ImageCourse extends StatelessWidget {
           child: CachedNetworkImage(
             height: displayHeight(context) * 0.25,
             width: displayWidth(context) * 0.8,
-            imageUrl: courses.length > 0 ? courses[indexCourses].image : "",
+            imageUrl: courses.length > 0
+                ? courses[indexCourses].image_course == null
+                    ? courses[indexCourses].image
+                    : courses[indexCourses].image_course
+                : "",
             progressIndicatorBuilder: (context, url, downloadProgress) =>
                 SkeletonAvatar(
               style: SkeletonAvatarStyle(

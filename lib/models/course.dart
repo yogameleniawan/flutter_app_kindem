@@ -3,6 +3,8 @@ class Courses {
   String? indonesia_text;
   String? english_text;
   String? image;
+  String? image_course;
+
   String? sub_category_id;
   String? sub_name;
   String? sub_image;
@@ -13,6 +15,10 @@ class Courses {
   int? total;
   int? is_voice;
   int? get isvoice => this.is_voice;
+
+  String? get imagecourse => this.image_course;
+
+  set imagecourse(String? value) => this.image_course = value;
 
   set isvoice(int? value) => this.is_voice = value;
 
@@ -69,6 +75,7 @@ class Courses {
     this.image = parsedJson['image'];
     this.sub_category_id = parsedJson['sub_category_id'];
     this.is_voice = parsedJson['is_voice'];
+    this.image_course = parsedJson['image_course'];
   }
 
   Courses.choiceAnswer(Map<String, dynamic> parsedJson) {
@@ -84,5 +91,6 @@ class Courses {
     this.sub_category_id = parsedJson['sub_category_id'];
     this.complete = parsedJson['complete'];
     this.total = parsedJson['total'];
+    this.image_course = parsedJson['image_course'];
   }
 }

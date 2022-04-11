@@ -347,7 +347,8 @@ class _CoursesMainState extends State<CoursesMain> {
                           )
                         : Image(
                             width: displayWidth(context) * 0.15,
-                            image: AssetImage("assets/images/blank.png"),
+                            image: AssetImage(
+                                "assets/images/next-icon-disable.png"),
                           ),
                   ],
                 ),

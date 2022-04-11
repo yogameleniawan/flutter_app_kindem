@@ -38,6 +38,7 @@ class _HomeMainState extends State<HomeMain> {
     pageController = PageController(viewportFraction: 6.0);
     getUser();
     getCourses();
+    addSession();
   }
 
   void getUser() async {
@@ -53,6 +54,19 @@ class _HomeMainState extends State<HomeMain> {
       setState(() {
         user = users;
       });
+    }
+  }
+
+  Future addSession() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/addSession";
+
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
     }
   }
 
