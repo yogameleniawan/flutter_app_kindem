@@ -27,6 +27,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
   String _errorMessage = "";
   bool _isLoading = false;
 
+  final _formKey = GlobalKey<FormState>();
+
   User user = new User();
 
   @override
@@ -70,17 +72,17 @@ class _ProfileSettingState extends State<ProfileSetting> {
   }
 
   bool _isPasswordValid = false;
-  bool changePasswordValidation(String password, String confirmPassword) {
+  void changePasswordValidation(String password, String confirmPassword) {
     setState(() {
       if (password != confirmPassword ||
           password.isEmpty ||
           confirmPassword.isEmpty) {
         _isPasswordValid = false;
+        // _errorMessage = "tes";
       } else {
         _isPasswordValid = true;
       }
     });
-    return _isPasswordValid;
   }
 
   Future updatePassword(String password) async {
@@ -562,133 +564,164 @@ class _ProfileSettingState extends State<ProfileSetting> {
                     child: Container(
                       constraints: BoxConstraints(
                           maxHeight: displayHeight(context) * 0.4),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: displayWidth(context) * 0.06),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: TextFormField(
-                                controller: passwordController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Password Baru',
-                                  hintText: 'Password Baru',
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 1.0, horizontal: 10.0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
+                      child: Form(
+                        key: _formKey,
+                        // autovalidate: true,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: displayWidth(context) * 0.06),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(bottom: 22),
+                                child: Text(
+                                  "Ubah Password",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20),
+                                ),
+                              ),
+                              Container(
+                                child: TextFormField(
+                                  controller: passwordController,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    hintText: 'Password Baru',
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 1.0, horizontal: 10.0),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 2, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 2, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Password tidak boleh kosong';
+                                    } else if (value.length < 8) {
+                                      return 'Password harus berisi min. 8 karakter';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.only(top: 20),
+                                child: TextFormField(
+                                  controller: confirmPasswordController,
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                    // labelText: 'Konfirmasi Password Baru',
+                                    hintText: 'Konfirmasi Ulang Password Baru',
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 1.0, horizontal: 10.0),
+                                    errorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 2, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 2, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      // borderSide: ,
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 3, color: Color(0xFFF5A720)),
+                                      borderRadius: BorderRadius.circular(6.0),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Konfirmasi password tidak boleh kosong';
+                                    } else if (value !=
+                                        passwordController.text) {
+                                      return 'Konfirmasi password tidak sesuai';
+                                    } else if (value.length < 8) {
+                                      return 'Password harus berisi min. 8 karakter';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              BouncingWidget(
+                                duration: Duration(milliseconds: 90),
+                                scaleFactor: 2.0,
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    updatePassword(passwordController.text);
+                                    Navigator.pop(context);
+                                    MotionToast(
+                                            icon: Icons
+                                                .check_circle_outline_outlined,
+                                            primaryColor: Color(0xFFBBDDFB),
+                                            height:
+                                                displayHeight(context) * 0.07,
+                                            width: displayWidth(context) * 0.8,
+                                            description: Text(
+                                                "Password berhasil diubah"))
+                                        .show(context);
+                                  }
 
-                                    // borderSide: ,
+                                  // bool result
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 30),
+                                  width: displayWidth(context) * 0.33,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: displayHeight(context) * 0.02),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFF5A720),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.20),
+                                          offset: Offset(2, 6),
+                                          blurRadius: 7,
+                                          spreadRadius: 2),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    "UBAH",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 20),
-                              child: TextFormField(
-                                controller: confirmPasswordController,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Konfirmasi Password Baru',
-                                  hintText: 'Ketik Ulang Password Baru',
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 1.0, horizontal: 10.0),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    // borderSide: ,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(
-                                  0.0,
-                                  displayHeight(context) * 0.02,
-                                  0.0,
-                                  displayHeight(context) * 0.001),
-                              child: Text(
-                                _errorMessage,
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ),
-                            _isLoading == false
-                                ? BouncingWidget(
-                                    duration: Duration(milliseconds: 90),
-                                    scaleFactor: 2.0,
-                                    onPressed: () async {
-                                      setState(() {
-                                        _errorMessage = "";
-                                        _isLoading = !_isLoading;
-                                      });
-                                      await changePasswordValidation(
-                                          passwordController.text,
-                                          confirmPasswordController.text);
-                                      print(_isPasswordValid);
-                                      if (_isPasswordValid == false) {
-                                        setState(() {
-                                          _errorMessage =
-                                              'Password and Confirm Password must be filled in and matched';
-                                          _isLoading = !_isLoading;
-                                        });
-                                      } else {
-                                        updatePassword(passwordController.text);
-                                      }
-                                      // bool result
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 30),
-                                      width: displayWidth(context) * 0.33,
-                                      padding: EdgeInsets.symmetric(
-                                          vertical:
-                                              displayHeight(context) * 0.02),
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFFF5A720),
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color: Colors.black
-                                                  .withOpacity(0.20),
-                                              offset: Offset(2, 6),
-                                              blurRadius: 7,
-                                              spreadRadius: 2),
-                                        ],
-                                      ),
-                                      child: Text(
-                                        "UBAH",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : Container(
-                                    margin: EdgeInsets.only(top: 30),
-                                    width: displayWidth(context) * 0.33,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical:
-                                            displayHeight(context) * 0.02),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF5A720),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.20),
-                                            offset: Offset(2, 6),
-                                            blurRadius: 7,
-                                            spreadRadius: 2),
-                                      ],
-                                    ),
-                                    child: CircularProgressIndicator(
-                                        color: Colors.white),
-                                  ),
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
