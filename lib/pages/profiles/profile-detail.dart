@@ -257,26 +257,8 @@ class _ProfileDetailState extends State<ProfileDetail> {
           duration: Duration(milliseconds: 90),
           scaleFactor: 2.0,
           onPressed: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                transitionDuration: Duration(milliseconds: 500),
-                pageBuilder: (BuildContext context, Animation<double> animation,
-                    Animation<double> secondaryAnimation) {
-                  return HomeMain();
-                },
-                transitionsBuilder: (BuildContext context,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
-                    Widget child) {
-                  return Align(
-                    child: FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
-                  );
-                },
-              ),
-            );
+            int count = 2;
+            Navigator.of(context).popUntil((_) => count-- <= 0);
           },
           child: Container(
             width: displayWidth(context) * 0.35,
