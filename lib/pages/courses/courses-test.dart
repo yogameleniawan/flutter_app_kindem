@@ -257,8 +257,24 @@ class _CourseTestState extends State<CourseTest> {
   void processStoreAnswer() {
     storeAnswer(lastWords, courses[indexCourses].english_text,
         courses[indexCourses].id, user.id);
+    if (indexCourses == courses.length - 1) {
+      Navigator.of(context).pop();
+      Navigator.of(context).pop();
+      Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+        return ResultMain(
+          id_sub_category: widget.id_sub_category,
+        );
+      }));
+      setState(() {
+        indexCourses = 0;
+        lastWords = '____________';
+      });
+    } else {
+      Navigator.of(context).pop();
+    }
     setState(() {
-      if (indexCourses < courses.length) {
+      if (indexCourses < courses.length - 1) {
         indexCourses++;
         lastWords = '____________';
       }
@@ -455,7 +471,7 @@ class _CourseTestState extends State<CourseTest> {
                           _falseAnswerShow(courses[indexCourses].english_text,
                               courses[indexCourses].indonesia_text);
                         }
-                        if (indexCourses < courses.length) {
+                        if (indexCourses < courses.length - 1) {
                           if (courses[indexCourses + 1].is_voice == 0) {
                             getChoiceAnswer(courses[indexCourses + 1].id,
                                 courses[indexCourses + 1].sub_category_id);
@@ -602,7 +618,6 @@ class _CourseTestState extends State<CourseTest> {
                       _isCheck = !_isCheck;
                     });
                     processStoreAnswer();
-                    Navigator.of(context).pop();
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(
@@ -671,23 +686,6 @@ class _CourseTestState extends State<CourseTest> {
                       _isCheck = !_isCheck;
                     });
                     processStoreAnswer();
-                    print('sub caategory id');
-                    print(widget.id_sub_category);
-                    if (indexCourses == courses.length) {
-                      Navigator.of(context).pop();
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (BuildContext context) {
-                        return ResultMain(
-                          id_sub_category: widget.id_sub_category,
-                        );
-                      }));
-                      setState(() {
-                        indexCourses = 0;
-                        lastWords = '____________';
-                      });
-                    } else {
-                      Navigator.of(context).pop();
-                    }
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(
@@ -712,21 +710,6 @@ class _CourseTestState extends State<CourseTest> {
         );
       },
     );
-  }
-
-  _navigateNextTest(BuildContext context) async {
-    final result = await Navigator.push(context,
-        MaterialPageRoute(builder: (BuildContext context) {
-      return ResultMain(
-        id_sub_category: widget.id_sub_category,
-      );
-    }));
-    if (result == true) {
-      setState(() {
-        indexCourses = 0;
-        lastWords = '____________';
-      });
-    }
   }
 
   showAlertDialog(BuildContext context) {
