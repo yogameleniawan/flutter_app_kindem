@@ -4,6 +4,8 @@ class User {
   String email = "";
   String? photo = "";
   String level = "";
+  int point = 0;
+  int complete_sub_category = 0;
 
   int get getId => this.id;
   set setId(int id) => this.id = id;
@@ -19,6 +21,13 @@ class User {
 
   get getLevel => this.level;
   set setLevel(level) => this.level = level;
+
+  get getPoint => this.point;
+  set setPoint(point) => this.point = point;
+
+  get getCompleteSubCategory => this.complete_sub_category;
+  set setCompleteSubCategory(complete_sub_category) =>
+      this.complete_sub_category = complete_sub_category;
 
   User() {}
 
@@ -42,5 +51,7 @@ class User {
     this.email = parsedJson['email'];
     this.photo = parsedJson['profile_photo_path'];
     this.level = parsedJson['level'];
+    this.point = parsedJson['point'];
+    this.complete_sub_category = parsedJson['complete_sub_category'];
   }
 }
