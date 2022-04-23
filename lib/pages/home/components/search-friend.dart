@@ -2,7 +2,7 @@ import 'package:coachmaker/coachmaker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/pages/friend_list/friend_list-main.dart';
+import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
 
 class SearchFriend extends StatelessWidget {
   const SearchFriend({
@@ -22,7 +22,7 @@ class SearchFriend extends StatelessWidget {
               transitionDuration: Duration(milliseconds: 500),
               pageBuilder: (BuildContext context, Animation<double> animation,
                   Animation<double> secondaryAnimation) {
-                return FriendList();
+                return AllUser();
               },
               transitionsBuilder: (BuildContext context,
                   Animation<double> animation,
