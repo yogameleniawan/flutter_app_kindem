@@ -94,130 +94,139 @@ class _RankingListState extends State<RankingList> {
                 children: [
                   Text("Ranking Saya",
                       style: TextStyle(fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        top: displayHeight(context) * 0.01,
-                        bottom: displayHeight(context) * 0.01),
-                    child: Container(
-                      padding:
-                          EdgeInsets.only(left: displayWidth(context) * 0.05),
-                      width: displayWidth(context) * 1,
-                      height: displayHeight(context) * 0.1,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                  maxRadius: displayWidth(context) * 0.072,
-                                  backgroundImage:
-                                      userx.photo.toString().isNotEmpty
-                                          ? AssetImage(userx.photo.toString())
-                                          : AssetImage(
-                                              "assets/images/user_icon_big.png")
-                                  // AssetImage(userx.photo.toString()),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfileDetail(user: userx);
+                      }));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: displayHeight(context) * 0.01,
+                          bottom: displayHeight(context) * 0.01),
+                      child: Container(
+                        padding:
+                            EdgeInsets.only(left: displayWidth(context) * 0.05),
+                        width: displayWidth(context) * 1,
+                        height: displayHeight(context) * 0.1,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                    maxRadius: displayWidth(context) * 0.072,
+                                    backgroundImage: userx.photo
+                                            .toString()
+                                            .isNotEmpty
+                                        ? AssetImage(userx.photo.toString())
+                                        : AssetImage(
+                                            "assets/images/user_icon_big.png")
+                                    // AssetImage(userx.photo.toString()),
+                                    ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: displayWidth(context) * 0.03,
                                   ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  left: displayWidth(context) * 0.03,
-                                ),
-                                child: Expanded(
-                                  child: Container(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(userx.name,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: displayHeight(context) *
-                                                  0.01),
-                                          child: Text(userx.level,
+                                  child: Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(userx.name,
                                               style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.normal)),
-                                        ),
-                                      ],
+                                                  fontWeight: FontWeight.bold)),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: displayHeight(context) *
+                                                    0.01),
+                                            child: Text(userx.level,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          if (userx.ranking == 1) ...[
-                            Container(
-                              alignment: Alignment.center,
-                              width: displayWidth(context) * 0.1,
-                              height: displayHeight(context) * 0.059,
-                              margin: EdgeInsets.only(right: 22),
-                              decoration: BoxDecoration(
-                                color: Color(0xFFF5A720),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: Text("#1",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
+                              ],
                             ),
-                          ] else if (userx.ranking == 2) ...[
-                            Container(
-                              alignment: Alignment.center,
-                              width: displayWidth(context) * 0.1,
-                              height: displayHeight(context) * 0.059,
-                              margin: EdgeInsets.only(right: 22),
-                              decoration: BoxDecoration(
-                                color: Color(0xFF0067B6),
-                                borderRadius: BorderRadius.circular(10.0),
+                            if (userx.ranking == 1) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF5A720),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
                               ),
-                              child: Text("#1",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
-                            ),
-                          ] else if (userx.ranking == 3) ...[
-                            Container(
-                              alignment: Alignment.center,
-                              width: displayWidth(context) * 0.1,
-                              height: displayHeight(context) * 0.059,
-                              margin: EdgeInsets.only(right: 22),
-                              decoration: BoxDecoration(
-                                color: Color(0xFF43AB9B),
-                                borderRadius: BorderRadius.circular(10.0),
+                            ] else if (userx.ranking == 2) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF0067B6),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
                               ),
-                              child: Text("#1",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
-                            ),
-                          ] else ...[
-                            Container(
-                              alignment: Alignment.center,
-                              width: displayWidth(context) * 0.1,
-                              height: displayHeight(context) * 0.059,
-                              margin: EdgeInsets.only(right: 22),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[350],
-                                borderRadius: BorderRadius.circular(10.0),
+                            ] else if (userx.ranking == 3) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF43AB9B),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
                               ),
-                              child: Text("#" + userx.ranking.toString(),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
-                            ),
-                          ]
-                        ],
+                            ] else ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[350],
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#" + userx.ranking.toString(),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ),
+                            ]
+                          ],
+                        ),
                       ),
                     ),
                   ),
