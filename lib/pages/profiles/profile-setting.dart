@@ -472,7 +472,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "12",
+                user.complete_sub_category.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -517,7 +517,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "40",
+                user.point.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,

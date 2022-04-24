@@ -158,8 +158,8 @@ class _FriendListState extends State<FriendList> {
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: displayHeight(context) * 0.01,
-                                    bottom: displayHeight(context) * 0.01),
+                                    // top: displayHeight(context) * 0.01,
+                                    bottom: displayHeight(context) * 0.02),
                                 child: Container(
                                   padding: EdgeInsets.only(
                                       left: displayWidth(context) * 0.05),
@@ -243,8 +243,8 @@ class _FriendListState extends State<FriendList> {
                               },
                               child: Padding(
                                 padding: EdgeInsets.only(
-                                    top: displayHeight(context) * 0.01,
-                                    bottom: displayHeight(context) * 0.01),
+                                    // top: displayHeight(context) * 0.01,
+                                    bottom: displayHeight(context) * 0.02),
                                 child: Container(
                                   padding: EdgeInsets.only(
                                       left: displayWidth(context) * 0.05),

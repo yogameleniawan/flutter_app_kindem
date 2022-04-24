@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/pages/friend_list/friend_list.dart';
-// import 'package:flutter_app_stulish/pages/friend_list/ranking_list.dart';
+import 'package:flutter_app_stulish/pages/friend_list/ranking_list.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({Key? key}) : super(key: key);
@@ -45,7 +45,7 @@ class _AllUserState extends State<AllUser> with SingleTickerProviderStateMixin {
                 margin: EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey[350],
-                    borderRadius: BorderRadius.circular(5)),
+                    borderRadius: BorderRadius.circular(7)),
                 child: Column(
                   children: [
                     Container(
@@ -83,10 +83,7 @@ class _AllUserState extends State<AllUser> with SingleTickerProviderStateMixin {
                 controller: _tabController,
                 children: [
                   FriendList(),
-                  Text(
-                    "RANKING",
-                  )
-                  // RankingList(),
+                  RankingList(),
                 ],
               ),
             ),
