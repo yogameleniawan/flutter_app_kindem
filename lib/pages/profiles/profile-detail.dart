@@ -2,8 +2,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/friend_list/friend_list-main.dart';
-import 'package:flutter_app_stulish/pages/home/home-main.dart';
+import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
 
 class ProfileDetail extends StatefulWidget {
   const ProfileDetail({Key? key, required this.user}) : super(key: key);
@@ -138,7 +137,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "12",
+                widget.user.complete_sub_category.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -183,7 +182,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "40",
+                widget.user.point.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -221,7 +220,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
           onPressed: () {
             Navigator.pop(context,
                 MaterialPageRoute(builder: (BuildContext context) {
-              return FriendList();
+              return AllUser();
             }));
           },
           child: Container(

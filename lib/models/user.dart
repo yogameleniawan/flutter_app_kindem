@@ -4,6 +4,9 @@ class User {
   String email = "";
   String? photo = "";
   String level = "";
+  int point = 0;
+  int complete_sub_category = 0;
+  int ranking = 0;
 
   int get getId => this.id;
   set setId(int id) => this.id = id;
@@ -20,6 +23,16 @@ class User {
   get getLevel => this.level;
   set setLevel(level) => this.level = level;
 
+  get getPoint => this.point;
+  set setPoint(point) => this.point = point;
+
+  get getCompleteSubCategory => this.complete_sub_category;
+  set setCompleteSubCategory(complete_sub_category) =>
+      this.complete_sub_category = complete_sub_category;
+
+  int get getRanking => this.ranking;
+  set setRanking(int ranking) => this.ranking = ranking;
+
   User() {}
 
   User.toString(Map<String, dynamic> data) {
@@ -27,6 +40,10 @@ class User {
     name = data['name'];
     email = data['email'];
     photo = data['profile_photo_path'];
+    level = data['level'];
+    ranking = data['ranking'];
+    point = data['point'];
+    complete_sub_category = data['complete_sub_category'];
   }
 
   User.fromJson(Map<String, dynamic> parsedJson) {
@@ -42,5 +59,7 @@ class User {
     this.email = parsedJson['email'];
     this.photo = parsedJson['profile_photo_path'];
     this.level = parsedJson['level'];
+    this.point = parsedJson['point'];
+    this.complete_sub_category = parsedJson['complete_sub_category'];
   }
 }

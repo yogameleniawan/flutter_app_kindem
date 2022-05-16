@@ -1,0 +1,394 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/friend_list/components/skeleton-friend-list.dart';
+import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_app_stulish/services/httpservice.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
+
+class RankingList extends StatefulWidget {
+  const RankingList({Key? key}) : super(key: key);
+
+  @override
+  State<RankingList> createState() => _RankingListState();
+}
+
+class _RankingListState extends State<RankingList> {
+  final HttpService service = new HttpService();
+  TextEditingController searchController = new TextEditingController();
+  List users = [];
+  bool _isLoadingUser = false;
+  bool _isLoading = true;
+  // List userx = [];
+  User userx = new User();
+
+  Future getAllUsers() async {
+    setState(() {
+      _isLoadingUser = true;
+    });
+
+    final String uri = dotenv.get('API_URL') + "/api/v1/getRankingUsers";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      List userMap = jsonResponse['data'];
+      List user = userMap.map((i) => User.allUser(i)).toList();
+      setState(() {
+        users = user;
+        _isLoadingUser = false;
+      });
+      _isLoading = false;
+    }
+  }
+
+  void getUser() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        userx = users;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getAllUsers();
+    getUser();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xFFF1F1F1),
+      body: Skeleton(
+        skeleton: SkeletonFriendList(),
+        isLoading: _isLoadingUser,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 15, bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Ranking Saya",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProfileDetail(user: userx);
+                      }));
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: displayHeight(context) * 0.01,
+                          bottom: displayHeight(context) * 0.01),
+                      child: Container(
+                        padding:
+                            EdgeInsets.only(left: displayWidth(context) * 0.05),
+                        width: displayWidth(context) * 1,
+                        height: displayHeight(context) * 0.1,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                CircleAvatar(
+                                    maxRadius: displayWidth(context) * 0.072,
+                                    backgroundImage: userx.photo
+                                            .toString()
+                                            .isNotEmpty
+                                        ? AssetImage(userx.photo.toString())
+                                        : AssetImage(
+                                            "assets/images/user_icon_big.png")
+                                    // AssetImage(userx.photo.toString()),
+                                    ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: displayWidth(context) * 0.03,
+                                  ),
+                                  child: Expanded(
+                                    child: Container(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(userx.name,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold)),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: displayHeight(context) *
+                                                    0.01),
+                                            child: Text(userx.level,
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.normal)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (userx.ranking == 1) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFFF5A720),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ),
+                            ] else if (userx.ranking == 2) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF0067B6),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ),
+                            ] else if (userx.ranking == 3) ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Color(0xFF43AB9B),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#1",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ),
+                            ] else ...[
+                              Container(
+                                alignment: Alignment.center,
+                                width: displayWidth(context) * 0.1,
+                                height: displayHeight(context) * 0.059,
+                                margin: EdgeInsets.only(right: 22),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[350],
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Text("#" + userx.ranking.toString(),
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16)),
+                              ),
+                            ]
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: 15),
+                    child: Text("Ranking 10 Besar",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                // physics: NeverScrollableScrollPhysics(),
+                itemCount: users.length,
+                itemBuilder: (context, int index) {
+                  return Builder(
+                    builder: (context) {
+                      if (users[index].photo == null) {
+                        users[index].photo = "assets/images/user_icon_big.png";
+                      }
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return ProfileDetail(user: users[index]);
+                          }));
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // top: displayHeight(context) * 0.01,
+                              bottom: displayHeight(context) * 0.02),
+                          child: Container(
+                            padding: EdgeInsets.only(
+                                left: displayWidth(context) * 0.05),
+                            width: displayWidth(context) * 1,
+                            height: displayHeight(context) * 0.1,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      maxRadius: displayWidth(context) * 0.072,
+                                      backgroundImage:
+                                          AssetImage(users[index].photo),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        left: displayWidth(context) * 0.03,
+                                      ),
+                                      child: Expanded(
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(users[index].name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top:
+                                                        displayHeight(context) *
+                                                            0.01),
+                                                child: Text(users[index].level,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.normal)),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (index == 0) ...[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: displayWidth(context) * 0.1,
+                                    height: displayHeight(context) * 0.059,
+                                    margin: EdgeInsets.only(right: 22),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFF5A720),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Text("#1",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ] else if (index == 1) ...[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: displayWidth(context) * 0.1,
+                                    height: displayHeight(context) * 0.059,
+                                    margin: EdgeInsets.only(right: 22),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF0067B6),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Text("#2",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ] else if (index == 2) ...[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: displayWidth(context) * 0.1,
+                                    height: displayHeight(context) * 0.059,
+                                    margin: EdgeInsets.only(right: 22),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF43AB9B),
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Text("#3",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ] else ...[
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: displayWidth(context) * 0.1,
+                                    height: displayHeight(context) * 0.059,
+                                    margin: EdgeInsets.only(right: 22),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[350],
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    child: Text("#" + (index + 1).toString(),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16)),
+                                  ),
+                                ]
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
