@@ -78,6 +78,22 @@ class _FriendListState extends State<FriendList> {
     setState(() {});
   }
 
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,7 +178,7 @@ class _FriendListState extends State<FriendList> {
                                     bottom: displayHeight(context) * 0.02),
                                 child: Container(
                                   padding: EdgeInsets.only(
-                                      left: displayWidth(context) * 0.05),
+                                      left: displayWidth(context) * 0.04),
                                   width: displayWidth(context) * 1,
                                   height: displayHeight(context) * 0.1,
                                   decoration: BoxDecoration(
@@ -172,11 +188,19 @@ class _FriendListState extends State<FriendList> {
                                   child: Row(
                                     children: [
                                       CircleAvatar(
-                                        maxRadius:
-                                            displayWidth(context) * 0.072,
-                                        backgroundImage: AssetImage(
-                                            _searchResult[index].photo),
+                                        backgroundColor: Colors.transparent,
+                                        maxRadius: displayWidth(context) * 0.09,
+                                        backgroundImage: getBorder(
+                                            _searchResult[index].level),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          maxRadius:
+                                              displayWidth(context) * 0.052,
+                                          backgroundImage: AssetImage(
+                                              _searchResult[index].photo),
+                                        ),
                                       ),
+
                                       // Image.asset(
                                       //   "assets/images/user_icon.png",
                                       //   width: displayWidth(context) * 0.12,
@@ -257,11 +281,24 @@ class _FriendListState extends State<FriendList> {
                                   child: Row(
                                     children: [
                                       CircleAvatar(
-                                        maxRadius:
-                                            displayWidth(context) * 0.072,
+                                        backgroundColor: Colors.transparent,
+                                        maxRadius: displayWidth(context) * 0.09,
                                         backgroundImage:
-                                            AssetImage(users[index].photo),
+                                            getBorder(users[index].level),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          maxRadius:
+                                              displayWidth(context) * 0.052,
+                                          backgroundImage:
+                                              AssetImage(users[index].photo),
+                                        ),
                                       ),
+                                      // CircleAvatar(
+                                      //   maxRadius:
+                                      //       displayWidth(context) * 0.072,
+                                      //   backgroundImage:
+                                      //       AssetImage(users[index].photo),
+                                      // ),
                                       Padding(
                                         padding: EdgeInsets.only(
                                           left: displayWidth(context) * 0.03,

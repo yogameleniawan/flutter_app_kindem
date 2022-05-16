@@ -12,6 +12,22 @@ class ProfileDetail extends StatefulWidget {
 }
 
 class _ProfileDetailState extends State<ProfileDetail> {
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,9 +45,28 @@ class _ProfileDetailState extends State<ProfileDetail> {
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                 child: Column(
                   children: [
-                    CircleAvatar(
-                      maxRadius: displayHeight(context) * 0.09,
-                      backgroundImage: AssetImage(widget.user.photo.toString()),
+                    Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.only(
+                              top: displayHeight(context) * 0.042),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            maxRadius: displayWidth(context) * 0.126,
+                            backgroundImage:
+                                AssetImage(widget.user.photo.toString()),
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            maxRadius: displayWidth(context) * 0.215,
+                            backgroundImage: getBorder(widget.user.level),
+                          ),
+                        ),
+                      ],
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 20),

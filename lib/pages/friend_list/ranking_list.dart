@@ -69,6 +69,22 @@ class _RankingListState extends State<RankingList> {
     }
   }
 
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -120,15 +136,20 @@ class _RankingListState extends State<RankingList> {
                             Row(
                               children: [
                                 CircleAvatar(
-                                    maxRadius: displayWidth(context) * 0.072,
-                                    backgroundImage: userx.photo
-                                            .toString()
-                                            .isNotEmpty
-                                        ? AssetImage(userx.photo.toString())
-                                        : AssetImage(
-                                            "assets/images/user_icon_big.png")
-                                    // AssetImage(userx.photo.toString()),
-                                    ),
+                                  backgroundColor: Colors.transparent,
+                                  maxRadius: displayWidth(context) * 0.09,
+                                  backgroundImage: getBorder(userx.level),
+                                  child: CircleAvatar(
+                                      maxRadius: displayWidth(context) * 0.052,
+                                      backgroundImage: userx.photo
+                                              .toString()
+                                              .isNotEmpty
+                                          ? AssetImage(userx.photo.toString())
+                                          : AssetImage(
+                                              "assets/images/user_icon_big.png")
+                                      // AssetImage(userx.photo.toString()),
+                                      ),
+                                ),
                                 Padding(
                                   padding: EdgeInsets.only(
                                     left: displayWidth(context) * 0.03,
@@ -274,9 +295,17 @@ class _RankingListState extends State<RankingList> {
                                 Row(
                                   children: [
                                     CircleAvatar(
-                                      maxRadius: displayWidth(context) * 0.072,
+                                      backgroundColor: Colors.transparent,
+                                      maxRadius: displayWidth(context) * 0.09,
                                       backgroundImage:
-                                          AssetImage(users[index].photo),
+                                          getBorder(users[index].level),
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        maxRadius:
+                                            displayWidth(context) * 0.052,
+                                        backgroundImage:
+                                            AssetImage(users[index].photo),
+                                      ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(

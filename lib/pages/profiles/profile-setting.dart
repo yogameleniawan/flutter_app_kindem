@@ -54,6 +54,22 @@ class _ProfileSettingState extends State<ProfileSetting> {
     }
   }
 
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
+
   Future updateName(String name) async {
     final String uri = dotenv.get('API_URL') + "/api/v1/updateProfile";
     String? token =
@@ -123,15 +139,53 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       margin: EdgeInsets.only(bottom: 55),
                       child: Row(
                         children: [
+                          // Stack(
+                          //   children: [
+                          //     Container(
+                          //       // color: Colors.black,
+                          //       // alignment: Alignment.center,
+                          //       padding: EdgeInsets.only(
+                          //           top: displayHeight(context) * 0.037),
+                          //       child: CircleAvatar(
+                          //         backgroundColor: Colors.transparent,
+                          //         maxRadius: displayWidth(context) * 0.09,
+                          //         backgroundImage: user.photo
+                          //                 .toString()
+                          //                 .isNotEmpty
+                          //             ? AssetImage(user.photo.toString())
+                          //             : AssetImage(
+                          //                 "assets/images/user_icon_big.png"),
+                          //       ),
+                          //     ),
+                          //     Container(
+                          //       // color: Colors.red,
+                          //       alignment: Alignment.centerLeft,
+                          //       padding: EdgeInsets.only(
+                          //           right: displayWidth(context) * 0.01),
+                          //       child: CircleAvatar(
+                          //         backgroundColor: Colors.transparent,
+                          //         maxRadius: displayWidth(context) * 0.15,
+                          //         backgroundImage: getBorder(user.level),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
                           CircleAvatar(
-                            maxRadius: displayHeight(context) * 0.052,
-                            backgroundImage: user.photo.toString().isNotEmpty
-                                ? AssetImage(user.photo.toString())
-                                : AssetImage("assets/images/user_icon_big.png"),
+                            backgroundColor: Colors.transparent,
+                            maxRadius: displayWidth(context) * 0.122,
+                            backgroundImage: getBorder(user.level),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              maxRadius: displayHeight(context) * 0.04,
+                              backgroundImage: user.photo.toString().isNotEmpty
+                                  ? AssetImage(user.photo.toString())
+                                  : AssetImage(
+                                      "assets/images/user_icon_big.png"),
+                            ),
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(left: 20),
+                              margin: EdgeInsets.only(left: 5),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [

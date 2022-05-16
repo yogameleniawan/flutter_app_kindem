@@ -57,6 +57,22 @@ class _HomeMainState extends State<HomeMain> {
     }
   }
 
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
+
   Future addSession() async {
     final String uri = dotenv.get('API_URL') + "/api/v1/addSession";
 
@@ -216,10 +232,16 @@ class _HomeMainState extends State<HomeMain> {
                         });
                       },
                       child: CircleAvatar(
-                        maxRadius: displayHeight(context) * 0.043,
-                        backgroundImage: user.photo.toString().isNotEmpty
+                        backgroundColor: Colors.transparent,
+                        maxRadius: displayHeight(context) * 0.06,
+                        backgroundImage: getBorder(user.level),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          maxRadius: displayHeight(context) * 0.035,
+                          backgroundImage: user.photo.toString().isNotEmpty
                             ? AssetImage(user.photo.toString())
                             : AssetImage("assets/images/user_icon_big.png"),
+                        ),
                       ),
                     ),
                   )
