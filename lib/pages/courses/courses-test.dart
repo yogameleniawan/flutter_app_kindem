@@ -420,15 +420,19 @@ class _CourseTestState extends State<CourseTest> {
                           children: [
                             InkWell(
                                 onTap: () {
-                                  setState(() {
-                                    if (!_isPauseIn) {
-                                      _isPauseIn = true;
-                                      text = text =
-                                          courses[indexCourses].english_text;
-                                      _speak("en-US");
-                                    }
-                                    // _isPauseIn = !_isPauseIn;
-                                  });
+                                  if (speech.isListening) {
+                                    return;
+                                  } else {
+                                    setState(() {
+                                      if (!_isPauseIn) {
+                                        _isPauseIn = true;
+                                        text = text =
+                                            courses[indexCourses].english_text;
+                                        _speak("en-US");
+                                      }
+                                      // _isPauseIn = !_isPauseIn;
+                                    });
+                                  }
                                 },
                                 child: _isPauseIn == false
                                     ? Image(
@@ -445,8 +449,9 @@ class _CourseTestState extends State<CourseTest> {
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
                                   "Tekan tombol diatas kemudian tekan tombol dibawah lalu tirukan!",
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 14,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
                                   )),
