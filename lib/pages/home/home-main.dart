@@ -187,14 +187,19 @@ class _HomeMainState extends State<HomeMain> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Helo",
-                                style: TextStyle(color: Colors.black),
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: Text(
+                                  "Hai ...",
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ),
                               Text(
                                 user.name,
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 24),
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
@@ -238,9 +243,9 @@ class _HomeMainState extends State<HomeMain> {
                         child: CircleAvatar(
                           backgroundColor: Colors.transparent,
                           maxRadius: displayHeight(context) * 0.035,
-                          backgroundImage: user.photo.toString().isNotEmpty
-                            ? AssetImage(user.photo.toString())
-                            : AssetImage("assets/images/user_icon_big.png"),
+                          backgroundImage: user.photo == null
+                              ? AssetImage("assets/images/user_icon_big.png")
+                              : AssetImage(user.photo.toString()),
                         ),
                       ),
                     ),

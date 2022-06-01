@@ -372,7 +372,11 @@ class _CoursesMainState extends State<CoursesMain> {
             courses.length > 0 ? courses[indexCourses].english_text : "Empty";
         _speak("en-US");
       }
-      _playEnglish = !_playEnglish;
+      if (_playEnglish) {
+        _playEnglish = _playEnglish;
+      } else {
+        _playEnglish = !_playEnglish;
+      }
     });
   }
 
@@ -384,7 +388,11 @@ class _CoursesMainState extends State<CoursesMain> {
             courses.length > 0 ? courses[indexCourses].indonesia_text : "Empty";
         _speak("id-ID");
       }
-      _playIndo = !_playIndo;
+      if (_playIndo) {
+        _playIndo = _playIndo;
+      } else {
+        _playIndo = !_playIndo;
+      }
     });
   }
 

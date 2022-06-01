@@ -12,7 +12,7 @@ import 'dart:io';
 
 class ChangeAvatar extends StatefulWidget {
   const ChangeAvatar({Key? key}) : super(key: key);
-  
+
   @override
   State<ChangeAvatar> createState() => _ChangeAvatarState();
 }
@@ -120,14 +120,9 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                             child: Text("Avatar Kamu")),
                         CircleAvatar(
                           maxRadius: displayHeight(context) * 0.11,
-                          backgroundImage: user.photo.toString().isNotEmpty
-                              ? AssetImage(user.photo.toString())
-                              : AssetImage("assets/images/user_icon_big.png"),
-                          // backgroundColor: Colors.blue,
-                          // child: Image(
-                          //   image:
-                          //       AssetImage("assets/images/user_icon_big.png"),
-                          // ),
+                          backgroundImage: user.photo == null
+                              ? AssetImage("assets/images/user_icon_big.png")
+                              : AssetImage(user.photo.toString()),
                         ),
                         Container(
                           margin: EdgeInsets.only(

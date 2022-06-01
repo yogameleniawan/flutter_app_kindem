@@ -139,37 +139,6 @@ class _ProfileSettingState extends State<ProfileSetting> {
                       margin: EdgeInsets.only(bottom: 55),
                       child: Row(
                         children: [
-                          // Stack(
-                          //   children: [
-                          //     Container(
-                          //       // color: Colors.black,
-                          //       // alignment: Alignment.center,
-                          //       padding: EdgeInsets.only(
-                          //           top: displayHeight(context) * 0.037),
-                          //       child: CircleAvatar(
-                          //         backgroundColor: Colors.transparent,
-                          //         maxRadius: displayWidth(context) * 0.09,
-                          //         backgroundImage: user.photo
-                          //                 .toString()
-                          //                 .isNotEmpty
-                          //             ? AssetImage(user.photo.toString())
-                          //             : AssetImage(
-                          //                 "assets/images/user_icon_big.png"),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       // color: Colors.red,
-                          //       alignment: Alignment.centerLeft,
-                          //       padding: EdgeInsets.only(
-                          //           right: displayWidth(context) * 0.01),
-                          //       child: CircleAvatar(
-                          //         backgroundColor: Colors.transparent,
-                          //         maxRadius: displayWidth(context) * 0.15,
-                          //         backgroundImage: getBorder(user.level),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                           CircleAvatar(
                             backgroundColor: Colors.transparent,
                             maxRadius: displayWidth(context) * 0.122,
@@ -177,10 +146,10 @@ class _ProfileSettingState extends State<ProfileSetting> {
                             child: CircleAvatar(
                               backgroundColor: Colors.transparent,
                               maxRadius: displayHeight(context) * 0.04,
-                              backgroundImage: user.photo.toString().isNotEmpty
-                                  ? AssetImage(user.photo.toString())
-                                  : AssetImage(
-                                      "assets/images/user_icon_big.png"),
+                              backgroundImage: user.photo == null
+                                  ? AssetImage(
+                                      "assets/images/user_icon_big.png")
+                                  : AssetImage(user.photo.toString()),
                             ),
                           ),
                           Expanded(

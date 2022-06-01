@@ -471,7 +471,8 @@ class _CourseTestState extends State<CourseTest> {
                       onTap: () {
                         if (lastWords.toUpperCase() ==
                             courses[indexCourses].english_text) {
-                          _trueAnswerShow();
+                          _trueAnswerShow(courses[indexCourses].english_text,
+                              courses[indexCourses].indonesia_text);
                         } else {
                           _falseAnswerShow(courses[indexCourses].english_text,
                               courses[indexCourses].indonesia_text);
@@ -588,7 +589,7 @@ class _CourseTestState extends State<CourseTest> {
     );
   }
 
-  Future _trueAnswerShow() async {
+  Future _trueAnswerShow(String textEn, String textIn) async {
     return showModalBottomSheet(
       isDismissible: false,
       enableDrag: false,
@@ -616,7 +617,14 @@ class _CourseTestState extends State<CourseTest> {
                     fontSize: 20,
                     fontWeight: FontWeight.bold),
               ),
-              // Text('text 2'),
+              Text(
+                'Jawabannya adalah ' + textEn,
+                style: TextStyle(color: Color(0xFF000000)),
+              ),
+              Text(
+                'Artinya adalah ' + textIn,
+                style: TextStyle(color: Color(0xFF000000)),
+              ),
               InkWell(
                   onTap: () {
                     setState(() {
