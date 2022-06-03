@@ -167,7 +167,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                       ),
                                     ),
                                     Text(
-                                      "CITIZEN/RAKYAT BIASA (LVL1)",
+                                      user.level,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w500,

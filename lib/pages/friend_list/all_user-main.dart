@@ -38,7 +38,7 @@ class _AllUserState extends State<AllUser> with SingleTickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              indexTab == 0 ? "CARI TEMAN" : "RANKING",
+              indexTab == 0 ? "LIHAT TEMAN" : "RANKING",
               style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
             ),
             Container(
@@ -68,7 +68,7 @@ class _AllUserState extends State<AllUser> with SingleTickerProviderStateMixin {
                         },
                         tabs: [
                           Tab(
-                            text: 'CARI TEMAN',
+                            text: 'LIHAT TEMAN',
                           ),
                           Tab(
                             text: 'RANKING',

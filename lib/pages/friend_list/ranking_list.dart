@@ -141,12 +141,10 @@ class _RankingListState extends State<RankingList> {
                                   backgroundImage: getBorder(userx.level),
                                   child: CircleAvatar(
                                       maxRadius: displayWidth(context) * 0.052,
-                                      backgroundImage: userx.photo
-                                              .toString()
-                                              .isNotEmpty
-                                          ? AssetImage(userx.photo.toString())
-                                          : AssetImage(
+                                      backgroundImage: userx.photo == null
+                                          ? AssetImage(
                                               "assets/images/user_icon_big.png")
+                                          : AssetImage(userx.photo.toString())
                                       // AssetImage(userx.photo.toString()),
                                       ),
                                 ),
@@ -191,7 +189,7 @@ class _RankingListState extends State<RankingList> {
                                   color: Color(0xFFF5A720),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Text("#1",
+                                child: Text("#" + userx.ranking.toString(),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -207,7 +205,7 @@ class _RankingListState extends State<RankingList> {
                                   color: Color(0xFF0067B6),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Text("#1",
+                                child: Text("#" + userx.ranking.toString(),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -223,7 +221,7 @@ class _RankingListState extends State<RankingList> {
                                   color: Color(0xFF43AB9B),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Text("#1",
+                                child: Text("#" + userx.ranking.toString(),
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,

@@ -81,7 +81,7 @@ class SearchFriend extends StatelessWidget {
                         color: Color(0xFFF5A71F),
                       ),
                       child: Text(
-                        'Cari Teman',
+                        'Lihat Teman',
                         style: TextStyle(color: Colors.white),
                       )),
                 ),
