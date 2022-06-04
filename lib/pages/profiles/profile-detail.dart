@@ -4,6 +4,7 @@ import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
+import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
 import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -21,6 +22,7 @@ class ProfileDetail extends StatefulWidget {
 
 class _ProfileDetailState extends State<ProfileDetail> {
   User user = new User();
+  bool _isLoad = true;
   AssetImage getBorder(String level) {
     if (level == "Emperor") {
       return AssetImage("assets/images/1-emperor.png");
@@ -51,6 +53,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
       var users = User.toString(jsonResponse);
       setState(() {
         user = users;
+        _isLoad = false;
       });
     }
   }
@@ -63,120 +66,125 @@ class _ProfileDetailState extends State<ProfileDetail> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/bg-rounded.png"),
-                  fit: BoxFit.cover)),
-          child: Center(
-            child: SingleChildScrollView(
-              physics: NeverScrollableScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
-                child: Column(
-                  children: [
-                    Stack(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.only(
-                              top: displayHeight(context) * 0.042),
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            maxRadius: displayWidth(context) * 0.126,
-                            backgroundImage: AssetImage(user.photo.toString()),
-                          ),
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            maxRadius: displayWidth(context) * 0.215,
-                            backgroundImage: getBorder(user.level),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
-                      child: Text(
-                        user.name,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10),
-                      child: Text(
-                        user.level,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15.0,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20.0),
-                      width: displayWidth(context) * 40,
-                      height: displayHeight(context) * 0.60,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20.0),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              offset: Offset(0, 9),
-                              blurRadius: 10,
-                              spreadRadius: 1),
-                        ],
-                      ),
-                      child: Column(
+    if (_isLoad) {
+      return PreloaderPage();
+    } else {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/bg-rounded.png"),
+                    fit: BoxFit.cover)),
+            child: Center(
+              child: SingleChildScrollView(
+                physics: NeverScrollableScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+                  child: Column(
+                    children: [
+                      Stack(
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: Image(
-                              width: 120.0,
-                              image:
-                                  AssetImage("assets/images/kindem-logo.png"),
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.only(
+                                top: displayHeight(context) * 0.042),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              maxRadius: displayWidth(context) * 0.126,
+                              backgroundImage:
+                                  AssetImage(user.photo.toString()),
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 18.0,
+                            alignment: Alignment.center,
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              maxRadius: displayWidth(context) * 0.215,
+                              backgroundImage: getBorder(user.level),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 20.0),
-                            // color: Colors.red,
-                            child: Column(
-                              children: [
-                                ResultDetail(),
-
-                                //button
-                                Container(
-                                  margin: EdgeInsets.only(top: 35),
-                                  child: Button(),
-                                ),
-                              ],
-                            ),
-                          )
+                          ),
                         ],
                       ),
-                    )
-                  ],
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Text(
+                          user.name,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 25.0,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 10),
+                        child: Text(
+                          user.level,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0),
+                        width: displayWidth(context) * 40,
+                        height: displayHeight(context) * 0.60,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20.0),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: Offset(0, 9),
+                                blurRadius: 10,
+                                spreadRadius: 1),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(top: 10),
+                              child: Image(
+                                width: 120.0,
+                                image:
+                                    AssetImage("assets/images/kindem-logo.png"),
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 18.0,
+                              ),
+                              padding: EdgeInsets.symmetric(vertical: 20.0),
+                              // color: Colors.red,
+                              child: Column(
+                                children: [
+                                  ResultDetail(),
+
+                                  //button
+                                  Container(
+                                    margin: EdgeInsets.only(top: 35),
+                                    child: Button(),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   Widget ResultDetail() {

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/course.dart';
+import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/components/choach-maker.dart';
 import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
 import 'package:flutter_app_stulish/services/auth.dart';
@@ -35,6 +36,8 @@ class CoursesMain extends StatefulWidget {
 enum TtsState { playing, stopped, paused, continued }
 
 class _CoursesMainState extends State<CoursesMain> {
+  User user = new User();
+  bool _isLoadDone = false;
   List courses = [];
   int indexCourses = 0;
   bool _fetchCourse = false;
@@ -182,7 +185,7 @@ class _CoursesMainState extends State<CoursesMain> {
 
   Future getCourses() async {
     final String uri = dotenv.get('API_URL') +
-        "/api/v1/getCoursesById/" +
+        "/api/v1/getCoursesById?id=" +
         widget.id_sub_category;
 
     String? token =
@@ -331,10 +334,9 @@ class _CoursesMainState extends State<CoursesMain> {
                                             MaterialPageRoute(builder:
                                                 (BuildContext context) {
                                           return CourseTest(
-                                            id_sub_category:
-                                                widget.id_sub_category,
-                                            is_redirect: false,
-                                          );
+                                              id_sub_category:
+                                                  widget.id_sub_category,
+                                              is_redirect: false);
                                         }));
                                       },
                                       child: Image(

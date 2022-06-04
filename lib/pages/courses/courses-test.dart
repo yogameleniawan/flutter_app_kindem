@@ -342,7 +342,7 @@ class _CourseTestState extends State<CourseTest> {
 
   Future getCourses() async {
     final String uri = dotenv.get('API_URL') +
-        "/api/v1/getCoursesById/" +
+        "/api/v1/getCoursesById?id=" +
         widget.id_sub_category;
 
     String? token =
@@ -363,7 +363,6 @@ class _CourseTestState extends State<CourseTest> {
 
   Future getCourseAnswered() async {
     final String uri = dotenv.get('API_URL') + "/api/v1/redirectCourse";
-    print(widget.id_sub_category);
     String? token =
         await Provider.of<AuthProvider>(context, listen: false).getToken();
     http.Response result = await http.post(Uri.parse(uri), headers: {
