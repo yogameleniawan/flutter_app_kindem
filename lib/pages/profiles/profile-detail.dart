@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
 import 'package:flutter_app_stulish/models/user.dart';
 import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
+import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
 class ProfileDetail extends StatefulWidget {
   const ProfileDetail({Key? key, required this.user}) : super(key: key);
@@ -12,6 +20,7 @@ class ProfileDetail extends StatefulWidget {
 }
 
 class _ProfileDetailState extends State<ProfileDetail> {
+  User user = new User();
   AssetImage getBorder(String level) {
     if (level == "Emperor") {
       return AssetImage("assets/images/1-emperor.png");
@@ -26,6 +35,30 @@ class _ProfileDetailState extends State<ProfileDetail> {
     } else {
       return AssetImage("assets/images/6-citizen.png");
     }
+  }
+
+  void getUser() async {
+    final String uri = dotenv.get('API_URL') +
+        "/api/v1/getDetailUser?user_id=" +
+        widget.user.id.toString();
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user = users;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUser();
   }
 
   @override
@@ -54,8 +87,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             maxRadius: displayWidth(context) * 0.126,
-                            backgroundImage:
-                                AssetImage(widget.user.photo.toString()),
+                            backgroundImage: AssetImage(user.photo.toString()),
                           ),
                         ),
                         Container(
@@ -63,7 +95,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                           child: CircleAvatar(
                             backgroundColor: Colors.transparent,
                             maxRadius: displayWidth(context) * 0.215,
-                            backgroundImage: getBorder(widget.user.level),
+                            backgroundImage: getBorder(user.level),
                           ),
                         ),
                       ],
@@ -71,7 +103,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     Container(
                       margin: EdgeInsets.only(top: 20),
                       child: Text(
-                        widget.user.name,
+                        user.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white,
@@ -83,7 +115,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     Container(
                       margin: EdgeInsets.only(top: 10),
                       child: Text(
-                        widget.user.level,
+                        user.level,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -172,7 +204,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.user.complete_sub_category.toString(),
+                user.complete_sub_category.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -217,7 +249,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.user.point.toString(),
+                user.point.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
