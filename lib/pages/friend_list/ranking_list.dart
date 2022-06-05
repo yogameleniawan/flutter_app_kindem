@@ -95,13 +95,12 @@ class _RankingListState extends State<RankingList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF1F1F1),
-      body: Skeleton(
-        skeleton: SkeletonFriendList(),
-        isLoading: _isLoadingUser,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    if (users.length == 0) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Scaffold(
+        backgroundColor: Color(0xFFF1F1F1),
+        body: Column(
           children: [
             Container(
               margin: EdgeInsets.only(top: 15, bottom: 5),
@@ -152,28 +151,26 @@ class _RankingListState extends State<RankingList> {
                                   padding: EdgeInsets.only(
                                     left: displayWidth(context) * 0.03,
                                   ),
-                                  child: Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(userx.name,
+                                  child: Container(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(userx.name,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: displayHeight(context) *
+                                                  0.01),
+                                          child: Text(userx.level,
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold)),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: displayHeight(context) *
-                                                    0.01),
-                                            child: Text(userx.level,
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.normal)),
-                                          ),
-                                        ],
-                                      ),
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -262,54 +259,56 @@ class _RankingListState extends State<RankingList> {
                 // physics: NeverScrollableScrollPhysics(),
                 itemCount: users.length,
                 itemBuilder: (context, int index) {
-                  return Builder(
-                    builder: (context) {
-                      if (users[index].photo == null) {
-                        users[index].photo = "assets/images/user_icon_big.png";
-                      }
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ProfileDetail(user: users[index]);
-                          }));
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              // top: displayHeight(context) * 0.01,
-                              bottom: displayHeight(context) * 0.02),
-                          child: Container(
+                  if (users.length > 0) {
+                    return Builder(
+                      builder: (context) {
+                        if (users[index].photo == null) {
+                          users[index].photo =
+                              "assets/images/user_icon_big.png";
+                        }
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return ProfileDetail(user: users[index]);
+                            }));
+                          },
+                          child: Padding(
                             padding: EdgeInsets.only(
-                                left: displayWidth(context) * 0.05),
-                            width: displayWidth(context) * 1,
-                            height: displayHeight(context) * 0.1,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: Colors.transparent,
-                                      maxRadius: displayWidth(context) * 0.09,
-                                      backgroundImage:
-                                          getBorder(users[index].level),
-                                      child: CircleAvatar(
+                                // top: displayHeight(context) * 0.01,
+                                bottom: displayHeight(context) * 0.02),
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  left: displayWidth(context) * 0.05),
+                              width: displayWidth(context) * 1,
+                              height: displayHeight(context) * 0.1,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
                                         backgroundColor: Colors.transparent,
-                                        maxRadius:
-                                            displayWidth(context) * 0.052,
+                                        maxRadius: displayWidth(context) * 0.09,
                                         backgroundImage:
-                                            AssetImage(users[index].photo),
+                                            getBorder(users[index].level),
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.transparent,
+                                          maxRadius:
+                                              displayWidth(context) * 0.052,
+                                          backgroundImage:
+                                              AssetImage(users[index].photo),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: displayWidth(context) * 0.03,
-                                      ),
-                                      child: Expanded(
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: displayWidth(context) * 0.03,
+                                        ),
                                         child: Container(
                                           child: Column(
                                             mainAxisAlignment:
@@ -335,87 +334,93 @@ class _RankingListState extends State<RankingList> {
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                if (index == 0) ...[
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: displayWidth(context) * 0.1,
-                                    height: displayHeight(context) * 0.059,
-                                    margin: EdgeInsets.only(right: 22),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFF5A720),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    child: Text("#1",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16)),
+                                    ],
                                   ),
-                                ] else if (index == 1) ...[
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: displayWidth(context) * 0.1,
-                                    height: displayHeight(context) * 0.059,
-                                    margin: EdgeInsets.only(right: 22),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF0067B6),
-                                      borderRadius: BorderRadius.circular(10.0),
+                                  if (index == 0) ...[
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: displayWidth(context) * 0.1,
+                                      height: displayHeight(context) * 0.059,
+                                      margin: EdgeInsets.only(right: 22),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFFF5A720),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Text("#1",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16)),
                                     ),
-                                    child: Text("#2",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16)),
-                                  ),
-                                ] else if (index == 2) ...[
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: displayWidth(context) * 0.1,
-                                    height: displayHeight(context) * 0.059,
-                                    margin: EdgeInsets.only(right: 22),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF43AB9B),
-                                      borderRadius: BorderRadius.circular(10.0),
+                                  ] else if (index == 1) ...[
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: displayWidth(context) * 0.1,
+                                      height: displayHeight(context) * 0.059,
+                                      margin: EdgeInsets.only(right: 22),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF0067B6),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Text("#2",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16)),
                                     ),
-                                    child: Text("#3",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16)),
-                                  ),
-                                ] else ...[
-                                  Container(
-                                    alignment: Alignment.center,
-                                    width: displayWidth(context) * 0.1,
-                                    height: displayHeight(context) * 0.059,
-                                    margin: EdgeInsets.only(right: 22),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[350],
-                                      borderRadius: BorderRadius.circular(10.0),
+                                  ] else if (index == 2) ...[
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: displayWidth(context) * 0.1,
+                                      height: displayHeight(context) * 0.059,
+                                      margin: EdgeInsets.only(right: 22),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF43AB9B),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Text("#3",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16)),
                                     ),
-                                    child: Text("#" + (index + 1).toString(),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16)),
-                                  ),
-                                ]
-                              ],
+                                  ] else ...[
+                                    Container(
+                                      alignment: Alignment.center,
+                                      width: displayWidth(context) * 0.1,
+                                      height: displayHeight(context) * 0.059,
+                                      margin: EdgeInsets.only(right: 22),
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[350],
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      child: Text("#" + (index + 1).toString(),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16)),
+                                    ),
+                                  ]
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-                  );
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
                 },
               ),
-            )
+            ),
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 }

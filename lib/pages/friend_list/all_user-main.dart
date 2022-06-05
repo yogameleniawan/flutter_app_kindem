@@ -82,6 +82,8 @@ class _AllUserState extends State<AllUser> with SingleTickerProviderStateMixin {
               child: TabBarView(
                 controller: _tabController,
                 children: [
+                  // Text("Tes 1"),
+                  // Text("Tes 2"),
                   FriendList(),
                   RankingList(),
                 ],

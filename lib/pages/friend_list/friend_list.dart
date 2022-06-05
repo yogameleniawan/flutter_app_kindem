@@ -96,62 +96,61 @@ class _FriendListState extends State<FriendList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xFFF1F1F1),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            color: Colors.white,
-            margin: EdgeInsets.only(top: 15, bottom: 5),
-            child: TextFormField(
-              controller: searchController,
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                hintText: 'Cari',
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 1.0, horizontal: 1.0),
-                hintStyle: TextStyle(
-                  fontWeight: FontWeight.w400,
-                ),
-                suffixIcon: searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: Icon(Icons.close, color: Colors.black),
-                        onPressed: () {
-                          searchController.clear();
-                          _searchUser('');
-                        },
-                      )
-                    : null,
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Image.asset(
-                    'assets/images/search.png',
-                    width: 20,
-                    height: 20,
-                    fit: BoxFit.fill,
+    if (users.length == 0 && _searchResult.length == 0) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Scaffold(
+        backgroundColor: Color(0xFFF1F1F1),
+        body: Column(
+          children: [
+            Container(
+              color: Colors.white,
+              margin: EdgeInsets.only(top: 15, bottom: 5),
+              child: TextFormField(
+                controller: searchController,
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+                decoration: InputDecoration(
+                  hintText: 'Cari',
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 1.0, horizontal: 1.0),
+                  hintStyle: TextStyle(
+                    fontWeight: FontWeight.w400,
+                  ),
+                  suffixIcon: searchController.text.isNotEmpty
+                      ? IconButton(
+                          icon: Icon(Icons.close, color: Colors.black),
+                          onPressed: () {
+                            searchController.clear();
+                            _searchUser('');
+                          },
+                        )
+                      : null,
+                  prefixIcon: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Image.asset(
+                      'assets/images/search.png',
+                      width: 20,
+                      height: 20,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(width: 2, color: Color(0xFFF5A720)),
+                    borderRadius: BorderRadius.circular(6.0),
+                    // borderSide: ,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        const BorderSide(width: 3, color: Color(0xFFF5A720)),
+                    borderRadius: BorderRadius.circular(6.0),
                   ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(width: 2, color: Color(0xFFF5A720)),
-                  borderRadius: BorderRadius.circular(6.0),
-                  // borderSide: ,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      const BorderSide(width: 3, color: Color(0xFFF5A720)),
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
+                onChanged: (value) => _searchUser(value),
               ),
-              onChanged: (value) => _searchUser(value),
             ),
-          ),
-          Expanded(
-            child: Skeleton(
-              skeleton: SkeletonFriendList(),
-              isLoading: _isLoadingUser,
+            Expanded(
               child: _searchResult.length != 0 ||
                       searchController.text.isNotEmpty
                   ? ListView.builder(
@@ -211,31 +210,28 @@ class _FriendListState extends State<FriendList> {
                                         padding: EdgeInsets.only(
                                           left: displayWidth(context) * 0.03,
                                         ),
-                                        child: Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(_searchResult[index].name,
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(_searchResult[index].name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top:
+                                                        displayHeight(context) *
+                                                            0.01),
+                                                child: Text(users[index].level,
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.bold)),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: displayHeight(
-                                                              context) *
-                                                          0.01),
-                                                  child: Text(
-                                                      users[index].level,
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                ),
-                                              ],
-                                            ),
+                                                            FontWeight.normal)),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -303,31 +299,28 @@ class _FriendListState extends State<FriendList> {
                                         padding: EdgeInsets.only(
                                           left: displayWidth(context) * 0.03,
                                         ),
-                                        child: Expanded(
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(users[index].name,
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(users[index].name,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top:
+                                                        displayHeight(context) *
+                                                            0.01),
+                                                child: Text(users[index].level,
                                                     style: TextStyle(
                                                         fontWeight:
-                                                            FontWeight.bold)),
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: displayHeight(
-                                                              context) *
-                                                          0.01),
-                                                  child: Text(
-                                                      users[index].level,
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .normal)),
-                                                ),
-                                              ],
-                                            ),
+                                                            FontWeight.normal)),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -340,10 +333,10 @@ class _FriendListState extends State<FriendList> {
                         );
                       },
                     ),
-            ),
-          )
-        ],
-      ),
-    );
+            )
+          ],
+        ),
+      );
+    }
   }
 }
