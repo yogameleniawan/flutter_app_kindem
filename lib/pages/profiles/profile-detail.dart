@@ -93,8 +93,10 @@ class _ProfileDetailState extends State<ProfileDetail> {
                             child: CircleAvatar(
                               backgroundColor: Colors.transparent,
                               maxRadius: displayWidth(context) * 0.126,
-                              backgroundImage:
-                                  AssetImage(user.photo.toString()),
+                              backgroundImage: user.photo == null
+                                  ? AssetImage(
+                                      "assets/images/user_icon_big.png")
+                                  : AssetImage(user.photo.toString()),
                             ),
                           ),
                           Container(
