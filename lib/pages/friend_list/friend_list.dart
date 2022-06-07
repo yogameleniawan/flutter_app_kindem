@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/friend_list/components/skeleton-friend-list.dart';
-import 'package:flutter_app_stulish/pages/profiles/profile-detail.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
-import 'package:flutter_app_stulish/services/httpservice.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/user.dart';
+import 'package:kindem_app/pages/friend_list/components/skeleton-friend-list.dart';
+import 'package:kindem_app/pages/profiles/profile-detail.dart';
+import 'package:kindem_app/services/auth.dart';
+import 'package:kindem_app/services/httpservice.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';

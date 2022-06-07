@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/pages/courses/components/skeleton-course-text.dart';
+import 'package:kindem_app/pages/courses/components/skeleton-course-text.dart';
 import 'package:skeletons/skeletons.dart';
 
 class TextCourse extends StatelessWidget {

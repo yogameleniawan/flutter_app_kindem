@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
 import 'package:skeletons/skeletons.dart';
 
 class SkeletonFriendList extends StatelessWidget {

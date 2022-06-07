@@ -1,4 +1,4 @@
-package com.example.flutter_app_stulish
+package com.kindem.app
 
 import io.flutter.embedding.android.FlutterActivity
 

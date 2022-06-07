@@ -1,4 +1,4 @@
-# flutter_app_stulish
+# kindem_app
 
 A new Flutter project.
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
 
 class DialogLevel extends StatefulWidget {
   DialogLevel({

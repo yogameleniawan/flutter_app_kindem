@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/course.dart';
-import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/components/choach-maker.dart';
-import 'package:flutter_app_stulish/pages/courses/courses-test.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/course.dart';
+import 'package:kindem_app/models/user.dart';
+import 'package:kindem_app/pages/components/choach-maker.dart';
+import 'package:kindem_app/pages/courses/courses-test.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

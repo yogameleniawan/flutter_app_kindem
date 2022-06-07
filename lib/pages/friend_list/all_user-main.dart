@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/pages/friend_list/friend_list.dart';
-import 'package:flutter_app_stulish/pages/friend_list/ranking_list.dart';
+import 'package:kindem_app/pages/friend_list/friend_list.dart';
+import 'package:kindem_app/pages/friend_list/ranking_list.dart';
 
 class AllUser extends StatefulWidget {
   const AllUser({Key? key}) : super(key: key);

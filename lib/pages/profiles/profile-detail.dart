@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
-import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/user.dart';
+import 'package:kindem_app/pages/components/perloader-page.dart';
+import 'package:kindem_app/pages/friend_list/all_user-main.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;

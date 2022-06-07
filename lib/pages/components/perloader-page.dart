@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class PreloaderPage extends StatelessWidget {

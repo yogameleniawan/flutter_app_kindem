@@ -1,10 +1,10 @@
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/category.dart';
-import 'package:flutter_app_stulish/pages/materi/materi-main.dart';
-import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/category.dart';
+import 'package:kindem_app/pages/materi/materi-main.dart';
+import 'package:kindem_app/pages/components/perloader-page.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';

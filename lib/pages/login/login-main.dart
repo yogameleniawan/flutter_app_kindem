@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class LoginMain extends StatefulWidget {

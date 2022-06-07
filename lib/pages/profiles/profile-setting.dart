@@ -1,11 +1,11 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/pages/components/perloader-page.dart';
-import 'package:flutter_app_stulish/pages/login/login-main.dart';
-import 'package:flutter_app_stulish/pages/profiles/change-avatar.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/user.dart';
+import 'package:kindem_app/pages/components/perloader-page.dart';
+import 'package:kindem_app/pages/login/login-main.dart';
+import 'package:kindem_app/pages/profiles/change-avatar.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:provider/provider.dart';

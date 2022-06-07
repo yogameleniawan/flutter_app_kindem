@@ -1,8 +1,8 @@
 import 'package:bouncing_widget/bouncing_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/models/user.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/models/user.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:motion_toast/motion_toast.dart';
 import 'package:provider/provider.dart';

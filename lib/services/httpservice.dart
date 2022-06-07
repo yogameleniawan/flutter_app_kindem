@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app_stulish/models/category.dart';
+import 'package:kindem_app/models/category.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 

@@ -1,8 +1,8 @@
 import 'package:coachmaker/coachmaker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app_stulish/helpers/sizes_helpers.dart';
-import 'package:flutter_app_stulish/pages/friend_list/all_user-main.dart';
+import 'package:kindem_app/helpers/sizes_helpers.dart';
+import 'package:kindem_app/pages/friend_list/all_user-main.dart';
 
 class SearchFriend extends StatelessWidget {
   const SearchFriend({

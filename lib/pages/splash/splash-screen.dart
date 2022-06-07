@@ -1,8 +1,8 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/pages/home/home-main.dart';
-import 'package:flutter_app_stulish/pages/login/login-main.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/pages/home/home-main.dart';
+import 'package:kindem_app/pages/login/login-main.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

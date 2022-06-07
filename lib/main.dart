@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_stulish/pages/home/home-main.dart';
+import 'package:kindem_app/pages/home/home-main.dart';
 
-import 'package:flutter_app_stulish/pages/splash/splash-screen.dart';
-import 'package:flutter_app_stulish/services/auth.dart';
+import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kindem_app/pages/splash/splash-screen.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
