@@ -451,7 +451,7 @@ class _CourseTestState extends State<CourseTest> {
                                             "assets/images/pause.png"),
                                       )),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Text(
                                   "Tekan tombol diatas kemudian tekan tombol dibawah lalu tirukan!",
                                   textAlign: TextAlign.center,
@@ -463,52 +463,97 @@ class _CourseTestState extends State<CourseTest> {
                             ),
                           ],
                         )
-                      : Text("Pilih Jawabanmu!",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          )),
+                      : Container(
+                          padding:
+                              EdgeInsets.only(top: displayWidth(context) * 0.1),
+                          child: Text("Pilih Jawabanmu!",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
                   courses[indexCourses].is_voice == 1
                       ? VoiceTest(context)
                       : ChooseTest(),
-                  InkWell(
-                      onTap: () {
-                        if (lastWords.toUpperCase() ==
-                            courses[indexCourses].english_text) {
-                          _trueAnswerShow(courses[indexCourses].english_text,
-                              courses[indexCourses].indonesia_text);
-                        } else {
-                          _falseAnswerShow(courses[indexCourses].english_text,
-                              courses[indexCourses].indonesia_text);
-                        }
-                        if (indexCourses < courses.length - 1) {
-                          if (courses[indexCourses + 1].is_voice == 0) {
-                            getChoiceAnswer(courses[indexCourses + 1].id,
-                                courses[indexCourses + 1].sub_category_id);
-                          }
-                        }
-                      },
-                      child: Container(
-                          width: displayWidth(context) * 1,
-                          height: displayHeight(context) * 0.08,
-                          decoration: BoxDecoration(
-                            color: Color(0xFFF5A71F),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                              child: _isCheck
-                                  ? CircularProgressIndicator(
-                                      color: Colors.white,
-                                    )
-                                  : Text("PERIKSA JAWABANMU",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold))))),
+                  // InkWell(
+                  //     onTap: () {
+                  //       if (lastWords.toUpperCase() ==
+                  //           courses[indexCourses].english_text) {
+                  //         _trueAnswerShow(courses[indexCourses].english_text,
+                  //             courses[indexCourses].indonesia_text);
+                  //       } else {
+                  //         _falseAnswerShow(courses[indexCourses].english_text,
+                  //             courses[indexCourses].indonesia_text);
+                  //       }
+                  //       if (indexCourses < courses.length - 1) {
+                  //         if (courses[indexCourses + 1].is_voice == 0) {
+                  //           getChoiceAnswer(courses[indexCourses + 1].id,
+                  //               courses[indexCourses + 1].sub_category_id);
+                  //         }
+                  //       }
+                  //     },
+                  //     child: Container(
+                  //         width: displayWidth(context) * 1,
+                  //         height: displayHeight(context) * 0.08,
+                  //         decoration: BoxDecoration(
+                  //           color: Color(0xFFF5A71F),
+                  //           borderRadius: BorderRadius.circular(20),
+                  //         ),
+                  //         child: Center(
+                  //             child: _isCheck
+                  //                 ? CircularProgressIndicator(
+                  //                     color: Colors.white,
+                  //                   )
+                  //                 : Text("PERIKSA JAWABANMU",
+                  //                     style: TextStyle(
+                  //                         color: Colors.white,
+                  //                         fontSize: 25,
+                  //                         fontWeight: FontWeight.bold))))),
                 ],
               ),
             )),
+            floatingActionButton: InkWell(
+              onTap: () {
+                if (lastWords.toUpperCase() ==
+                    courses[indexCourses].english_text) {
+                  _trueAnswerShow(courses[indexCourses].english_text,
+                      courses[indexCourses].indonesia_text);
+                } else {
+                  _falseAnswerShow(courses[indexCourses].english_text,
+                      courses[indexCourses].indonesia_text);
+                }
+                if (indexCourses < courses.length - 1) {
+                  if (courses[indexCourses + 1].is_voice == 0) {
+                    getChoiceAnswer(courses[indexCourses + 1].id,
+                        courses[indexCourses + 1].sub_category_id);
+                  }
+                }
+              },
+              child: Container(
+                  margin: EdgeInsets.only(
+                    right: displayWidth(context) * 0.05,
+                    left: displayWidth(context) * 0.05,
+                  ),
+                  width: displayWidth(context) * 1,
+                  height: displayHeight(context) * 0.08,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF5A71F),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Center(
+                      child: _isCheck
+                          ? CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Text("PERIKSA JAWABANMU",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold)))),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
           ),
         ),
         onWillPop: () {
