@@ -158,9 +158,18 @@ class _RankingListState extends State<RankingList> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(userx.name,
+                                        SizedBox(
+                                          width: displayWidth(context) * 0.45,
+                                          child: Text(
+                                            userx.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: false,
                                             style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
                                         Padding(
                                           padding: EdgeInsets.only(
                                               top: displayHeight(context) *
@@ -316,10 +325,20 @@ class _RankingListState extends State<RankingList> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text(users[index].name,
+                                              SizedBox(
+                                                width: displayWidth(context) *
+                                                    0.45,
+                                                child: Text(
+                                                  users[index].name,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: false,
                                                   style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold)),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
                                               Padding(
                                                 padding: EdgeInsets.only(
                                                     top:

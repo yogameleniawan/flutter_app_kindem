@@ -200,13 +200,26 @@ class _HomeMainState extends State<HomeMain> {
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),
-                                Text(
-                                  user.name,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                SizedBox(
+                                  width: 240.0,
+                                  child: Text(
+                                    user.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20.0),
+                                  ),
                                 ),
+                                // Text(
+                                //   user.name,
+                                //   style: TextStyle(
+                                //       color: Colors.black,
+                                //       fontSize: 16,
+                                //       fontWeight: FontWeight.bold),
+                                // ),
                               ],
                             ),
                           ),
