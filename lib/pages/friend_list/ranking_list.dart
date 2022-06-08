@@ -161,7 +161,9 @@ class _RankingListState extends State<RankingList> {
                                         SizedBox(
                                           width: displayWidth(context) * 0.45,
                                           child: Text(
-                                            userx.name,
+                                            userx.name.length > 30
+                                                ? '${userx.name.substring(0, 30)}...'
+                                                : userx.name,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             softWrap: false,
@@ -329,7 +331,9 @@ class _RankingListState extends State<RankingList> {
                                                 width: displayWidth(context) *
                                                     0.45,
                                                 child: Text(
-                                                  users[index].name,
+                                                  users[index].name.length > 30
+                                                      ? '${users[index].name.substring(0, 30)}...'
+                                                      : users[index].name,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,

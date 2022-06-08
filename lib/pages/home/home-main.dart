@@ -203,7 +203,9 @@ class _HomeMainState extends State<HomeMain> {
                                 SizedBox(
                                   width: 240.0,
                                   child: Text(
-                                    user.name,
+                                    user.name.length > 30
+                                        ? '${user.name.substring(0, 30)}...'
+                                        : user.name,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false,

@@ -112,7 +112,9 @@ class _ProfileDetailState extends State<ProfileDetail> {
                       Container(
                         margin: EdgeInsets.only(top: 20),
                         child: Text(
-                          user.name,
+                          user.name.length > 30
+                              ? '${user.name.substring(0, 30)}...'
+                              : user.name,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.white,

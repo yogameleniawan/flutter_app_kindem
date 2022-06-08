@@ -126,6 +126,8 @@ class _ProfileSettingState extends State<ProfileSetting> {
 
   Widget build(BuildContext context) {
     usernameController.text = user.name;
+    usernameController.selection = TextSelection.fromPosition(
+        TextPosition(offset: usernameController.text.length));
     if (_isLoad) {
       return PreloaderPage();
     } else {
@@ -169,7 +171,9 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        user.name,
+                                        user.name.length > 30
+                                            ? '${user.name.substring(0, 30)}...'
+                                            : user.name,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w800,
@@ -262,6 +266,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                   child: TextFormField(
                                     // controller: ,
                                     controller: usernameController,
+                                    // initialValue: usernameController.text,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500),
@@ -820,7 +825,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
               ],
             ),
             child: Text(
-              "GANTI FOTO",
+              "GANTI AVATAR",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
