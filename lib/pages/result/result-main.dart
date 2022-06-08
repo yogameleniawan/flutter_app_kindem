@@ -183,7 +183,6 @@ class _ResultMainState extends State<ResultMain> {
                               bool reload = await reloadTest();
                               if (reload) {
                                 Navigator.pop(context, true);
-                                Navigator.pop(context, true);
                               }
                             },
                             child: Image(
