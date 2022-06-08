@@ -270,7 +270,7 @@ class _ProfileDetailState extends State<ProfileDetail> {
               Container(
                 margin: EdgeInsets.only(top: displayHeight(context) * 0.015),
                 child: Text(
-                  "Exp yang didapatkan",
+                  "Poin yang didapatkan",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,

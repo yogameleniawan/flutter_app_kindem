@@ -84,8 +84,9 @@ class _LoginMainState extends State<LoginMain> {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: TextFormField(
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
-                            labelText: 'Username',
+                            labelText: 'Email',
                             prefixIcon:
                                 Icon(Icons.person_outline, color: Colors.black),
                             border: OutlineInputBorder(

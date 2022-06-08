@@ -5,6 +5,7 @@ import 'package:kindem_app/models/user.dart';
 import 'package:kindem_app/pages/components/perloader-page.dart';
 import 'package:kindem_app/pages/login/login-main.dart';
 import 'package:kindem_app/pages/profiles/change-avatar.dart';
+import 'package:kindem_app/pages/splash/splash-screen.dart';
 import 'package:kindem_app/services/auth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:motion_toast/motion_toast.dart';
@@ -12,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+
+import '../../main.dart';
 
 class ProfileSetting extends StatefulWidget {
   const ProfileSetting({Key? key}) : super(key: key);
@@ -229,7 +232,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                     obscureText: true,
                                     enabled: false,
                                     decoration: InputDecoration(
-                                      hintText: '123456789',
+                                      hintText: '${user.email}',
                                       hintStyle: TextStyle(
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -412,7 +415,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
                                                                             animation,
                                                                         Animation<double>
                                                                             secondaryAnimation) {
-                                                                      return LoginMain();
+                                                                      return SplashScreen();
                                                                     },
                                                                     transitionsBuilder: (BuildContext context,
                                                                         Animation<double>
@@ -564,7 +567,7 @@ class _ProfileSettingState extends State<ProfileSetting> {
               Container(
                 margin: EdgeInsets.only(top: displayHeight(context) * 0.015),
                 child: Text(
-                  "Exp yang didapatkan",
+                  "Poin yang didapatkan",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,

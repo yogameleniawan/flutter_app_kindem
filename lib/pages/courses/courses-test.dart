@@ -138,15 +138,19 @@ class _CourseTestState extends State<CourseTest> {
     // recognition will be stopped before this value is reached.
     // Similarly `pauseFor` is a maximum not a minimum and may be ignored
     // on some devices.
-    speech.listen(
-        onResult: resultListener,
-        listenFor: Duration(seconds: 30),
-        pauseFor: Duration(seconds: 5),
-        partialResults: true,
-        localeId: _currentLocaleId,
-        onSoundLevelChange: soundLevelListener,
-        cancelOnError: true,
-        listenMode: ListenMode.confirmation);
+    speech
+        .listen(
+            onResult: resultListener,
+            listenFor: Duration(seconds: 30),
+            pauseFor: Duration(seconds: 5),
+            partialResults: true,
+            localeId: _currentLocaleId,
+            onSoundLevelChange: soundLevelListener,
+            cancelOnError: true,
+            listenMode: ListenMode.confirmation)
+        .then((result) {
+      print('_MyAppState.start => result $result');
+    });
     setState(() {});
   }
 
@@ -394,12 +398,14 @@ class _CourseTestState extends State<CourseTest> {
             backgroundColor: Color(0xFFF1F1F1),
             body: Container(
                 child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: displayWidth(context) * 0.05,
-                vertical: displayHeight(context) * 0.05,
+              padding: EdgeInsets.only(
+                right: displayWidth(context) * 0.05,
+                left: displayWidth(context) * 0.05,
+                top: displayHeight(context) * 0.05,
+                bottom: displayHeight(context) * 0.01,
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Center(
                       child: FAProgressBar(
@@ -563,26 +569,37 @@ class _CourseTestState extends State<CourseTest> {
     return Column(
       children: [
         Text(lastWords, style: TextStyle(color: Colors.black, fontSize: 20)),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 30, top: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () {
-                  if (_isPauseIn == false) {
-                    startListening();
-                  }
-                },
-                child: Image(
-                  width: displayWidth(context) * 0.15,
-                  image: speech.isListening
-                      ? AssetImage("assets/images/mic-on.png")
-                      : AssetImage("assets/images/mic-off.png"),
+        AvatarGlow(
+          endRadius: 50,
+          animate: speech.isListening,
+          glowColor: Color(0xFFF5A71F),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10, top: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                InkWell(
+                  onTap: () {
+                    if (_isPauseIn == false) {
+                      startListening();
+                    }
+                  },
+                  child: Image(
+                    width: displayWidth(context) * 0.15,
+                    image: speech.isListening
+                        ? AssetImage("assets/images/mic-on.png")
+                        : AssetImage("assets/images/mic-off.png"),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(speech.isListening
+              ? 'Sedang mendengarkan kamu bicara'
+              : 'Tidak sedang mendengarkan kamu bicara'),
         ),
       ],
     );
