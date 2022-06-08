@@ -568,7 +568,18 @@ class _CourseTestState extends State<CourseTest> {
   Widget VoiceTest(BuildContext context) {
     return Column(
       children: [
-        Text(lastWords, style: TextStyle(color: Colors.black, fontSize: 20)),
+        SizedBox(
+          width: displayWidth(context) * 0.8,
+          child: Center(
+            child: Text(
+              lastWords,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+          ),
+        ),
         AvatarGlow(
           endRadius: 50,
           animate: speech.isListening,
