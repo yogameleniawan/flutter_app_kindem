@@ -63,6 +63,8 @@ class _CourseTestState extends State<CourseTest> {
   int course_answer_total = 0;
 
   bool _isCheck = false;
+  bool _isStore = false;
+  bool _isLoadingStore = false;
 
   String? text;
   var _isPauseIn = false;
@@ -235,7 +237,7 @@ class _CourseTestState extends State<CourseTest> {
     }
   }
 
-  void storeAnswer(
+  Future storeAnswer(
       String answer, String courseText, String course_id, int user_id) async {
     final String uri = dotenv.get('API_URL') + "/api/v1/storeAnswer";
     Map data = {
@@ -256,37 +258,52 @@ class _CourseTestState extends State<CourseTest> {
           'Authorization': 'Bearer $token',
         },
         body: body);
+    if (result.statusCode == HttpStatus.ok) {
+      setState(() {
+        _isStore = true;
+      });
+    }
   }
 
-  void processStoreAnswer() {
-    storeAnswer(lastWords, courses[indexCourses].english_text,
-        courses[indexCourses].id, user.id);
-    if (indexCourses == courses.length - 1) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return ResultMain(
-          id_sub_category: widget.id_sub_category,
-        );
-      }));
-      setState(() {
-        indexCourses = 0;
-        lastWords = '____________';
-      });
-    } else {
-      Navigator.of(context).pop();
-    }
+  Future<void> processStoreAnswer() async {
     setState(() {
-      if (indexCourses < courses.length - 1) {
-        indexCourses++;
-        lastWords = '____________';
-      }
-      _isCheck = !_isCheck;
-      widget.is_redirect = false;
-      _selectedIndexAnswer =
-          10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
+      _isStore = false;
+      _isLoadingStore = true;
     });
+    await storeAnswer(lastWords, courses[indexCourses].english_text,
+        courses[indexCourses].id, user.id);
+  }
+
+  Future<void> doNextCourse() async {
+    if (_isStore) {
+      if (indexCourses == courses.length - 1) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ResultMain(
+            id_sub_category: widget.id_sub_category,
+          );
+        }));
+        setState(() {
+          indexCourses = 0;
+          lastWords = '____________';
+        });
+      } else {
+        Navigator.of(context).pop();
+      }
+      setState(() {
+        if (indexCourses < courses.length - 1) {
+          indexCourses++;
+          lastWords = '____________';
+        }
+        _isCheck = !_isCheck;
+        _isLoadingStore = false;
+        widget.is_redirect = false;
+        _selectedIndexAnswer =
+            10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
+      });
+    }
   }
 
   Future getChoiceAnswer(String id, String sub_category_id) async {
@@ -451,7 +468,7 @@ class _CourseTestState extends State<CourseTest> {
                                             "assets/images/pause.png"),
                                       )),
                             Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
                                   "Tekan tombol diatas kemudian tekan tombol dibawah lalu tirukan!",
                                   textAlign: TextAlign.center,
@@ -463,97 +480,56 @@ class _CourseTestState extends State<CourseTest> {
                             ),
                           ],
                         )
-                      : Container(
-                          padding:
-                              EdgeInsets.only(top: displayWidth(context) * 0.1),
-                          child: Text("Pilih Jawabanmu!",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ),
+                      : Text("Pilih Jawabanmu!",
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          )),
                   courses[indexCourses].is_voice == 1
                       ? VoiceTest(context)
                       : ChooseTest(),
-                  // InkWell(
-                  //     onTap: () {
-                  //       if (lastWords.toUpperCase() ==
-                  //           courses[indexCourses].english_text) {
-                  //         _trueAnswerShow(courses[indexCourses].english_text,
-                  //             courses[indexCourses].indonesia_text);
-                  //       } else {
-                  //         _falseAnswerShow(courses[indexCourses].english_text,
-                  //             courses[indexCourses].indonesia_text);
-                  //       }
-                  //       if (indexCourses < courses.length - 1) {
-                  //         if (courses[indexCourses + 1].is_voice == 0) {
-                  //           getChoiceAnswer(courses[indexCourses + 1].id,
-                  //               courses[indexCourses + 1].sub_category_id);
-                  //         }
-                  //       }
-                  //     },
-                  //     child: Container(
-                  //         width: displayWidth(context) * 1,
-                  //         height: displayHeight(context) * 0.08,
-                  //         decoration: BoxDecoration(
-                  //           color: Color(0xFFF5A71F),
-                  //           borderRadius: BorderRadius.circular(20),
-                  //         ),
-                  //         child: Center(
-                  //             child: _isCheck
-                  //                 ? CircularProgressIndicator(
-                  //                     color: Colors.white,
-                  //                   )
-                  //                 : Text("PERIKSA JAWABANMU",
-                  //                     style: TextStyle(
-                  //                         color: Colors.white,
-                  //                         fontSize: 25,
-                  //                         fontWeight: FontWeight.bold))))),
+                  InkWell(
+                      onTap: () async {
+                        if (!_isLoadingStore) {
+                          if (lastWords.toUpperCase() ==
+                              courses[indexCourses].english_text) {
+                            await processStoreAnswer();
+                            _trueAnswerShow(courses[indexCourses].english_text,
+                                courses[indexCourses].indonesia_text);
+                          } else {
+                            await processStoreAnswer();
+                            _falseAnswerShow(courses[indexCourses].english_text,
+                                courses[indexCourses].indonesia_text);
+                          }
+                          if (indexCourses < courses.length - 1) {
+                            if (courses[indexCourses + 1].is_voice == 0) {
+                              getChoiceAnswer(courses[indexCourses + 1].id,
+                                  courses[indexCourses + 1].sub_category_id);
+                            }
+                          }
+                        }
+                      },
+                      child: Container(
+                          width: displayWidth(context) * 1,
+                          height: displayHeight(context) * 0.08,
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF5A71F),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                              child: _isLoadingStore
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : Text("PERIKSA JAWABANMU",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold))))),
                 ],
               ),
             )),
-            floatingActionButton: InkWell(
-              onTap: () {
-                if (lastWords.toUpperCase() ==
-                    courses[indexCourses].english_text) {
-                  _trueAnswerShow(courses[indexCourses].english_text,
-                      courses[indexCourses].indonesia_text);
-                } else {
-                  _falseAnswerShow(courses[indexCourses].english_text,
-                      courses[indexCourses].indonesia_text);
-                }
-                if (indexCourses < courses.length - 1) {
-                  if (courses[indexCourses + 1].is_voice == 0) {
-                    getChoiceAnswer(courses[indexCourses + 1].id,
-                        courses[indexCourses + 1].sub_category_id);
-                  }
-                }
-              },
-              child: Container(
-                  margin: EdgeInsets.only(
-                    right: displayWidth(context) * 0.05,
-                    left: displayWidth(context) * 0.05,
-                  ),
-                  width: displayWidth(context) * 1,
-                  height: displayHeight(context) * 0.08,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF5A71F),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Center(
-                      child: _isCheck
-                          ? CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : Text("PERIKSA JAWABANMU",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold)))),
-            ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
           ),
         ),
         onWillPop: () {
@@ -702,7 +678,7 @@ class _CourseTestState extends State<CourseTest> {
                     setState(() {
                       _isCheck = !_isCheck;
                     });
-                    processStoreAnswer();
+                    doNextCourse();
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(
@@ -770,7 +746,7 @@ class _CourseTestState extends State<CourseTest> {
                     setState(() {
                       _isCheck = !_isCheck;
                     });
-                    processStoreAnswer();
+                    doNextCourse();
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(
