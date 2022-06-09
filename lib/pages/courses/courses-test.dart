@@ -63,6 +63,8 @@ class _CourseTestState extends State<CourseTest> {
   int course_answer_total = 0;
 
   bool _isCheck = false;
+  bool _isStore = false;
+  bool _isLoadingStore = false;
 
   String? text;
   var _isPauseIn = false;
@@ -235,7 +237,7 @@ class _CourseTestState extends State<CourseTest> {
     }
   }
 
-  void storeAnswer(
+  Future storeAnswer(
       String answer, String courseText, String course_id, int user_id) async {
     final String uri = dotenv.get('API_URL') + "/api/v1/storeAnswer";
     Map data = {
@@ -256,37 +258,59 @@ class _CourseTestState extends State<CourseTest> {
           'Authorization': 'Bearer $token',
         },
         body: body);
+    if (result.statusCode == HttpStatus.ok) {
+      setState(() {
+        _isStore = true;
+      });
+    }
   }
 
-  void processStoreAnswer() {
-    storeAnswer(lastWords, courses[indexCourses].english_text,
-        courses[indexCourses].id, user.id);
-    if (indexCourses == courses.length - 1) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (BuildContext context) {
-        return ResultMain(
-          id_sub_category: widget.id_sub_category,
-        );
-      }));
-      setState(() {
-        indexCourses = 0;
-        lastWords = '____________';
-      });
-    } else {
-      Navigator.of(context).pop();
-    }
+  Future<void> processStoreAnswer() async {
     setState(() {
-      if (indexCourses < courses.length - 1) {
-        indexCourses++;
-        lastWords = '____________';
-      }
-      _isCheck = !_isCheck;
-      widget.is_redirect = false;
-      _selectedIndexAnswer =
-          10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
+      _isStore = false;
+      _isLoadingStore = true;
     });
+    await storeAnswer(lastWords, courses[indexCourses].english_text,
+        courses[indexCourses].id, user.id);
+  }
+
+  Future<void> doNextCourse() async {
+    if (_isStore) {
+      if (indexCourses == courses.length - 1) {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ResultMain(
+            id_sub_category: widget.id_sub_category,
+          );
+        }));
+        setState(() {
+          indexCourses = 0;
+          lastWords = '____________';
+        });
+      } else {
+        Navigator.of(context).pop();
+      }
+      setState(() {
+        if (indexCourses < courses.length - 1) {
+          indexCourses++;
+          lastWords = '____________';
+        }
+        _isCheck = !_isCheck;
+        _isLoadingStore = false;
+        widget.is_redirect = false;
+        _selectedIndexAnswer =
+            10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
+      });
+    }
+
+    if (indexCourses < courses.length - 1) {
+      if (courses[indexCourses + 1].is_voice == 0) {
+        getChoiceAnswer(courses[indexCourses + 1].id,
+            courses[indexCourses + 1].sub_category_id);
+      }
+    }
   }
 
   Future getChoiceAnswer(String id, String sub_category_id) async {
@@ -473,19 +497,17 @@ class _CourseTestState extends State<CourseTest> {
                       ? VoiceTest(context)
                       : ChooseTest(),
                   InkWell(
-                      onTap: () {
-                        if (lastWords.toUpperCase() ==
-                            courses[indexCourses].english_text) {
-                          _trueAnswerShow(courses[indexCourses].english_text,
-                              courses[indexCourses].indonesia_text);
-                        } else {
-                          _falseAnswerShow(courses[indexCourses].english_text,
-                              courses[indexCourses].indonesia_text);
-                        }
-                        if (indexCourses < courses.length - 1) {
-                          if (courses[indexCourses + 1].is_voice == 0) {
-                            getChoiceAnswer(courses[indexCourses + 1].id,
-                                courses[indexCourses + 1].sub_category_id);
+                      onTap: () async {
+                        if (!_isLoadingStore) {
+                          if (lastWords.toUpperCase() ==
+                              courses[indexCourses].english_text) {
+                            await processStoreAnswer();
+                            _trueAnswerShow(courses[indexCourses].english_text,
+                                courses[indexCourses].indonesia_text);
+                          } else {
+                            await processStoreAnswer();
+                            _falseAnswerShow(courses[indexCourses].english_text,
+                                courses[indexCourses].indonesia_text);
                           }
                         }
                       },
@@ -497,7 +519,7 @@ class _CourseTestState extends State<CourseTest> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Center(
-                              child: _isCheck
+                              child: _isLoadingStore
                                   ? CircularProgressIndicator(
                                       color: Colors.white,
                                     )
@@ -527,39 +549,43 @@ class _CourseTestState extends State<CourseTest> {
           itemCount: answers.length,
           itemBuilder: (context, int index) {
             return Builder(builder: (context) {
-              return InkWell(
-                onTap: () {
-                  setState(() {
-                    lastWords = answers[index].english_text;
-                    _selectedIndexAnswer = index;
-                  });
-                },
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: displayHeight(context) * 0.01),
-                  child: Center(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: displayHeight(context) * 0.01,
-                        horizontal: displayWidth(context) * 0.1,
-                      ),
-                      decoration: BoxDecoration(
-                        color: index == _selectedIndexAnswer
-                            ? Color(0xFFF5A71F)
-                            : Colors.white,
-                      ),
-                      child: Text(
-                        answers[index].english_text,
-                        style: TextStyle(
-                          color: index == _selectedIndexAnswer
-                              ? Colors.white
-                              : Colors.black,
+              return answers.length > 0
+                  ? InkWell(
+                      onTap: () {
+                        setState(() {
+                          lastWords = answers[index].english_text;
+                          _selectedIndexAnswer = index;
+                        });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            bottom: displayHeight(context) * 0.01),
+                        child: Center(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: displayHeight(context) * 0.01,
+                              horizontal: displayWidth(context) * 0.1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: index == _selectedIndexAnswer
+                                  ? Color(0xFFF5A71F)
+                                  : Colors.white,
+                            ),
+                            child: Text(
+                              answers[index].english_text,
+                              style: TextStyle(
+                                color: index == _selectedIndexAnswer
+                                    ? Colors.white
+                                    : Colors.black,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-              );
+                    )
+                  : CircularProgressIndicator(
+                      color: Color(0xFFF5A71F),
+                    );
             });
           }),
     );
@@ -657,7 +683,7 @@ class _CourseTestState extends State<CourseTest> {
                     setState(() {
                       _isCheck = !_isCheck;
                     });
-                    processStoreAnswer();
+                    doNextCourse();
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(
@@ -725,7 +751,7 @@ class _CourseTestState extends State<CourseTest> {
                     setState(() {
                       _isCheck = !_isCheck;
                     });
-                    processStoreAnswer();
+                    doNextCourse();
                   },
                   child: Container(
                       margin: EdgeInsets.symmetric(

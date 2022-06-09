@@ -19,7 +19,7 @@ class ImageCourse extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: displayWidth(context) * 0.1,
-        vertical: displayWidth(context) * 0.28,
+        vertical: displayWidth(context) * 0.16,
       ),
       child: Skeleton(
         skeleton: SkeletonAvatar(

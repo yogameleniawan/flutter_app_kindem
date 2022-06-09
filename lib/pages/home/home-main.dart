@@ -176,7 +176,8 @@ class _HomeMainState extends State<HomeMain> {
         backgroundColor: Color(0xFFF1F1F1),
         body: Container(
           child: Padding(
-            padding: const EdgeInsets.only(top: 50, right: 20, left: 20),
+            padding:
+                const EdgeInsets.only(top: 50, right: 18, left: 18, bottom: 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -184,7 +185,7 @@ class _HomeMainState extends State<HomeMain> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(left: 7, top: 7),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -194,7 +195,7 @@ class _HomeMainState extends State<HomeMain> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.only(bottom: 5),
                                   child: Text(
                                     "Hai ...",
                                     style: TextStyle(color: Colors.black),
@@ -274,7 +275,7 @@ class _HomeMainState extends State<HomeMain> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: displayHeight(context) * 0.05),
+                  padding: EdgeInsets.only(top: displayHeight(context) * 0.04),
                   child: Stack(children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),

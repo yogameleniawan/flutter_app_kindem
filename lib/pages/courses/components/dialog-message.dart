@@ -73,8 +73,10 @@ class _DialogMessageState extends State<DialogMessage> {
                         child:
                             Text("Ya", style: TextStyle(color: Colors.white))),
                     onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
+                      int count = 2;
+                      Navigator.of(context).popUntil((_) => count-- <= 0);
+                      // Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
                     },
                   )
                 ])

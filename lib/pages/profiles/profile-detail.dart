@@ -79,7 +79,6 @@ class _ProfileDetailState extends State<ProfileDetail> {
                     fit: BoxFit.cover)),
             child: Center(
               child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25, vertical: 25),
                   child: Column(
