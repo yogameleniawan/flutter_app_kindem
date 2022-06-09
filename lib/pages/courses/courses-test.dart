@@ -65,6 +65,7 @@ class _CourseTestState extends State<CourseTest> {
   bool _isCheck = false;
   bool _isStore = false;
   bool _isLoadingStore = false;
+  bool _isGetChoice = false;
 
   String? text;
   var _isPauseIn = false;
@@ -307,7 +308,7 @@ class _CourseTestState extends State<CourseTest> {
 
     if (indexCourses < courses.length - 1) {
       if (courses[indexCourses + 1].is_voice == 0) {
-        getChoiceAnswer(courses[indexCourses + 1].id,
+        await getChoiceAnswer(courses[indexCourses + 1].id,
             courses[indexCourses + 1].sub_category_id);
       }
     }
