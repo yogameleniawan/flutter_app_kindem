@@ -65,6 +65,7 @@ class _CourseTestState extends State<CourseTest> {
   bool _isCheck = false;
   bool _isStore = false;
   bool _isLoadingStore = false;
+  bool _isGetChoice = false;
 
   String? text;
   var _isPauseIn = false;
@@ -292,6 +293,14 @@ class _CourseTestState extends State<CourseTest> {
       } else {
         Navigator.of(context).pop();
       }
+
+      if (indexCourses < courses.length - 1) {
+        if (courses[indexCourses + 1].is_voice == 0) {
+          getChoiceAnswer(courses[indexCourses + 1].id,
+              courses[indexCourses + 1].sub_category_id);
+        }
+      }
+
       setState(() {
         if (indexCourses < courses.length - 1) {
           indexCourses++;
@@ -304,16 +313,15 @@ class _CourseTestState extends State<CourseTest> {
             10; // di set 10 karena apabila di set 0 maka jawaban yang dipilih pada pilihan pertama
       });
     }
-
-    if (indexCourses < courses.length - 1) {
-      if (courses[indexCourses + 1].is_voice == 0) {
-        getChoiceAnswer(courses[indexCourses + 1].id,
-            courses[indexCourses + 1].sub_category_id);
-      }
-    }
   }
 
   Future getChoiceAnswer(String id, String sub_category_id) async {
+    setState(() {
+      answers = [];
+    });
+
+    print('Total Jawaban');
+    print(answers.length);
     final String uri = dotenv.get('API_URL') + "/api/v1/getAnswerChoices";
     Map data = {'id': id, 'sub_category_id': sub_category_id};
     var body = json.encode(data);
@@ -333,6 +341,7 @@ class _CourseTestState extends State<CourseTest> {
         print(jsonResponse);
         answers = answer;
       });
+      print('Total Jawaban');
       print(answers.length);
     }
   }
@@ -502,6 +511,7 @@ class _CourseTestState extends State<CourseTest> {
                           if (lastWords.toUpperCase() ==
                               courses[indexCourses].english_text) {
                             await processStoreAnswer();
+
                             _trueAnswerShow(courses[indexCourses].english_text,
                                 courses[indexCourses].indonesia_text);
                           } else {
@@ -544,13 +554,13 @@ class _CourseTestState extends State<CourseTest> {
   }
 
   Widget ChooseTest() {
-    return Expanded(
-      child: ListView.builder(
-          itemCount: answers.length,
-          itemBuilder: (context, int index) {
-            return Builder(builder: (context) {
-              return answers.length > 0
-                  ? InkWell(
+    return answers.length > 0
+        ? Expanded(
+            child: ListView.builder(
+                itemCount: answers.length,
+                itemBuilder: (context, int index) {
+                  return Builder(builder: (context) {
+                    return InkWell(
                       onTap: () {
                         setState(() {
                           lastWords = answers[index].english_text;
@@ -582,63 +592,65 @@ class _CourseTestState extends State<CourseTest> {
                           ),
                         ),
                       ),
-                    )
-                  : CircularProgressIndicator(
-                      color: Color(0xFFF5A71F),
                     );
-            });
-          }),
-    );
+                  });
+                }),
+          )
+        : Expanded(
+            child: Center(
+                child: CircularProgressIndicator(color: Color(0xFFF5A71F))));
   }
 
   Widget VoiceTest(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: displayWidth(context) * 0.8,
-          child: Center(
-            child: Text(
-              lastWords,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-              style: TextStyle(color: Colors.black, fontSize: 20),
+    return Expanded(
+      child: Column(
+        children: [
+          SizedBox(
+            width: displayWidth(context) * 0.8,
+            child: Center(
+              child: Text(
+                lastWords,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                softWrap: false,
+                style: TextStyle(color: Colors.black, fontSize: 20),
+              ),
             ),
           ),
-        ),
-        AvatarGlow(
-          endRadius: 50,
-          animate: speech.isListening,
-          glowColor: Color(0xFFF5A71F),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                InkWell(
-                  onTap: () {
-                    if (_isPauseIn == false) {
-                      startListening();
-                    }
-                  },
-                  child: Image(
-                    width: displayWidth(context) * 0.15,
-                    image: speech.isListening
-                        ? AssetImage("assets/images/mic-on.png")
-                        : AssetImage("assets/images/mic-off.png"),
+          AvatarGlow(
+            endRadius: 50,
+            animate: speech.isListening,
+            glowColor: Color(0xFFF5A71F),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10, top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (_isPauseIn == false) {
+                        startListening();
+                      }
+                    },
+                    child: Image(
+                      width: displayWidth(context) * 0.15,
+                      image: speech.isListening
+                          ? AssetImage("assets/images/mic-on.png")
+                          : AssetImage("assets/images/mic-off.png"),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(speech.isListening
-              ? 'Sedang mendengarkan kamu bicara'
-              : 'Tidak sedang mendengarkan kamu bicara'),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(speech.isListening
+                ? 'Sedang mendengarkan kamu bicara'
+                : 'Tidak sedang mendengarkan kamu bicara'),
+          ),
+        ],
+      ),
     );
   }
 
