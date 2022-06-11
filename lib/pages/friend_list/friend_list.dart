@@ -221,14 +221,7 @@ class _FriendListState extends State<FriendList> {
                                                 width: displayWidth(context) *
                                                     0.45,
                                                 child: Text(
-                                                  _searchResult[index]
-                                                              .name
-                                                              .length >
-                                                          30
-                                                      ? '${_searchResult[index].name.substring(0, 30)}...'
-                                                      : _searchResult[index]
-                                                          .name
-                                                          .name,
+                                                  _searchResult[index].name,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
@@ -327,9 +320,7 @@ class _FriendListState extends State<FriendList> {
                                                 width: displayWidth(context) *
                                                     0.45,
                                                 child: Text(
-                                                  users[index].name.length > 30
-                                                      ? '${users[index].name.substring(0, 30)}...'
-                                                      : users[index].name,
+                                                  users[index].name,
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
