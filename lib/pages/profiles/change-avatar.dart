@@ -110,7 +110,7 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
             child: SingleChildScrollView(
               child: Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 30),
+                  padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                   child: Container(
                     child: Column(
                       children: [
@@ -126,7 +126,7 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                         ),
                         Container(
                           margin: EdgeInsets.only(
-                              top: displayHeight(context) * 0.04),
+                              top: displayHeight(context) * 0.025),
                           child: Text("Pilih avatar baru kamu:"),
                         ),
                         Container(
@@ -239,6 +239,19 @@ class _ChangeAvatarState extends State<ChangeAvatar> {
                                 }),
                           ),
                         ),
+                        Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.only(top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Avatar by: "),
+                                Text(
+                                  "Karafuru",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            )),
                       ],
                     ),
                   ),

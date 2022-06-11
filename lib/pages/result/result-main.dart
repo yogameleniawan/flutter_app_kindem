@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:kindem_app/helpers/sizes_helpers.dart';
 import 'package:kindem_app/models/score.dart';
+import 'package:kindem_app/models/user.dart';
 import 'package:kindem_app/pages/components/perloader-page.dart';
 import 'package:kindem_app/pages/home/home-main.dart';
 import 'package:kindem_app/pages/result/components/dialog-level.dart';
@@ -28,17 +29,51 @@ class ResultMain extends StatefulWidget {
 
 class _ResultMainState extends State<ResultMain> {
   Score score = new Score();
+  User user = new User();
   var user_level;
   var next_level;
   var next_point_level;
   var total_score;
+  var user_photo;
   bool is_done = false;
+  AssetImage getBorder(String level) {
+    if (level == "Emperor") {
+      return AssetImage("assets/images/1-emperor.png");
+    } else if (level == "King") {
+      return AssetImage("assets/images/2-king.png");
+    } else if (level == "Duke") {
+      return AssetImage("assets/images/3-duke.png");
+    } else if (level == "Prince") {
+      return AssetImage("assets/images/4-prince.png");
+    } else if (level == "Knight") {
+      return AssetImage("assets/images/5-knight.png");
+    } else {
+      return AssetImage("assets/images/6-citizen.png");
+    }
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getUser();
     getScore();
+  }
+
+  void getUser() async {
+    final String uri = dotenv.get('API_URL') + "/api/v1/user";
+    String? token =
+        await Provider.of<AuthProvider>(context, listen: false).getToken();
+    http.Response result = await http.get(Uri.parse(uri), headers: {
+      'Authorization': 'Bearer $token',
+    });
+    if (result.statusCode == HttpStatus.ok) {
+      final jsonResponse = json.decode(result.body);
+      var users = User.toString(jsonResponse);
+      setState(() {
+        user_photo = jsonResponse['profile_photo_path'];
+      });
+    }
   }
 
   Future getScore() async {
@@ -97,9 +132,39 @@ class _ResultMainState extends State<ResultMain> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Image(
-                      width: displayWidth(context) * 1,
-                      image: AssetImage("assets/images/user_icon_big.png"),
+                    // Image(
+                    //   width: displayWidth(context) * 1,
+                    //   image: AssetImage("assets/images/user_icon_big.png"),
+                    // ),
+                    Container(
+                      margin:
+                          EdgeInsets.only(top: displayHeight(context) * 0.1),
+                      child: Stack(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.only(
+                                top: displayHeight(context) * 0.051),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              maxRadius: displayWidth(context) * 0.13,
+                              backgroundImage: user_photo == null
+                                  ? AssetImage(
+                                      "assets/images/user_icon_big.png")
+                                  : AssetImage(user_photo.toString()),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.center,
+                            margin: EdgeInsets.only(bottom: 40),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              maxRadius: displayWidth(context) * 0.23,
+                              backgroundImage: getBorder(user_level),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Column(
                       children: [
