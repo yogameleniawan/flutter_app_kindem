@@ -1,16 +1,65 @@
-# kindem_app
+# Kindem Flutter Application
 
-A new Flutter project.
+## Daftar Isi
+- [Kindem Flutter Application](#kindem-flutter-application)
+  - [Daftar Isi](#daftar-isi)
+  - [Setup pertama kali](#setup-pertama-kali)
+  - [Requirements](#requirements)
+  - [Resources](#resources)
+  - [Copyright](#copyright)
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Setup pertama kali
+1. Clone repository
+	```bash
+	# Clone dengan SSH
+	git clone git@github.com/yogameleniawan/kindem_rest_api.git
+	# Clone dengan HTTPS
+	git clone https://github.com/yogameleniawan/kindem_rest_api.git
+	```
+2. Install laravel dan php dependency
+	```
+	composer install
+	```
+3. Setup konfigurasi  
+Buat file `.env` di root project dan copy isi file `.env.example` ke `.env`  
+Ubah konfigurasi sesuai keperluan. Pastikan `APP_URL_BASE` sudah benar
+	```bash
+	# Unix/Linux/Windows Powershell
+	cp .env.example .env
+	# Windows CMD
+	copy .env.example .env
+	```
+4. Generate application key
+	```
+	php artisan key:generate
+	```
+5. Migrasi database  
+Pastikan konfigurasi database di `.env` sudah benar
+	```
+	php artisan migrate
+	```
+6. Seed database _[opsional]_
+	```
+	php artisan db:seed
+	```
+7. Install node dependency
+	```
+	npm install
+	```
+8. Running Aplikasi
+    Jalankan 2 perintah dibawah ini :
+    ```
+	php artisan serve
+    ```
+    
+## Requirements
+- Android OS >= 7.0 (Nougat)
+- Flutter SDK Version >= 3.0 (https://docs.flutter.dev/get-started/install)
 
-A few resources to get you started if this is your first Flutter project:
+## Resources
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Design UI : https://www.figma.com/file/g6flnOGXIs3YX7WShk5Kyc/KINDEM-MOBILE-APP-DESIGN
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Copyright
+2022 [Abdul Rahman Saleh](https://www.linkedin.com/in/abdul-rahman-saleh-714120217/) & [Yoga Meleniawan Pamungkas](https://www.linked.in/id/yogameleniawan)
