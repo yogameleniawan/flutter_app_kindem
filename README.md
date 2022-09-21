@@ -13,46 +13,19 @@
 1. Clone repository
 	```bash
 	# Clone dengan SSH
-	git clone git@github.com/yogameleniawan/kindem_rest_api.git
+	git clone git@github.com/yogameleniawan/flutter_app_kindem.git
 	# Clone dengan HTTPS
-	git clone https://github.com/yogameleniawan/kindem_rest_api.git
+	git clone https://github.com/yogameleniawan/flutter_app_kindem.git
 	```
-2. Install laravel dan php dependency
+2. Install Flutter dependency
 	```
-	composer install
+	flutter pub get
 	```
-3. Setup konfigurasi  
-Buat file `.env` di root project dan copy isi file `.env.example` ke `.env`  
-Ubah konfigurasi sesuai keperluan. Pastikan `APP_URL_BASE` sudah benar
-	```bash
-	# Unix/Linux/Windows Powershell
-	cp .env.example .env
-	# Windows CMD
-	copy .env.example .env
+3. Running Flutter dengan tombol F5 apabila menggunakan VSCode atau apabila menggunakan bash dapat menggunakan perintah berikut :
 	```
-4. Generate application key
+	flutter run
 	```
-	php artisan key:generate
-	```
-5. Migrasi database  
-Pastikan konfigurasi database di `.env` sudah benar
-	```
-	php artisan migrate
-	```
-6. Seed database _[opsional]_
-	```
-	php artisan db:seed
-	```
-7. Install node dependency
-	```
-	npm install
-	```
-8. Running Aplikasi
-    Jalankan 2 perintah dibawah ini :
-    ```
-	php artisan serve
-    ```
-    
+	
 ## Requirements
 - Android OS >= 7.0 (Nougat)
 - Flutter SDK Version >= 3.0 (https://docs.flutter.dev/get-started/install)
