@@ -33,6 +33,7 @@
 ## Resources
 
 Design UI : https://www.figma.com/file/g6flnOGXIs3YX7WShk5Kyc/KINDEM-MOBILE-APP-DESIGN
+Demo Aplikasi : https://www.youtube.com/watch?v=7PqGl344wLk
 
 ## Copyright
 2022 [Abdul Rahman Saleh](https://www.linkedin.com/in/abdul-rahman-saleh-714120217/) & [Yoga Meleniawan Pamungkas](https://www.linked.in/id/yogameleniawan)
