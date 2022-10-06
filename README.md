@@ -36,4 +36,4 @@
 - Demo Aplikasi : https://www.youtube.com/watch?v=7PqGl344wLk
 
 ## Copyright
-2022 [Abdul Rahman Saleh](https://www.linkedin.com/in/abdul-rahman-saleh-714120217/) & [Yoga Meleniawan Pamungkas](https://www.linkedin.com/id/yogameleniawan)
+2022 [Abdul Rahman Saleh](https://www.linkedin.com/in/abdul-rahman-saleh-714120217/) & [Yoga Meleniawan Pamungkas](https://www.linkedin.com/in/yogameleniawan/)
